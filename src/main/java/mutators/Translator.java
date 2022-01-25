@@ -13,11 +13,11 @@ public class Translator {
 	private String ogfilepath;
 	private char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 	private String tempLine;
+	private String[] keywords = {"if", "else", "while", "for", "class", "try", "catch", "throws", "interface"}; 
+	private String[] keywordSubs = { "@", ">", "<", "#", "%", "^", "*", "-", "+"};		//"_, $, and & " are taken by letters, spaces, and tabs, respectively
 	
 	public Translator(String ogfilepath) {
 		this.ogfilepath = Objects.requireNonNull(ogfilepath);
-		
-		// call method after acquistion of filepath to begin translation
 	}
 	
 		// takes given file and returns easy to read version, translator only deals with indents
@@ -27,15 +27,23 @@ public class Translator {
 		tempLine = bfr.readLine();
 		
 		while(tempLine != null) {
-			tempLine = tempLine.toLowerCase();
-			tempLine = noLetters(tempLine);
-			tempLine = spaceTabTransform(tempLine);
+			tempLine = aggregateFunction(tempLine);
 			bwr.write(tempLine + "\n");
 			tempLine = bfr.readLine();
 		}
 		
+		bfr.close();
 		bwr.close();
 		
+	}
+	
+	public String aggregateFunction(String input) {
+		String output = input;
+		output = output.toLowerCase();
+		output = keywordSwap(output);
+		output = noLetters(output);
+		output = spaceTabTransform(output);
+		return output;
 	}
 	
 	 
@@ -53,6 +61,14 @@ public class Translator {
 		String output = null;
 		output = input.replace(' ', '$');
 		output = output.replace('\t', '&');
+		return output;
+	}
+	
+	public String keywordSwap(String input) {
+		String output = input;
+		for (int i=0; i<keywords.length; i++) {
+			output = output.replaceAll("\\b" + keywords[i] + "\\b", keywordSubs[i]);
+		}
 		return output;
 	}
 	

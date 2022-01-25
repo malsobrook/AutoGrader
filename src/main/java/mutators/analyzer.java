@@ -1,5 +1,5 @@
 package mutators;
 
-public class analyzer {
+public abstract interface Analyzer {
 
 }

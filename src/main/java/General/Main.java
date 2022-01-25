@@ -1,3 +1,4 @@
+package General;
 // main class
 // main > translator > analyzer > flagging > production > done
 
@@ -32,10 +33,10 @@ public class Main {
 		try {
 			trs.translate();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			System.out.println("error on pass to Translator");
 			e.printStackTrace();
 		}
-		
+		System.out.println("done");
 		
 		// main program should have no other function besides launching and passing to respective mutators. ???
 		// maybe remain open window to use the function multiple times
