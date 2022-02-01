@@ -76,4 +76,8 @@ public class Translator {
 		bfr.close();
 	}
 	
+	public void passLine(String line) {
+		//TODO pass line before translation to naming convention analyzer.
+	}
+	
 }
