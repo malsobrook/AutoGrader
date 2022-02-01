@@ -49,7 +49,7 @@ update the look and feel of the file browser to match windows 10/newest MAC.
 import/setup Maven
 
 ## Translator
-develop testing for translator methods using MOCKITO
+develop testing for translator methods using MOCKITO <br />
 develop list of 'KeyWords' or JAVA reserved words that anticipate indentation using brackets
 develop list of 'KeyWord-Substitutes' for the Analyzer class to recognize when searching for brackets/indents/comments
 develop method 'keywordReplace' that replaces all previously mentioned 'KeyWords' with their respective substitiues
