@@ -45,25 +45,25 @@ TBD
 # TODO
 
 ## Main
-update the look and feel of the file browser to match windows 10/newest MAC.
-import/setup Maven
+update the look and feel of the file browser to match windows 10/newest MAC. <br />
+import/setup Maven <br />
 
 ## Translator
 develop testing for translator methods using MOCKITO <br />
-develop list of 'KeyWords' or JAVA reserved words that anticipate indentation using brackets
-develop list of 'KeyWord-Substitutes' for the Analyzer class to recognize when searching for brackets/indents/comments
-develop method 'keywordReplace' that replaces all previously mentioned 'KeyWords' with their respective substitiues
-layout legend for JAVA (and later other languages) for KeyWord -> Substitutes
+develop list of 'KeyWords' or JAVA reserved words that anticipate indentation using brackets <br />
+develop list of 'KeyWord-Substitutes' for the Analyzer class to recognize when searching for brackets/indents/comments <br />
+develop method 'keywordReplace' that replaces all previously mentioned 'KeyWords' with their respective substitiues <br />
+layout legend for JAVA (and later other languages) for KeyWord -> Substitutes <br />
 
 ## Analyzer (Interface)
-develop this interface file
-decide on which methods and their return types
-set up basic start files for the implementors
+develop this interface file <br />
+decide on which methods and their return types <br />
+set up basic start files for the implementors <br />
 
 ## IndentAnalyzer
-determine best way to assess a file for the multiple parameters we have to search for.
+determine best way to assess a file for the multiple parameters we have to search for. <br />
 
 
 # Sources
-https://google.github.io/styleguide/javaguide.html
+https://google.github.io/styleguide/javaguide.html <br />
 
