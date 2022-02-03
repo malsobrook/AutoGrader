@@ -11,12 +11,6 @@ public class CommentAnalyzer implements Analyzer{
 	}
 	
 	@Override
-	public String analyze(File file) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void aggregateFunc() {
 		// TODO Auto-generated method stub
 		
@@ -24,6 +18,12 @@ public class CommentAnalyzer implements Analyzer{
 
 	@Override
 	public String keyFinder(String line) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String analyze() throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}

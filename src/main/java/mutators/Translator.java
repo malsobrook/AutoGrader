@@ -8,9 +8,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Objects;
+import mutators.*;
 
 public class Translator {
 	private String ogfilepath;
+	private String newPath = "C:\\Users\\Michael\\OneDrive\\Documents\\test.java";
 	private char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 	private String tempLine;
 	private String[] keywords = {"if", "else", "while", "for", "class", "try", "catch", "throws", "interface"}; 
@@ -23,7 +25,7 @@ public class Translator {
 		// takes given file and returns easy to read version, translator only deals with indents
 	public void translate() throws Exception {
 		BufferedReader bfr = new BufferedReader(new FileReader(ogfilepath));
-		BufferedWriter bwr = new BufferedWriter(new FileWriter("C:\\Users\\Michael\\OneDrive\\Documents\\test.java"));
+		BufferedWriter bwr = new BufferedWriter(new FileWriter(newPath));
 		tempLine = bfr.readLine();
 		
 		while(tempLine != null) {
@@ -35,11 +37,13 @@ public class Translator {
 		bfr.close();
 		bwr.close();
 		
+		IndentAnalyzer idt = new IndentAnalyzer(newPath);
 	}
 	
 	public String aggregateFunction(String input) {
 		String output = input;
 		output = output.toLowerCase();
+		output = whiteOut(output);
 		output = keywordSwap(output);
 		output = noLetters(output);
 		output = spaceTabTransform(output);
@@ -56,6 +60,14 @@ public class Translator {
 		return output;
 	}
 	
+		// if string is entirely blank (pre translate), simply turns to empty string to avoid analyzer confusion.
+	public String whiteOut(String input) {
+		String output = input;
+		if (output.isBlank()) {
+			return "";
+		} 
+		return output;
+	}
 	
 	public String spaceTabTransform(String input) {
 		String output = null;
