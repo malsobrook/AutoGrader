@@ -1,22 +1,17 @@
 package mutators;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Objects;
 import mutators.*;
 
 public class Translator {
 	private String ogfilepath;
-	private String newPath = "C:\\Users\\Michael\\OneDrive\\Documents\\test.java";
+	private String newPath = "test.java";
 	private char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 	private String tempLine;
 	private String[] keywords = {"if", "else", "while", "for", "class", "try", "catch", "throws", "interface"}; 
-	private String[] keywordSubs = { "@", ">", "<", "#", "%", "^", "*", "-", "+"};		//"_, $, and & " are taken by letters, spaces, and tabs, respectively
+	private String[] keywordSubs = { "@", ">", "<", "#", "%", "^", "*", "-", "+"};		
+		//"_, $, and & " are taken by letters, spaces, and tabs, respectively
 	
 	public Translator(String ogfilepath) {
 		this.ogfilepath = Objects.requireNonNull(ogfilepath);
@@ -92,4 +87,7 @@ public class Translator {
 		//TODO pass line before translation to naming convention analyzer.
 	}
 	
+	public void passFile(String filePath) {
+		//TODO pass newPath variable to analyzer
+	}
 }
