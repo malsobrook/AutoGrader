@@ -10,7 +10,7 @@ Contains the loop in which the file browser is opened, the original filepath to 
 the respective methods are performed on it to translate it to a non-alphabet representation that can be easily interpreted by the Analyzer class' 
 children classes.
 
-## Tanslator
+## Translator
 
 The initial object in the process that obtains the original filepath from the Main File, performs mutations on a "dumpable" file (locally cached)
 that will be read from for the rest of the process (this is to avoid accidental mutation or corruption of the original file). Specifically, the 
