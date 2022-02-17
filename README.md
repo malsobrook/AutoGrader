@@ -67,3 +67,9 @@ determine best way to assess a file for the multiple parameters we have to searc
 # Sources
 https://google.github.io/styleguide/javaguide.html <br />
 
+
+regex: temporary
+(public|private|protected|) (space) (static)? (??Some return value, may be not keyword??) (??Location of class|method name??)
+
+
+<\\w>1<\\s>static?<\\s>(??return type??)<\\s> (?? ITEM DESIRED ??)
