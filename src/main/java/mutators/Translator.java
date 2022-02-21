@@ -2,11 +2,13 @@ package mutators;
 
 import java.io.*;
 import java.util.Objects;
+
+import javax.swing.JFileChooser;
 import mutators.*;
 
 public class Translator {
 	private String ogfilepath;
-	private String newPath = "test.java";
+	private String newPath = "test2.java";
 	private char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 	private String tempLine;
 	private String[] keywords = {"if", "else", "while", "for", "class", "try", "catch", "throws", "interface"}; 
@@ -17,10 +19,12 @@ public class Translator {
 		this.ogfilepath = Objects.requireNonNull(ogfilepath);
 	}
 	
-		// takes given file and returns easy to read version, translator only deals with indents
+		// takes given file and returns easy to read version, translator only deals with indents and keywords
 	public void translate() throws Exception {
 		BufferedReader bfr = new BufferedReader(new FileReader(ogfilepath));
-		BufferedWriter bwr = new BufferedWriter(new FileWriter(newPath));
+		String path = System.getProperty("user.home") + File.separator + "testing.java";
+		File dumpFile = new File(path);
+		BufferedWriter bwr = new BufferedWriter(new FileWriter(path));
 		tempLine = bfr.readLine();
 		
 		while(tempLine != null) {
@@ -35,6 +39,8 @@ public class Translator {
 		IndentAnalyzer idt = new IndentAnalyzer(newPath);
 	}
 	
+	
+	
 	public String aggregateFunction(String input) {
 		String output = input;
 		output = output.toLowerCase();
@@ -45,7 +51,6 @@ public class Translator {
 		return output;
 	}
 	
-	 
 		// removes all alphabet letters
 	public String noLetters(String input) {
 		String output = input;
@@ -64,6 +69,7 @@ public class Translator {
 		return output;
 	}
 	
+		// turns all spaces to $ and all tabs to &
 	public String spaceTabTransform(String input) {
 		String output = null;
 		output = input.replace(' ', '$');
@@ -71,6 +77,7 @@ public class Translator {
 		return output;
 	}
 	
+		// searches for all given keywords and replaces them with the corresponding symbol from keywordSub list
 	public String keywordSwap(String input) {
 		String output = input;
 		for (int i=0; i<keywords.length; i++) {
@@ -79,14 +86,17 @@ public class Translator {
 		return output;
 	}
 	
+		// closes the reader, may remove
 	public void close(BufferedReader bfr) throws IOException {
 		bfr.close();
 	}
 	
+		// passes an untranslated line to an Analyzer that may require it
 	public void passLine(String line) {
 		//TODO pass line before translation to naming convention analyzer.
 	}
 	
+		// passes the original file path to an Analyzer that may require it
 	public void passFile(String filePath) {
 		//TODO pass newPath variable to analyzer
 	}

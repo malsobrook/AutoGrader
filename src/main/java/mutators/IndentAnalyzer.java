@@ -9,7 +9,8 @@ import java.io.FileReader;
 public class IndentAnalyzer implements Analyzer{
 
 	private String filePath;
-	private int indentCount;	// dated, possible remove
+	private int indentLvl = 0;
+	private int expectedIdtLvl = 0;
 	private int idtTab = 0;
 	private int idtSpace = 0;
 	private int spaceCount = 0;
@@ -31,28 +32,14 @@ public class IndentAnalyzer implements Analyzer{
 			// tempLine not being null implies there will be char to make into array
 			// char by char assess indent level, ending when encountering a character not representing space or tab
 			// indentation ends upon the first character
-		while(tempLine != null) {
+		while (tempLine != null) {
 			charArray = tempLine.toCharArray();
 			checker = false;
-			for (char c: charArray) {
-				if (checker ==  false) {	// checker indicates if we have encountered a non indent character, thus skips the rest of the line.
-					if ( isSpace(c) || isTab(c) ) {
-						if ( isSpace(c) ) {
-							// space count +1, asses if equal to spaceIndex var, default is currently 4, then reset space counter
-							spaceCount++;
-							if (spaceCount >= spaceIndex) {
-								indtReset();
-								idtSpace++;
-							}
-						}
-						if ( isTab(c) ) {
-							idtTab++;
-						}
-					} else {
-						checker = true;	
-					}
-				}
-			}
+			indentCounter(charArray);	// count the indents, counts separated by type.
+			
+				// logic to assess indent level
+			
+			
 			tempLine = bfr.readLine();
 			
 		}
@@ -62,6 +49,7 @@ public class IndentAnalyzer implements Analyzer{
 			// testing feature
 		String str = "Indent Consistency:	Spaces: " + idtSpace + "	Tabs: " + idtTab;
 		System.out.println(str);
+			// remove later
 		return str;
 	}
 
@@ -77,7 +65,7 @@ public class IndentAnalyzer implements Analyzer{
 		return null;
 	}
 	
-	public void indtReset() {
+	public void idtReset() {
 		spaceCount = 0;
 	}
 	
@@ -96,5 +84,29 @@ public class IndentAnalyzer implements Analyzer{
 			return false; 
 		}
 	}
-
+	
+		// void for now / takes char array of line being read and adjust relevant variables to count indents
+	public void indentCounter(char charArray[]) {
+		for (char c: charArray) {
+			if (checker ==  false) {	// checker indicates if we have encountered a non indent character, thus skips the rest of the line.
+				if ( isSpace(c) || isTab(c) ) {
+					if ( isSpace(c) ) {
+						// space count +1, asses if equal to spaceIndex var, default is currently 4, then reset space counter
+						spaceCount++;
+						if (spaceCount >= spaceIndex) {
+							idtReset();
+							idtSpace++;
+						}
+					}
+					if ( isTab(c) ) {
+						idtTab++;
+					}
+				} else {
+					checker = true;	
+				}
+			}
+		}
+			// reset the spaceCount to 0 before reading a newline
+		idtReset();
+	}
 }
