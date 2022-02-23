@@ -1,8 +1,8 @@
 # AutoGrader
 
-A program that will automatically, upon file selection, translate the file into a computer-friendly, readable alhpa-numeric representation 
+A program that will automatically, upon file selection, translate the file into a computer-friendly, readable non-alphabet representation 
 of the selected .JAVA file (pending other languages) and assess the file for indentation errors, bracket placement errors (or lack thereof),
-proper naming convention (TBD), and proper comments (specifics TBD w/Tennyson).
+proper naming convention, and proper comments.
 
 ## Main File
 
