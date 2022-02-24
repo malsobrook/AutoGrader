@@ -9,8 +9,6 @@ import java.io.FileReader;
 public class IndentAnalyzer implements Analyzer{
 
 	private String filePath;
-	private int indentLvl = 0;
-	private int expectedIdtLvl = 0;
 	private int idtTab = 0;
 	private int idtSpace = 0;
 	private int spaceCount = 0;
@@ -83,6 +81,13 @@ public class IndentAnalyzer implements Analyzer{
 		} else {
 			return false; 
 		}
+	}
+	
+		// parse line as char array looking for specific symbols that require indents. Also examines the indent level 
+		// in comparison to the expected level
+	public void indentCorrecter(char charArrray[]) {
+		// body
+		
 	}
 	
 		// void for now / takes char array of line being read and adjust relevant variables to count indents

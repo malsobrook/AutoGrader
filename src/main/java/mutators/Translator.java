@@ -2,8 +2,6 @@ package mutators;
 
 import java.io.*;
 import java.util.Objects;
-
-import javax.swing.JFileChooser;
 import mutators.*;
 
 public class Translator {
@@ -11,8 +9,8 @@ public class Translator {
 	private String newPath = "test2.java";
 	private char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 	private String tempLine;
-	private String[] keywords = {"if", "else", "while", "for", "class", "try", "catch", "throws", "interface"}; 
-	private String[] keywordSubs = { "@", ">", "<", "#", "%", "^", "*", "-", "+"};		
+	private String[] keywords =    {"if", "else", "while", "for", "class", "try", "catch", "throws", "interface"}; 
+	private String[] keywordSubs = { "@",    ">",     "<",   "#",     "%",   "^",     "*",      "-",         "+"};		
 		//"_, $, and & " are taken by letters, spaces, and tabs, respectively
 	
 	public Translator(String ogfilepath) {
@@ -22,8 +20,7 @@ public class Translator {
 		// takes given file and returns easy to read version, translator only deals with indents and keywords
 	public void translate() throws Exception {
 		BufferedReader bfr = new BufferedReader(new FileReader(ogfilepath));
-		String path = System.getProperty("user.home") + File.separator + "testing.java";
-		File dumpFile = new File(path);
+		String path = createDumpFile();
 		BufferedWriter bwr = new BufferedWriter(new FileWriter(path));
 		tempLine = bfr.readLine();
 		
@@ -84,6 +81,14 @@ public class Translator {
 			output = output.replaceAll("\\b" + keywords[i] + "\\b", keywordSubs[i]);
 		}
 		return output;
+	}
+	
+		// creates a dumpfile for translated documents that will be stored locally, temporarily. 
+		// May in future support option to check/validate files in dumplocation to prevent overwriting
+	public String createDumpFile() {
+		String path = System.getProperty("user.home") + File.separator + "testing.java";
+		File dumpFile = new File(path);
+		return dumpFile.getPath();
 	}
 	
 		// closes the reader, may remove
