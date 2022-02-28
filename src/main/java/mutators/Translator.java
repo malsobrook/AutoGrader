@@ -9,8 +9,8 @@ public class Translator {
 	private String newPath = "test2.java";
 	private char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 	private String tempLine;
-	private String[] keywords =    {"if", "else", "while", "for", "class", "try", "catch", "throws", "interface"}; 
-	private String[] keywordSubs = { "@",    ">",     "<",   "#",     "%",   "^",     "*",      "-",         "+"};		
+	private String[] keywords =    {"if", "else", "while", "for", "class", "try", "catch", "throws", "interface", "public", "private", "protected"}; 
+	private String[] keywordSubs = { "@",    ">",     "<",   "#",     "%",   "^",     "*",      "-",         "+", 	   "~",       ":",         "/"};		
 		//"_, $, and & " are taken by letters, spaces, and tabs, respectively
 	
 	public Translator(String ogfilepath) {
@@ -33,7 +33,7 @@ public class Translator {
 		bfr.close();
 		bwr.close();
 		
-		IndentAnalyzer idt = new IndentAnalyzer(newPath);
+		IndentAnalyzer idt = new IndentAnalyzer(path);
 	}
 	
 	

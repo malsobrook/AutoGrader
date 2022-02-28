@@ -12,8 +12,13 @@ public class IndentAnalyzer implements Analyzer{
 	private int idtTab = 0;
 	private int idtSpace = 0;
 	private int spaceCount = 0;
+	private int exptIdt = 0;
+	private int actualIdt = 0;
+	private int bktCountO = 0;
+	private int bktCountC = 0;
 	private int spaceIndex;	//when customizing how many spaces is an indent, change this var from default (4) in constructor
 	private boolean checker = false;
+	private char[] iso = {'@', '<', '>', '#', '^', '*'};
 	
 	public IndentAnalyzer(String filepath) throws Exception {
 		this.filePath = filepath;
@@ -32,7 +37,6 @@ public class IndentAnalyzer implements Analyzer{
 			// indentation ends upon the first character
 		while (tempLine != null) {
 			charArray = tempLine.toCharArray();
-			checker = false;
 			indentCounter(charArray);	// count the indents, counts separated by type.
 			
 				// logic to assess indent level
@@ -63,10 +67,6 @@ public class IndentAnalyzer implements Analyzer{
 		return null;
 	}
 	
-	public void idtReset() {
-		spaceCount = 0;
-	}
-	
 	public boolean isSpace(char c) {
 		if (c == '$') {
 			return true;
@@ -85,21 +85,42 @@ public class IndentAnalyzer implements Analyzer{
 	
 		// parse line as char array looking for specific symbols that require indents. Also examines the indent level 
 		// in comparison to the expected level
-	public void indentCorrecter(char charArrray[]) {
-		// body
+	public void indentCorrecter(char charArray[]) {
+		for (int i=0; i<charArray.length;i++) {
+			if (linearSearch(charArray[i])) {
+				exptIdt++;
+			}
+		}
 		
+	}
+	
+	public boolean linearSearch(char c) {
+		boolean out = false;
+		for (int i=0; i < iso.length; i++) {
+			if (c == iso[i]) {
+				return out = true;
+			}
+		}
+		
+		return out;
+	}
+	
+	public boolean bracketCheck() {
+		//todo
+		return false;
 	}
 	
 		// void for now / takes char array of line being read and adjust relevant variables to count indents
 	public void indentCounter(char charArray[]) {
+		checker = false;
 		for (char c: charArray) {
-			if (checker ==  false) {	// checker indicates if we have encountered a non indent character, thus skips the rest of the line.
+			if (checker ==  false) {	// checker indicates if we have encountered a non indent character, then skips the rest of the line.
 				if ( isSpace(c) || isTab(c) ) {
 					if ( isSpace(c) ) {
 						// space count +1, asses if equal to spaceIndex var, default is currently 4, then reset space counter
 						spaceCount++;
 						if (spaceCount >= spaceIndex) {
-							idtReset();
+							spaceCount = 0;
 							idtSpace++;
 						}
 					}
@@ -112,6 +133,6 @@ public class IndentAnalyzer implements Analyzer{
 			}
 		}
 			// reset the spaceCount to 0 before reading a newline
-		idtReset();
+		spaceCount = 0;
 	}
 }
