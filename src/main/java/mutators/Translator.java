@@ -7,10 +7,11 @@ import mutators.*;
 public class Translator {
 	private String ogfilepath;
 	private String newPath = "test2.java";
+	private String path2 = "test3.java";
 	private char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 	private String tempLine;
 	private String[] keywords =    {"if", "else", "while", "for", "class", "try", "catch", "throws", "interface", "public", "private", "protected"}; 
-	private String[] keywordSubs = { "@",    ">",     "<",   "#",     "%",   "^",     "*",      "-",         "+", 	   "~",       ":",         "/"};		
+	private String[] keywordSubs = { "@",    "!",     "?",   "#",     "%",   "^",     "*",      "-",         "+", 	   "~",       ":",         "/"};		
 		//"_, $, and & " are taken by letters, spaces, and tabs, respectively
 	
 	public Translator(String ogfilepath) {
@@ -22,9 +23,18 @@ public class Translator {
 		BufferedReader bfr = new BufferedReader(new FileReader(ogfilepath));
 		String path = createDumpFile();
 		BufferedWriter bwr = new BufferedWriter(new FileWriter(path));
+		BufferedWriter writer = new BufferedWriter(new FileWriter(path2));
 		tempLine = bfr.readLine();
 		
 		while(tempLine != null) {
+				// testing newer, limted translate to path2
+			String thing = tempLine;
+			thing = whiteOut(thing);
+			thing = spaceTabTransform(thing);
+			writer.write(thing + "\n");
+			
+			
+				// original translate to path
 			tempLine = aggregateFunction(tempLine);
 			bwr.write(tempLine + "\n");
 			tempLine = bfr.readLine();
@@ -33,7 +43,8 @@ public class Translator {
 		bfr.close();
 		bwr.close();
 		
-		IndentAnalyzer idt = new IndentAnalyzer(path);
+			// if desired to go back to original, change to path.
+		IndentAnalyzer idt = new IndentAnalyzer(path2);
 	}
 	
 	
@@ -86,9 +97,15 @@ public class Translator {
 		// creates a dumpfile for translated documents that will be stored locally, temporarily. 
 		// May in future support option to check/validate files in dumplocation to prevent overwriting
 	public String createDumpFile() {
-		String path = System.getProperty("user.home") + File.separator + "testing.java";
+		String path = System.getProperty("user.home") + File.separator + "dump.java";
 		File dumpFile = new File(path);
 		return dumpFile.getPath();
+	}
+	
+	public String newFile(String path) {
+		File newFile = new File(System.getProperty("user.home") + File.separator + path);
+		return newFile.getPath();
+		
 	}
 	
 		// closes the reader, may remove

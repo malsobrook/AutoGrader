@@ -2,23 +2,27 @@ package mutators;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import General.Reporter;
 	
 	// class is passed filepath of translated file to assess the consistency of indentation
 	// does not currently assess if the indentation is proper or in line with java style expectations
 	// after testing, will insert a function that checks against a preselected indentation convention (tabs or spaces)
 public class IndentAnalyzer implements Analyzer{
-
+	
+	private String[] keywords =    {"if", "else", "while", "for", "class", "try", "catch", "throws", "interface", "public", "private", "protected"}; 
 	private String filePath;
 	private int idtTab = 0;
 	private int idtSpace = 0;
 	private int spaceCount = 0;
+	private int tempCount = 0;
 	private int exptIdt = 0;
 	private int actualIdt = 0;
 	private int bktCountO = 0;
 	private int bktCountC = 0;
 	private int spaceIndex;	//when customizing how many spaces is an indent, change this var from default (4) in constructor
 	private boolean checker = false;
-	private char[] iso = {'@', '<', '>', '#', '^', '*'};
+	public Reporter repo = new Reporter("Indent");
+	private char[] iso = {'@', '!', '?', '#', '^', '*'};
 	
 	public IndentAnalyzer(String filepath) throws Exception {
 		this.filePath = filepath;
@@ -37,9 +41,8 @@ public class IndentAnalyzer implements Analyzer{
 			// indentation ends upon the first character
 		while (tempLine != null) {
 			charArray = tempLine.toCharArray();
-			indentCounter(charArray);	// count the indents, counts separated by type.
-			
-				// logic to assess indent level
+			int tc = indentCounter(charArray);	// count the indents, counts separated by type. returns indent level for the line
+			indentCorrecter(charArray, tc); 
 			
 			
 			tempLine = bfr.readLine();
@@ -50,6 +53,7 @@ public class IndentAnalyzer implements Analyzer{
 		bfr.close();
 			// testing feature
 		String str = "Indent Consistency:	Spaces: " + idtSpace + "	Tabs: " + idtTab;
+		
 		System.out.println(str);
 			// remove later
 		return str;
@@ -85,10 +89,10 @@ public class IndentAnalyzer implements Analyzer{
 	
 		// parse line as char array looking for specific symbols that require indents. Also examines the indent level 
 		// in comparison to the expected level
-	public void indentCorrecter(char charArray[]) {
+	public void indentCorrecter(char charArray[], int lineCount) {
 		for (int i=0; i<charArray.length;i++) {
 			if (linearSearch(charArray[i])) {
-				exptIdt++;
+				
 			}
 		}
 		
@@ -111,7 +115,8 @@ public class IndentAnalyzer implements Analyzer{
 	}
 	
 		// void for now / takes char array of line being read and adjust relevant variables to count indents
-	public void indentCounter(char charArray[]) {
+	public int indentCounter(char charArray[]) {
+		tempCount = 0;
 		checker = false;
 		for (char c: charArray) {
 			if (checker ==  false) {	// checker indicates if we have encountered a non indent character, then skips the rest of the line.
@@ -122,10 +127,12 @@ public class IndentAnalyzer implements Analyzer{
 						if (spaceCount >= spaceIndex) {
 							spaceCount = 0;
 							idtSpace++;
+							tempCount++;
 						}
 					}
 					if ( isTab(c) ) {
 						idtTab++;
+						tempCount++;
 					}
 				} else {
 					checker = true;	
@@ -134,5 +141,6 @@ public class IndentAnalyzer implements Analyzer{
 		}
 			// reset the spaceCount to 0 before reading a newline
 		spaceCount = 0;
+		return tempCount;
 	}
 }
