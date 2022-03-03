@@ -18,9 +18,8 @@ public class Reporter {
 	}
 	
 	
-	public void lineStore(int lineNumb, String errorType) {
+	public void errorGen(int lineNumb, String errorType) {
 		map.put(lineNumb, errorType);
-		
 	}
 	
 	public void mapDone() {

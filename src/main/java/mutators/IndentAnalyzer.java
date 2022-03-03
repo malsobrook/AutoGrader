@@ -9,16 +9,15 @@ import General.Reporter;
 	// after testing, will insert a function that checks against a preselected indentation convention (tabs or spaces)
 public class IndentAnalyzer implements Analyzer{
 	
-	private String[] keywords =    {"if", "else", "while", "for", "class", "try", "catch", "throws", "interface", "public", "private", "protected"}; 
+	private String[] keywords = {"if", "else", "while", "for", "class", "try", "catch", "throws", "interface", "public", "private", "protected"}; 
 	private String filePath;
+	private int tfm = 0;	// Used as bracket counter
 	private int idtTab = 0;
 	private int idtSpace = 0;
 	private int spaceCount = 0;
 	private int tempCount = 0;
 	private int exptIdt = 0;
-	private int actualIdt = 0;
-	private int bktCountO = 0;
-	private int bktCountC = 0;
+	public int lineNumb = 0;
 	private int spaceIndex;	//when customizing how many spaces is an indent, change this var from default (4) in constructor
 	private boolean checker = false;
 	public Reporter repo = new Reporter("Indent");
@@ -34,6 +33,7 @@ public class IndentAnalyzer implements Analyzer{
 	public String analyze() throws Exception {
 		BufferedReader bfr = new BufferedReader(new FileReader(filePath));
 		String tempLine = bfr.readLine();
+		lineNumb++;
 		char charArray[];
 		
 			// tempLine not being null implies there will be char to make into array
@@ -46,6 +46,7 @@ public class IndentAnalyzer implements Analyzer{
 			
 			
 			tempLine = bfr.readLine();
+			lineNumb++;
 			
 		}
 		
@@ -89,11 +90,20 @@ public class IndentAnalyzer implements Analyzer{
 	
 		// parse line as char array looking for specific symbols that require indents. Also examines the indent level 
 		// in comparison to the expected level
-	public void indentCorrecter(char charArray[], int lineCount) {
+	public void indentCorrecter(char charArray[], int idtLevel) {
+			// assess indent level to expected indent level
+		if (!(exptIdt == idtLevel)) {
+			repo.errorGen(lineNumb, "indent error"); // make more specific in future version
+		}
+		
 		for (int i=0; i<charArray.length;i++) {
 			if (linearSearch(charArray[i])) {
-				
+				exptIdt++;
 			}
+			if (tfm > 0 ) {
+				bracketCheck(charArray[i]);
+			}
+			
 		}
 		
 	}
@@ -109,12 +119,11 @@ public class IndentAnalyzer implements Analyzer{
 		return out;
 	}
 	
-	public boolean bracketCheck() {
-		//todo
-		return false;
+	public void bracketCheck(char c) {
+		
 	}
 	
-		// void for now / takes char array of line being read and adjust relevant variables to count indents
+		// takes char array of line being read and adjust relevant variables to count indents, returns indent level of line read.
 	public int indentCounter(char charArray[]) {
 		tempCount = 0;
 		checker = false;

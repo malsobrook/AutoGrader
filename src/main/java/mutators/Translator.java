@@ -44,7 +44,7 @@ public class Translator {
 		bwr.close();
 		
 			// if desired to go back to original, change to path.
-		IndentAnalyzer idt = new IndentAnalyzer(path2);
+		IndentAnalyzer idt = new IndentAnalyzer(path);
 	}
 	
 	
@@ -53,6 +53,7 @@ public class Translator {
 		String output = input;
 		output = output.toLowerCase();
 		output = whiteOut(output);
+		output = removeSpecialChar(output);
 		output = keywordSwap(output);
 		output = noLetters(output);
 		output = spaceTabTransform(output);
@@ -64,6 +65,14 @@ public class Translator {
 		String output = input;
 		for (char x: alphabet) {
 			output = output.replace(x, '_');
+		}
+		return output;
+	}
+	
+	public String removeSpecialChar(String input) {
+		String output = input;
+		for(int i=0; i<keywordSubs.length;i++) {
+			output = output.replaceAll("(\\@|\\#|\\%|\\^|\\*|\\-|\\:|\\~|\\/|\\+|\\!|\\?)", "_");
 		}
 		return output;
 	}
