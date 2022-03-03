@@ -9,19 +9,28 @@ import General.Reporter;
 	// after testing, will insert a function that checks against a preselected indentation convention (tabs or spaces)
 public class IndentAnalyzer implements Analyzer{
 	
-	private String[] keywords = {"if", "else", "while", "for", "class", "try", "catch", "throws", "interface", "public", "private", "protected"}; 
 	private String filePath;
-	private int tfm = 0;	// Used as bracket counter
+		// counters
 	private int idtTab = 0;
 	private int idtSpace = 0;
 	private int spaceCount = 0;
 	private int tempCount = 0;
 	private int exptIdt = 0;
 	public int lineNumb = 0;
+	private int bCount = 0;
+		// checker variables
+	private boolean bt = false;
+	private boolean cont = false;
+	
+		// preference variables
+	private boolean OneTBS = true;		// default option is 1TBS (brace placement style: inline)
 	private int spaceIndex;	//when customizing how many spaces is an indent, change this var from default (4) in constructor
+	
 	private boolean checker = false;
 	public Reporter repo = new Reporter("Indent");
+		// meta symbols, loops  then class/methods
 	private char[] iso = {'@', '!', '?', '#', '^', '*'};
+	private char[] cm = {};
 	
 	public IndentAnalyzer(String filepath) throws Exception {
 		this.filePath = filepath;
@@ -54,6 +63,7 @@ public class IndentAnalyzer implements Analyzer{
 		bfr.close();
 			// testing feature
 		String str = "Indent Consistency:	Spaces: " + idtSpace + "	Tabs: " + idtTab;
+		System.out.println(repo.report());
 		
 		System.out.println(str);
 			// remove later
@@ -92,35 +102,88 @@ public class IndentAnalyzer implements Analyzer{
 		// in comparison to the expected level
 	public void indentCorrecter(char charArray[], int idtLevel) {
 			// assess indent level to expected indent level
-		if (!(exptIdt == idtLevel)) {
-			repo.errorGen(lineNumb, "indent error"); // make more specific in future version
+		if (cont) {
+			for (int i=0; i<charArray.length; i++) {
+				if (charArray[i] == '}') {
+					if (bCount == 0) {
+						exptIdt--;
+						cont = false;
+						break;
+					} else {
+						bCount--;
+					}
+				}
+				if (charArray[i] == '{') {
+					bCount++;
+				}
+			}
 		}
 		
-		for (int i=0; i<charArray.length;i++) {
-			if (linearSearch(charArray[i])) {
-				exptIdt++;
+		System.out.println("Line:" + lineNumb + "        " + idtLevel+ "    " + exptIdt);
+		if (idtLevel != exptIdt) {
+			repo.errorGen(lineNumb, "Indent Level Incorrect");
+		}
+		
+		if (bt) {
+			for (int i=0; i<charArray.length;i++) {
+				if (charArray[i] == '{' ) {
+					bt = false;
+					exptIdt++;
+				}
 			}
-			if (tfm > 0 ) {
-				bracketCheck(charArray[i]);
+			if (bt) {
+				bt = false; 
+				repo.errorGen(lineNumb, "Missing bracket according to K&R Style");
 			}
 			
 		}
 		
+			// line parser
+		for (int i=0; i<charArray.length;i++) {
+			if (keySearch(charArray[i])) {
+				if (OneTBS) {
+					boolean bool = false;
+					exptIdt++;
+					for (int j=i; j<charArray.length;j++) {
+						if (charArray[j] == '{') {
+							bool = true;
+							cont = true;
+						}
+					}
+					if (bool == false) {
+						repo.errorGen(lineNumb, "Missing bracket according to 1TBS");
+					}
+				} else {
+					for (int j=i; j<charArray.length;j++) {
+						if (charArray[j] == '{') {
+							repo.errorGen(lineNumb, "Bracket not placed according to K&R Style");
+						}
+					}
+					bt = true;
+				}
+			}
+			
+			
+
+		}
+		
 	}
 	
-	public boolean linearSearch(char c) {
-		boolean out = false;
+	public boolean bracketSearch(char c) {
+		if (c == '{') {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean keySearch(char c) {
 		for (int i=0; i < iso.length; i++) {
 			if (c == iso[i]) {
-				return out = true;
+				return true;
 			}
 		}
 		
-		return out;
-	}
-	
-	public void bracketCheck(char c) {
-		
+		return false;
 	}
 	
 		// takes char array of line being read and adjust relevant variables to count indents, returns indent level of line read.
