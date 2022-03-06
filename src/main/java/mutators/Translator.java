@@ -51,6 +51,7 @@ public class Translator {
 	
 	public String aggregateFunction(String input) {
 		String output = input;
+		output = detectMethod(output);
 		output = output.toLowerCase();
 		output = whiteOut(output);
 		output = removeSpecialChar(output);
@@ -101,6 +102,15 @@ public class Translator {
 			output = output.replaceAll("\\b" + keywords[i] + "\\b", keywordSubs[i]);
 		}
 		return output;
+	}
+	
+		// inputs special character in line if a method declaration is detected. Easiest way to detect methods of indent analyzer.
+	public String detectMethod(String input) {
+		if(input.matches("(?s).*\\b(public|private|protected|)\\b\\s+[\\$_\\w\\[\\]\\<\\>]+\\s+[\\$_\\w]+\\([^\\)]*\\).*")) {
+			input = (input.substring(0, input.length()/2) + "`" + input.substring(input.length()/2));
+			System.out.println(input);
+		}
+		return input;
 	}
 	
 		// creates a dumpfile for translated documents that will be stored locally, temporarily. 

@@ -37,10 +37,14 @@ public class Reporter {
 		map.remove(lineNumb);
 	}
 	
+		// returns large string of every error or null if no errors
 	public String report() {
 		String out = "";
-		for (int i=0; i<test.size(); i++) {
+		while ( !(test.isEmpty()) ) {
 			out = out + test.pop() +"\n";
+		}
+		if ( out.isBlank()) {
+			return null;
 		}
 		return out;
 	}

@@ -15,12 +15,15 @@ public class IndentAnalyzer implements Analyzer{
 	private int idtSpace = 0;
 	private int spaceCount = 0;
 	private int tempCount = 0;
+	private int blankCount;
 	private int exptIdt = 0;
 	public int lineNumb = 0;
 	private int bCount = 0;
+	private int nestLvl = 0;
 		// checker variables
 	private boolean bt = false;
 	private boolean cont = false;
+	private boolean errorFlag = false;
 	
 		// preference variables
 	private boolean OneTBS = true;		// default option is 1TBS (brace placement style: inline)
@@ -29,7 +32,8 @@ public class IndentAnalyzer implements Analyzer{
 	private boolean checker = false;
 	public Reporter repo = new Reporter("Indent");
 		// meta symbols, loops  then class/methods
-	private char[] iso = {'@', '!', '?', '#', '^', '*'};
+	private char[] iso = {'@', 	  '!', 	   '?',   '#',  '^',   '*',   '%',    '`'};
+						// if,   else,   while,   for,  try, catch, class, method 
 	private char[] cm = {};
 	
 	public IndentAnalyzer(String filepath) throws Exception {
@@ -48,6 +52,7 @@ public class IndentAnalyzer implements Analyzer{
 			// tempLine not being null implies there will be char to make into array
 			// char by char assess indent level, ending when encountering a character not representing space or tab
 			// indentation ends upon the first character
+		System.out.println("	  Actual	Expected");
 		while (tempLine != null) {
 			charArray = tempLine.toCharArray();
 			int tc = indentCounter(charArray);	// count the indents, counts separated by type. returns indent level for the line
@@ -63,9 +68,15 @@ public class IndentAnalyzer implements Analyzer{
 		bfr.close();
 			// testing feature
 		String str = "Indent Consistency:	Spaces: " + idtSpace + "	Tabs: " + idtTab;
-		System.out.println(repo.report());
+		String report = repo.report();
+		if (!(report == null)) {
+			str = str + "\n" + report;
+		} else {
+			str = str + "\nNo indent discrepancies detected";
+		}
 		
-		System.out.println(str);
+		
+		System.out.println("\n" + str);
 			// remove later
 		return str;
 	}
@@ -101,24 +112,36 @@ public class IndentAnalyzer implements Analyzer{
 		// parse line as char array looking for specific symbols that require indents. Also examines the indent level 
 		// in comparison to the expected level
 	public void indentCorrecter(char charArray[], int idtLevel) {
-			// assess indent level to expected indent level
+			// cont determines if a loop is currently in place and searches for the ending '}'
 		if (cont) {
 			for (int i=0; i<charArray.length; i++) {
 				if (charArray[i] == '}') {
 					if (bCount == 0) {
 						exptIdt--;
-						cont = false;
+						if ( nestLvl > 0) {
+							nestLvl--;
+							cont = true; // ensure cont stays true, nested loop level decrease by 1.
+						} else {
+							cont = false;
+						}
 						break;
 					} else {
 						bCount--;
 					}
 				}
+				if ( keySearch(charArray[i]) ) {
+					bCount--;
+				}
 				if (charArray[i] == '{') {
 					bCount++;
+					if (errorFlag) {
+						bCount--;
+					}
+					errorFlag = false;
 				}
 			}
 		}
-		
+			// assess indent level to expected indent level
 		System.out.println("Line:" + lineNumb + "        " + idtLevel+ "    " + exptIdt);
 		if (idtLevel != exptIdt) {
 			repo.errorGen(lineNumb, "Indent Level Incorrect");
@@ -142,16 +165,24 @@ public class IndentAnalyzer implements Analyzer{
 		for (int i=0; i<charArray.length;i++) {
 			if (keySearch(charArray[i])) {
 				if (OneTBS) {
-					boolean bool = false;
+					boolean bool = false;	// used to determine if '{' is found in-line or not
 					exptIdt++;
 					for (int j=i; j<charArray.length;j++) {
 						if (charArray[j] == '{') {
 							bool = true;
+							if (cont) {
+								nestLvl++;
+							}
 							cont = true;
 						}
 					}
 					if (bool == false) {
 						repo.errorGen(lineNumb, "Missing bracket according to 1TBS");
+						if (cont) {
+							nestLvl++;
+						}
+						cont = true;
+						errorFlag = true;	// used when '{' was anticipated but not found
 					}
 				} else {
 					for (int j=i; j<charArray.length;j++) {
@@ -160,6 +191,10 @@ public class IndentAnalyzer implements Analyzer{
 						}
 					}
 					bt = true;
+				}
+					// constructor finder
+				if (charArray[i] == '%') {
+					
 				}
 			}
 			
@@ -182,9 +217,10 @@ public class IndentAnalyzer implements Analyzer{
 				return true;
 			}
 		}
-		
 		return false;
 	}
+	
+		// constructor finder, access modifier > no other keywords > () > '{'
 	
 		// takes char array of line being read and adjust relevant variables to count indents, returns indent level of line read.
 	public int indentCounter(char charArray[]) {
@@ -213,6 +249,11 @@ public class IndentAnalyzer implements Analyzer{
 		}
 			// reset the spaceCount to 0 before reading a newline
 		spaceCount = 0;
+			// check if line is blank, if it is then return previous indent level
+		if(charArray.length ==  0) {
+			return blankCount;
+		}
+		blankCount = tempCount;
 		return tempCount;
 	}
 }
