@@ -3,6 +3,7 @@ package General;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 public class Reporter {
 		// stores two maps, one with all the linenumbers and error messages, and one with only one value
@@ -11,6 +12,7 @@ public class Reporter {
 	public Map<String, Map<Integer, String>> superMap = new HashMap<String, Map<Integer, String>>();
 	public ArrayList<Map<String, Map<Integer, String>>> mapList = new ArrayList<Map<String, Map<Integer, String>>>();
 	public String mapType;
+	public Stack<String> test = new Stack<String>();
 	
 	
 	public Reporter(String mapType) {
@@ -18,9 +20,9 @@ public class Reporter {
 	}
 	
 	
-	public void lineStore(int lineNumb, String errorType) {
+	public void errorGen(int lineNumb, String errorType) {
 		map.put(lineNumb, errorType);
-		
+		test.push(errorType + ": " + String.valueOf(lineNumb));
 	}
 	
 	public void mapDone() {
@@ -30,4 +32,21 @@ public class Reporter {
 	public Map<String, Map<Integer, String>> getSuperMap(){
 		return this.superMap;
 	}
+	
+	public void deleteError(int lineNumb) {
+		map.remove(lineNumb);
+	}
+	
+		// returns large string of every error or null if no errors
+	public String report() {
+		String out = "";
+		while ( !(test.isEmpty()) ) {
+			out = out + test.pop() +"\n";
+		}
+		if ( out.isBlank()) {
+			return null;
+		}
+		return out;
+	}
+	
 }

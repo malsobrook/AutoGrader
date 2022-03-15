@@ -44,15 +44,17 @@ public class Translator {
 		bwr.close();
 		
 			// if desired to go back to original, change to path.
-		IndentAnalyzer idt = new IndentAnalyzer(path2);
+		IndentAnalyzer idt = new IndentAnalyzer(path);
 	}
 	
 	
 	
 	public String aggregateFunction(String input) {
 		String output = input;
+		output = detectMethod(output);
 		output = output.toLowerCase();
 		output = whiteOut(output);
+		output = removeSpecialChar(output);
 		output = keywordSwap(output);
 		output = noLetters(output);
 		output = spaceTabTransform(output);
@@ -64,6 +66,14 @@ public class Translator {
 		String output = input;
 		for (char x: alphabet) {
 			output = output.replace(x, '_');
+		}
+		return output;
+	}
+	
+	public String removeSpecialChar(String input) {
+		String output = input;
+		for(int i=0; i<keywordSubs.length;i++) {
+			output = output.replaceAll("(\\@|\\#|\\%|\\^|\\*|\\-|\\:|\\~|\\/|\\+|\\!|\\?)", "_");
 		}
 		return output;
 	}
@@ -92,6 +102,15 @@ public class Translator {
 			output = output.replaceAll("\\b" + keywords[i] + "\\b", keywordSubs[i]);
 		}
 		return output;
+	}
+	
+		// inputs special character in line if a method declaration is detected. Easiest way to detect methods of indent analyzer.
+	public String detectMethod(String input) {
+		if(input.matches("(?s).*\\b(public|private|protected|)\\b\\s+[\\$_\\w\\[\\]\\<\\>]+\\s+[\\$_\\w]+\\([^\\)]*\\).*")) {
+			input = (input.substring(0, input.length()/2) + "`" + input.substring(input.length()/2));
+			System.out.println(input);
+		}
+		return input;
 	}
 	
 		// creates a dumpfile for translated documents that will be stored locally, temporarily. 
