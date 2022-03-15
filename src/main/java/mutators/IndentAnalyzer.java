@@ -25,16 +25,15 @@ public class IndentAnalyzer implements Analyzer{
 	private boolean cont = false;
 	private boolean errorFlag = false;
 	
-		// preference variables
+	// preference variables
 	private boolean OneTBS = true;		// default option is 1TBS (brace placement style: inline)
 	private int spaceIndex;	//when customizing how many spaces is an indent, change this var from default (4) in constructor
 	
 	private boolean checker = false;
 	public Reporter repo = new Reporter("Indent");
-		// meta symbols, loops  then class/methods
+	// meta symbols, loops  then class/methods
 	private char[] iso = {'@', 	  '!', 	   '?',   '#',  '^',   '*',   '%',    '`'};
 						// if,   else,   while,   for,  try, catch, class, method 
-	private char[] cm = {};
 	
 	public IndentAnalyzer(String filepath) throws Exception {
 		this.filePath = filepath;
@@ -49,9 +48,9 @@ public class IndentAnalyzer implements Analyzer{
 		lineNumb++;
 		char charArray[];
 		
-			// tempLine not being null implies there will be char to make into array
-			// char by char assess indent level, ending when encountering a character not representing space or tab
-			// indentation ends upon the first character
+		// tempLine not being null implies there will be char to make into array
+		// char by char assess indent level, ending when encountering a character not representing space or tab
+		// indentation ends upon the first character
 		System.out.println("	  Actual	Expected");
 		while (tempLine != null) {
 			charArray = tempLine.toCharArray();
@@ -66,7 +65,7 @@ public class IndentAnalyzer implements Analyzer{
 		
 		
 		bfr.close();
-			// testing feature
+		// testing feature
 		String str = "Indent Consistency:	Spaces: " + idtSpace + "	Tabs: " + idtTab;
 		String report = repo.report();
 		if (!(report == null)) {
@@ -77,14 +76,13 @@ public class IndentAnalyzer implements Analyzer{
 		
 		
 		System.out.println("\n" + str);
-			// remove later
+		// remove later
 		return str;
 	}
 
 	@Override
 	public void aggregateFunc() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -144,7 +142,9 @@ public class IndentAnalyzer implements Analyzer{
 			// assess indent level to expected indent level
 		System.out.println("Line:" + lineNumb + "        " + idtLevel+ "    " + exptIdt);
 		if (idtLevel != exptIdt) {
-			repo.errorGen(lineNumb, "Indent Level Incorrect");
+			if ( idtLevel != 321) {
+				repo.errorGen(lineNumb, "Indent Level Incorrect");
+			}
 		}
 		
 		if (bt) {
@@ -192,10 +192,7 @@ public class IndentAnalyzer implements Analyzer{
 					}
 					bt = true;
 				}
-					// constructor finder
-				if (charArray[i] == '%') {
-					
-				}
+				
 			}
 			
 			
@@ -249,9 +246,9 @@ public class IndentAnalyzer implements Analyzer{
 		}
 			// reset the spaceCount to 0 before reading a newline
 		spaceCount = 0;
-			// check if line is blank, if it is then return previous indent level
+			// check if line is blank, if it is then return a large number that indicates line to be skipped in indentCorrector() because it is blank
 		if(charArray.length ==  0) {
-			return blankCount;
+			return 321;
 		}
 		blankCount = tempCount;
 		return tempCount;

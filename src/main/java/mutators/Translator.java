@@ -73,7 +73,7 @@ public class Translator {
 	public String removeSpecialChar(String input) {
 		String output = input;
 		for(int i=0; i<keywordSubs.length;i++) {
-			output = output.replaceAll("(\\@|\\#|\\%|\\^|\\*|\\-|\\:|\\~|\\/|\\+|\\!|\\?)", "_");
+			output = output.replaceAll("(\\@|\\#|\\%|\\^|\\*|\\-|\\:|\\~|\\/|\\+|\\!|\\?|\\<|\\>)", "_");
 		}
 		return output;
 	}
@@ -108,7 +108,6 @@ public class Translator {
 	public String detectMethod(String input) {
 		if(input.matches("(?s).*\\b(public|private|protected|)\\b\\s+[\\$_\\w\\[\\]\\<\\>]+\\s+[\\$_\\w]+\\([^\\)]*\\).*")) {
 			input = (input.substring(0, input.length()/2) + "`" + input.substring(input.length()/2));
-			System.out.println(input);
 		}
 		return input;
 	}
