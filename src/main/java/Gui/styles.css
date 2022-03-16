@@ -1,0 +1,17 @@
+.title{
+    -fx-background-color: #4A6572;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: 900;
+    -fx-padding: 10px;
+    -fx-font-size: 18pt;
+}
+
+.backgroundMainPanel {
+	-fx-background-color: #344955;
+}
+
+.border{
+	-fx-border-color: #4A6572;
+	-fx-border-width: 2px;
+	-fx-background-color: #FFFFFF;
+}
