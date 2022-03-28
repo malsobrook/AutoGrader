@@ -253,4 +253,17 @@ public class IndentAnalyzer implements Analyzer{
 		blankCount = tempCount;
 		return tempCount;
 	}
+	
+	public void testermethodremove() {
+		if(true) {
+			
+		} else 	if (false) {
+			
+		} else if (false) {
+			
+		}	else 			if (true) {
+			
+		}
+		
+	}
 }
