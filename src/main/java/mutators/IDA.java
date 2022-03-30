@@ -1,19 +1,23 @@
 package mutators;
 
 import java.io.*;
-
+import General.Reportable;
 import General.Reporter;
 
-public class IDA {
-	String filePath;
+public class IDA implements Reportable{
+	
+	boolean OneTBS;
+	char[] carray;
+	char[] iso = {'@', 	  '!', 	   '?',   '#',  '^',   '*',   '%',    '`'};
 	int spaceIndex;
 	int lineNumb = 0;
-	char[] carray;
 	Reporter repo;
-	boolean OneTBS;
+	String filePath;
+	
 		// respective indent counters
 	int spaceC = 0;
 	int tabC = 0;
+	
 		// for IndentCorrector
 	boolean loopinpr = false;
 	boolean errorFlag = false;
@@ -27,8 +31,6 @@ public class IDA {
 	int unclosedbrackets = 0;
 	int expectedIdt = 0;
 	int nestLvl = 0;
-	
-	private char[] iso = {'@', 	  '!', 	   '?',   '#',  '^',   '*',   '%',    '`'};
 	
 	
 	public IDA (String filepath) throws Exception {
@@ -53,7 +55,7 @@ public class IDA {
 			lineNumb++;
 		}
 		System.out.println("\n\n\n|-----------------------------Report--------------------------------|");
-		String report = repo.report();
+		String report = report();
 		if(report != null) {
 			System.out.println(report);
 		} else {
@@ -113,6 +115,10 @@ public class IDA {
 		
 		
 		System.out.println("Line:" + lineNumb + "        " + actual + "    " + expectedIdt);
+		if (expectedIdt != actual) {
+				// insert a blank line handler here
+			this.repo.errorGen("Indentation error on", lineNumb);
+		}
 		
 		for (int i = 0; i < ca.length; i++) {
 			// if we find a keyword
@@ -177,5 +183,10 @@ public class IDA {
 		return false;
 	}
 	
+		// called externally to get all reports of this type.
+	public String report() {
+		String str = repo.report();
+		return str;
+	}
 	
 }

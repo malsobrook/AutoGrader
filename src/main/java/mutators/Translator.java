@@ -45,6 +45,7 @@ public class Translator {
 			// if desired to go back to original, change to path.
 			// IndentAnalyzer idt = new IndentAnalyzer(path);
 		IDA ida = new IDA(path);
+		
 	}
 	
 	
@@ -164,13 +165,11 @@ public class Translator {
 		bfr.close();
 	}
 	
-		// passes an untranslated line to an Analyzer that may require it
-	public void passLine(String line) {
-		//TODO pass line before translation to naming convention analyzer.
-	}
-	
-		// passes the original file path to an Analyzer that may require it
-	public void passFile(String filePath) {
-		//TODO pass newPath variable to analyzer
+	public String report() {
+		// for each subfile that makes a report
+			// append that report to a stringbuilder via its method
+		// then return that String
+		
+		return null;
 	}
 }
