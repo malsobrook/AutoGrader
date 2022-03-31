@@ -31,20 +31,18 @@ public class BracketAnalyzer implements Analyzer{
 		this.analyze();
 
 	}
+	
+	@Override
+	public String analyze() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	@Override
 	public void aggregateFunc() {
 		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
-	public String keyFinder(String line) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
 
 	@Override
 	public void analyze() throws Exception {
@@ -99,6 +97,9 @@ public class BracketAnalyzer implements Analyzer{
 			}
 		}
 		return false;
+	public String keyFinder(String line) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

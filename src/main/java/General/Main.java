@@ -6,6 +6,8 @@ import javax.swing.JFileChooser;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import java.io.File;
+
+import mutators.IndentAnalyzer;
 import mutators.Translator;
 
 
@@ -13,7 +15,7 @@ public class Main {
 	
 	private static String filepath;
 	
-	public static void main(String args[]) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+	public static void main(String args[]) throws Exception {
 		
 			// set better look and feel. Throws happen here.
 		UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -36,6 +38,10 @@ public class Main {
 			System.out.println("error on pass to Translator");
 			e.printStackTrace();
 		}
+		
+		
+		System.out.println("\n\n\n|-----------------------------Report--------------------------------|");
+		
 		System.out.println("done");
 		
 		// main program should have no other function besides launching and passing to respective mutators. ???
