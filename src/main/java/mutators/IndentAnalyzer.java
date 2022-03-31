@@ -143,7 +143,7 @@ public class IndentAnalyzer implements Analyzer{
 		System.out.println("Line:" + lineNumb + "        " + idtLevel+ "    " + exptIdt);
 		if (idtLevel != exptIdt) {
 			if ( idtLevel != 321) {
-				repo.errorGen(lineNumb, "Indent Level Incorrect");
+				repo.errorGen("Indent Level Incorrect", lineNumb);
 			}
 		}
 		
@@ -156,7 +156,7 @@ public class IndentAnalyzer implements Analyzer{
 			}
 			if (bt) {
 				bt = false; 
-				repo.errorGen(lineNumb, "Missing bracket according to K&R Style");
+				repo.errorGen("Missing bracket according to K&R Style", lineNumb);
 			}
 			
 		}
@@ -177,7 +177,7 @@ public class IndentAnalyzer implements Analyzer{
 						}
 					}
 					if (bool == false) {
-						repo.errorGen(lineNumb, "Missing bracket according to 1TBS");
+						repo.errorGen("Missing bracket according to 1TBS", lineNumb);
 						if (cont) {
 							nestLvl++;
 						}
@@ -187,7 +187,7 @@ public class IndentAnalyzer implements Analyzer{
 				} else {
 					for (int j=i; j<charArray.length;j++) {
 						if (charArray[j] == '{') {
-							repo.errorGen(lineNumb, "Bracket not placed according to K&R Style");
+							repo.errorGen("Bracket not placed according to K&R Style", lineNumb);
 						}
 					}
 					bt = true;
@@ -252,18 +252,5 @@ public class IndentAnalyzer implements Analyzer{
 		}
 		blankCount = tempCount;
 		return tempCount;
-	}
-	
-	public void testermethodremove() {
-		if(true) {
-			
-		} else 	if (false) {
-			
-		} else if (false) {
-			
-		}	else 			if (true) {
-			
-		}
-		
 	}
 }
