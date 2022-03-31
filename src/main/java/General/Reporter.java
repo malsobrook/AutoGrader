@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-public class Reporter {
+public class Reporter implements Reportable {
 		// stores two maps, one with all the linenumbers and error messages, and one with only one value
 		// the first value is the type of error (brackets, indents, comments, etc) and the other value the previous map.
 	public Map<Integer, String> map = new HashMap<Integer, String>();
@@ -20,7 +20,7 @@ public class Reporter {
 	}
 	
 	
-	public void errorGen(int lineNumb, String errorType) {
+	public void errorGen(String errorType, int lineNumb) {
 		map.put(lineNumb, errorType);
 		test.push(errorType + ": " + String.valueOf(lineNumb));
 	}

@@ -6,12 +6,11 @@ import mutators.*;
 
 public class Translator {
 	private String ogfilepath;
-	private String newPath = "test2.java";
 	private String path2 = "test3.java";
 	private char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 	private String tempLine;
-	private String[] keywords =    {"if", "else", "while", "for", "class", "try", "catch", "throws", "interface", "public", "private", "protected"}; 
-	private String[] keywordSubs = { "@",    "!",     "?",   "#",     "%",   "^",     "*",      "-",         "+", 	   "~",       ":",         "/"};		
+	private String[] keywords =    {"if", "else", "while", "for", "class", "try", "catch", "throws", "interface"}; 
+	private String[] keywordSubs = { "@",    "!",     "?",   "#",     "%",   "^",     "*",      "-",         "+"};
 		//"_, $, and & " are taken by letters, spaces, and tabs, respectively
 	
 	public Translator(String ogfilepath) {
@@ -44,17 +43,23 @@ public class Translator {
 		bwr.close();
 		
 			// if desired to go back to original, change to path.
-		IndentAnalyzer idt = new IndentAnalyzer(path);
+			// IndentAnalyzer idt = new IndentAnalyzer(path);
+		IDA ida = new IDA(path);
+		
 	}
 	
 	
 	
 	public String aggregateFunction(String input) {
 		String output = input;
-		output = detectMethod(output);
 		output = output.toLowerCase();
 		output = whiteOut(output);
 		output = removeSpecialChar(output);
+		output = commentRemover(output);
+		output = emptyQuotes(output);
+		output = detectMethod(output);
+		output = elifCondenser(output);
+		output = bracketCondenser(output);
 		output = keywordSwap(output);
 		output = noLetters(output);
 		output = spaceTabTransform(output);
@@ -73,7 +78,7 @@ public class Translator {
 	public String removeSpecialChar(String input) {
 		String output = input;
 		for(int i=0; i<keywordSubs.length;i++) {
-			output = output.replaceAll("(\\@|\\#|\\%|\\^|\\*|\\-|\\:|\\~|\\/|\\+|\\!|\\?|\\<|\\>)", "_");
+			output = output.replaceAll("(\\@|\\#|\\%|\\^|\\*|\\-|\\:|\\~|\\+|\\!|\\?|\\<|\\>)", "_");
 		}
 		return output;
 	}
@@ -89,9 +94,38 @@ public class Translator {
 	
 		// turns all spaces to $ and all tabs to &
 	public String spaceTabTransform(String input) {
-		String output = null;
+		String output = input;
 		output = input.replace(' ', '$');
 		output = output.replace('\t', '&');
+		return output;
+	}
+	
+		// empties ALL characters out of quotes to avoid reading of String Literals
+	public String emptyQuotes(String input) {
+		String output = input;
+		output = output.replaceAll("\\'.*\\'", "_");
+		output = output.replaceAll("\\\".*\\\"", "_");
+		return output;
+	}
+		
+		// gets rid of SINGLE LINE comments, To Be Updated
+	public String commentRemover(String input) {
+		String output = input;
+		output = output.replaceAll("//.*", "_");
+		return output;
+	}
+	
+		// condenses "else if" statements into one token, to avoid reading them as two tokens
+	public String elifCondenser(String input) {
+		String output = input;
+		output = output.replaceAll("else\\s+if", "!");
+		return output;
+	}
+	
+		// condense/remove brackets that open and close in the same line. Requires testing for nested occurrences
+	public String bracketCondenser(String input) {
+		String output = input;
+		output = output.replaceAll("\\{.*\\}", "_'");
 		return output;
 	}
 	
@@ -131,13 +165,11 @@ public class Translator {
 		bfr.close();
 	}
 	
-		// passes an untranslated line to an Analyzer that may require it
-	public void passLine(String line) {
-		//TODO pass line before translation to naming convention analyzer.
-	}
-	
-		// passes the original file path to an Analyzer that may require it
-	public void passFile(String filePath) {
-		//TODO pass newPath variable to analyzer
+	public String report() {
+		// for each subfile that makes a report
+			// append that report to a stringbuilder via its method
+		// then return that String
+		
+		return null;
 	}
 }

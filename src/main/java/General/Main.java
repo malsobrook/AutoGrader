@@ -38,6 +38,10 @@ public class Main {
 			System.out.println("error on pass to Translator");
 			e.printStackTrace();
 		}
+		
+		
+		System.out.println("\n\n\n|-----------------------------Report--------------------------------|");
+		
 		System.out.println("done");
 		
 		// main program should have no other function besides launching and passing to respective mutators. ???
