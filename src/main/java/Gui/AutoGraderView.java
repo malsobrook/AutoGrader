@@ -1,21 +1,16 @@
-package Gui.views;
+package Gui;
 
-import Gui.AutoGraderApp;
-import Gui.models.UserSettings;
+import Gui.UserSettings.BracketStyles;
+import Gui.UserSettings.IndentationStyles;
 import javafx.collections.FXCollections;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Accordion;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
@@ -120,7 +115,7 @@ public class AutoGraderView {
     private VBox createView(){
         VBox vBox = new VBox(15);
         vBox.setPadding(new Insets(15));
-        vBox.getStylesheets().addAll(AutoGraderApp.class.getResource("/css/styles.css").toExternalForm());
+        vBox.getStylesheets().addAll(App.class.getResource("styles.css").toExternalForm());
         vBox.getStyleClass().add("backgroundMainPanel");
         vBox.getChildren().add(createFileChooserRegion());
         

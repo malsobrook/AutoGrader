@@ -1,17 +1,16 @@
-package Gui.controllers;
+package Gui;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import com.google.gson.Gson;
 
-import Gui.models.UserSettings;
-import Gui.models.UserSettings.BracketStyles;
-import Gui.models.UserSettings.IndentationStyles;
-import Gui.views.AutoGraderView;
+import Gui.UserSettings.BracketStyles;
+import Gui.UserSettings.IndentationStyles;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
@@ -23,7 +22,7 @@ import javafx.stage.FileChooser;
 public class MainViewController {
 
     //Model
-    List<File> fileList;
+    List<File> fileList = new ArrayList<File>();
     UserSettings obj;
 
     public MainViewController(AutoGraderView view){
@@ -31,17 +30,6 @@ public class MainViewController {
     }
 
     public void setView(AutoGraderView view){    
-        //link Model with View
-        //view.getAccountHolderDetailsLabel().textProperty().bind(account.accountHolderProperty());
-        //view.getAccountBalanceDetailsLabel().textProperty().bind(account.accountBalanceProperty().asString());
-        
-        //link Controller to View - methods for buttons
-		/*
-		 * view.getDepositButton().setOnAction(event -> {
-		 * account.deposit(getAmount(view.getAmountTextField())); event.consume(); });
-		 * view.getWithdrawalButton().setOnAction(event -> {
-		 * account.withdraw(getAmount(view.getAmountTextField())); event.consume(); });
-		 */
     	loadSettings(view);
         
         //This is where we connect the run button to the logic setup to execute over the files.
