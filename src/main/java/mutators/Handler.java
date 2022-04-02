@@ -41,7 +41,7 @@ public class Handler {
 		bfr.close();
 		bwr.close();
 		
-		BracketAnalyzer bra = new BracketAnalyzer(path);
+		// BracketAnalyzer bra = new BracketAnalyzer(path);
 		IDA ida = new IDA(path);
 		
 	}
@@ -138,7 +138,7 @@ public class Handler {
 	
 		// inputs special character in line if a method declaration is detected. Easiest way to detect methods of indent analyzer.
 	public String detectMethod(String input) {
-		if(input.matches("(?s).*\\b(public|private|protected|)\\b\\s+[\\$_\\w\\[\\]\\<\\>]+\\s+[\\$_\\w]+\\([^\\)]*\\).*")) {
+		if(input.matches("(?s).*\\b(public|private|protected|)\\b\\s+[\\$_\\w\\[\\]\\<\\>]+\\s+[\\$_\\w]+\\s*\\([^\\)]*\\).*")) {
 			input = (input.substring(0, input.length()/2) + "`" + input.substring(input.length()/2));
 		}
 		return input;

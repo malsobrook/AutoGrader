@@ -114,11 +114,19 @@ public class IDA implements Reportable{
 		}
 		
 		
-		System.out.println("Line:" + lineNumb + "        " + actual + "    " + expectedIdt);
-		if (expectedIdt != actual) {
-				// insert a blank line handler here
-			this.repo.errorGen("Indentation error on", lineNumb);
+		if (ca.length == 0) {
+			System.out.println("Line:" + lineNumb + "        " + "B" + "    " + expectedIdt);	// B for Blank Line
+		} else {
+			System.out.println("Line:" + lineNumb + "        " + actual + "    " + expectedIdt);
 		}
+		if (expectedIdt != actual) {
+				if (ca.length == 0) {
+					// ignore for now
+				} else {
+					this.repo.errorGen("Indentation error on", lineNumb);
+				}
+		}
+		
 		
 		for (int i = 0; i < ca.length; i++) {
 			// if we find a keyword

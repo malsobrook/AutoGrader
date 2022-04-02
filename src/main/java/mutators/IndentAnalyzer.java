@@ -4,13 +4,15 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import General.Reporter;
 	
-	// class is passed filepath of translated file to assess the consistency of indentation
-	// does not currently assess if the indentation is proper or in line with java style expectations
-	// after testing, will insert a function that checks against a preselected indentation convention (tabs or spaces)
+// FILE OUT OF USE, DO NOT CALL FILE METHODS, DOES NOT RUN. FOR TESTING PURPOSES ONLY.
+
+// class is passed filepath of translated file to assess the consistency of indentation
+// does not currently assess if the indentation is proper or in line with java style expectations
+// after testing, will insert a function that checks against a preselected indentation convention (tabs or spaces)
 public class IndentAnalyzer implements Analyzer{
 	
 	private String filePath;
-		// counters
+	// counters
 	private int idtTab = 0;
 	private int idtSpace = 0;
 	private int spaceCount = 0;
@@ -20,7 +22,7 @@ public class IndentAnalyzer implements Analyzer{
 	public int lineNumb = 0;
 	private int bCount = 0;
 	private int nestLvl = 0;
-		// checker variables
+	// checker variables
 	private boolean bt = false;
 	private boolean cont = false;
 	private boolean errorFlag = false;
@@ -107,10 +109,10 @@ public class IndentAnalyzer implements Analyzer{
 		}
 	}
 	
-		// parse line as char array looking for specific symbols that require indents. Also examines the indent level 
-		// in comparison to the expected level
+	// parse line as char array looking for specific symbols that require indents. Also examines the indent level 
+	// in comparison to the expected level
 	public void indentCorrecter(char charArray[], int idtLevel) {
-			// cont determines if a loop is currently in place and searches for the ending '}'
+		// cont determines if a loop is currently in place and searches for the ending '}'
 		if (cont) {
 			for (int i=0; i<charArray.length; i++) {
 				if (charArray[i] == '}') {
@@ -139,7 +141,7 @@ public class IndentAnalyzer implements Analyzer{
 				}
 			}
 		}
-			// assess indent level to expected indent level
+		// assess indent level to expected indent level
 		System.out.println("Line:" + lineNumb + "        " + idtLevel+ "    " + exptIdt);
 		if (idtLevel != exptIdt) {
 			if ( idtLevel != 321) {
@@ -161,7 +163,7 @@ public class IndentAnalyzer implements Analyzer{
 			
 		}
 		
-			// line parser
+		// line parser
 		for (int i=0; i<charArray.length;i++) {
 			if (keySearch(charArray[i])) {
 				if (OneTBS) {
@@ -217,9 +219,9 @@ public class IndentAnalyzer implements Analyzer{
 		return false;
 	}
 	
-		// constructor finder, access modifier > no other keywords > () > '{'
+	// constructor finder, access modifier > no other keywords > () > '{'
 	
-		// takes char array of line being read and adjust relevant variables to count indents, returns indent level of line read.
+	// takes char array of line being read and adjust relevant variables to count indents, returns indent level of line read.
 	public int indentCounter(char charArray[]) {
 		tempCount = 0;
 		checker = false;
@@ -244,9 +246,9 @@ public class IndentAnalyzer implements Analyzer{
 				}
 			}
 		}
-			// reset the spaceCount to 0 before reading a newline
+		// reset the spaceCount to 0 before reading a newline
 		spaceCount = 0;
-			// check if line is blank, if it is then return a large number that indicates line to be skipped in indentCorrector() because it is blank
+		// check if line is blank, if it is then return a large number that indicates line to be skipped in indentCorrector() because it is blank
 		if(charArray.length ==  0) {
 			return 321;
 		}

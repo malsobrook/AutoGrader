@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.io.LineNumberReader;
 
 
-public class BracketAnalyzer implements Reportable{
+public class BracketAnalyzer implements Reportable {
 
 	private final String filepath;
 	private int inLine = 0;
@@ -46,6 +46,14 @@ public class BracketAnalyzer implements Reportable{
 
 
 	public void bracketChecker (char CA[]) {
+		
+		// if anticipateNext is true
+			// set anticipateNext to false
+			// call method detectBracketNextLine()
+				// if method returns true, we found next line bracket, make appropriate changes
+			// else call an error "bracket anticipated, but never found
+					
+		
 		// for int i = 0 ; i<CA.length;i++
 			// if find keyword token
 				// determine if bracket is inline, if not, expect on next
@@ -53,36 +61,21 @@ public class BracketAnalyzer implements Reportable{
 				// make appropriate changes for inline dected
 		
 		
+		if (anticipateNext) {
+			if( ! ( detectBracketNextLine(CA) ) ) {
+				// make appropriate logs / changes
+			}
+		}
+		
 		for (int i = 0; i < CA.length; i++) {
 			if (keywordSearch(CA[i])) {
 				if(!(detectBracketInLine(CA, i))) {
 					anticipateNext = true;
+					// make appropriate logs / changes
 				}
 			}
 		}
-
-
-
-
-
-
-//		for (int i = 0; i < CA.length; i++) {
-//			if (methodSearch(CA[i])) {
-//				System.out.println("detected");
-//				if (CA[i] == '{') {
-//					after = bracketReader.getLineNumber();
-//					if (before == after) {
-//						oneTrueBraceStyle = true;
-//						inLine++;
-//					} else if (after > before) {
-//						allmanBraceStyle = true;
-//						nextLine++;
-//					}
-//				}
-//			} else {
-//				//System.out.println("noth");
-//			}
-//		}
+		
 	}
 
 	
@@ -90,10 +83,17 @@ public class BracketAnalyzer implements Reportable{
 	private boolean detectBracketInLine(char[] ca, int index) {
 		for (int i = index; i < ca.length; i++) {
 			if (ca[i] == '{') {
+				System.out.println("found inline bracket on:" + bracketReader.getLineNumber()); 	// this is only for testing purposes, delete when no longer necessary
 				return true;
 			}
 		}
 		return false;
+	}
+	
+	private boolean detectBracketNextLine(char[] ca) {
+		// assess if there's a bracket in this line, return true if true, otherwise false
+		
+		return true;	// placeholder, change as necessary
 	}
 
 		// uses char array to detect if char is present in our keyword array.
