@@ -4,33 +4,32 @@ import java.io.*;
 import java.util.Objects;
 import mutators.*;
 
-public class Translator {
+public class Handler {
 	private String ogfilepath;
-	private String path2 = "test3.java";
 	private char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 	private String tempLine;
 	private String[] keywords =    {"if", "else", "while", "for", "class", "try", "catch", "throws", "interface"}; 
 	private String[] keywordSubs = { "@",    "!",     "?",   "#",     "%",   "^",     "*",      "-",         "+"};
 		//"_, $, and & " are taken by letters, spaces, and tabs, respectively
 	
-	public Translator(String ogfilepath) {
+	public Handler(String ogfilepath) {
 		this.ogfilepath = Objects.requireNonNull(ogfilepath);
 	}
 	
 		// takes given file and returns easy to read version, translator only deals with indents and keywords
-	public void translate() throws Exception {
+	
+	// TODO VIST THIS METHOD TO REMOVE EXCESS WRITERS!!!!!!!!!!!!!!!
+	public void handle() throws Exception {
 		BufferedReader bfr = new BufferedReader(new FileReader(ogfilepath));
 		String path = createDumpFile();
 		BufferedWriter bwr = new BufferedWriter(new FileWriter(path));
-		BufferedWriter writer = new BufferedWriter(new FileWriter(path2));
 		tempLine = bfr.readLine();
 		
 		while(tempLine != null) {
-				// testing newer, limted translate to path2
+				// testing newer, limited translate to path2
 			String thing = tempLine;
 			thing = whiteOut(thing);
 			thing = spaceTabTransform(thing);
-			writer.write(thing + "\n");
 			
 			
 				// original translate to path
@@ -42,8 +41,7 @@ public class Translator {
 		bfr.close();
 		bwr.close();
 		
-			// if desired to go back to original, change to path.
-			// IndentAnalyzer idt = new IndentAnalyzer(path);
+		BracketAnalyzer bra = new BracketAnalyzer(path);
 		IDA ida = new IDA(path);
 		
 	}

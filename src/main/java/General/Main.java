@@ -1,6 +1,6 @@
 package General;
 // main class
-// main > translator > analyzer > flagging > production > done
+// main > handler > analyzer > flagging > production > done
 
 import javax.swing.JFileChooser;
 import javax.swing.UIManager;
@@ -8,7 +8,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import java.io.File;
 
 import mutators.IndentAnalyzer;
-import mutators.Translator;
+import mutators.Handler;
 
 
 public class Main {
@@ -31,9 +31,9 @@ public class Main {
 		}
 		
 			// send file path to translator
-		Translator trs = new Translator(filepath);
+		Handler trs = new Handler(filepath);
 		try {
-			trs.translate();
+			trs.handle();
 		} catch (Exception e) {
 			System.out.println("error on pass to Translator");
 			e.printStackTrace();
