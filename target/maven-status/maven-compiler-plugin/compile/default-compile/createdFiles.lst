@@ -1,0 +1,16 @@
+General\Main.class
+Gui\UserSettings$BracketStyles.class
+mutators\IndentAnalyzer.class
+Gui\UserSettings$IndentationStyles.class
+mutators\CommentAnalyzer.class
+General\Reportable.class
+mutators\NamingAnalyzer.class
+Gui\AutoGraderView.class
+mutators\Analyzer.class
+Gui\App.class
+mutators\IDA.class
+mutators\BracketAnalyzer.class
+Gui\MainViewController.class
+mutators\Handler.class
+General\Reporter.class
+Gui\UserSettings.class
