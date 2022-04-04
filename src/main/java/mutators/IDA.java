@@ -120,11 +120,11 @@ public class IDA implements Reportable{
 			System.out.println("Line:" + lineNumb + "        " + actual + "    " + expectedIdt);
 		}
 		if (expectedIdt != actual) {
-				if (ca.length == 0) {
-					// ignore for now
-				} else {
-					this.repo.errorGen("Indentation error on", lineNumb);
-				}
+			if (ca.length == 0) {
+				// ignore for now
+			} else {
+				this.repo.errorGen("Indentation error on", lineNumb);
+			}
 		}
 		
 		
