@@ -7,7 +7,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import java.io.File;
 
-import mutators.IndentAnalyzer;
+import mutators.IDAnalyzer;
 import mutators.Handler;
 
 

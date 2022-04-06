@@ -42,7 +42,7 @@ public class Handler {
 		bwr.close();
 		
 		// BracketAnalyzer bra = new BracketAnalyzer(path);
-		IDA ida = new IDA(path);
+		IDAnalyzer ida = new IDAnalyzer(path);
 		
 	}
 	
