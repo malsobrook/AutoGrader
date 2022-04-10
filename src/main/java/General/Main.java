@@ -5,6 +5,9 @@ package General;
 import javax.swing.JFileChooser;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
+import com.google.gson.Gson;
+
 import java.io.File;
 
 import mutators.IDAnalyzer;
@@ -14,6 +17,7 @@ import mutators.Handler;
 public class Main {
 	
 	private static String filepath;
+	public static Gson json = new Gson();
 	
 	public static void main(String args[]) throws Exception {
 		

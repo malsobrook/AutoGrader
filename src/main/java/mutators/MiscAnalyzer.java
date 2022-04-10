@@ -5,7 +5,7 @@ import General.Reportable;
 	// Going to use this class to generate and report on the simple features of the product
 public class MiscAnalyzer implements Reportable {
 
-	public MiscAnalyzer(String filepath) {
+	public MiscAnalyzer(String filepath /*int lineLength, boolean importAtTop, boolean commentB4Method */) {
 
 		
 	}

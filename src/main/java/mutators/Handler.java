@@ -12,7 +12,7 @@ public class Handler {
 	private String[] keywordSubs = { "@",    "!",     "?",   "#",     "%",   "^",     "*",      "-",         "+"};
 		//"_, $, and & " are taken by letters, spaces, and tabs, respectively
 	
-	public Handler(String ogfilepath) {
+	public Handler(String ogfilepath /* json object pass */) {
 		this.ogfilepath = Objects.requireNonNull(ogfilepath);
 	}
 	

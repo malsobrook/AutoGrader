@@ -33,7 +33,7 @@ public class IDAnalyzer implements Reportable{
 	int nestLvl = 0;
 	
 	
-	public IDAnalyzer (String filepath) throws Exception {
+	public IDAnalyzer (String filepath /*int spaceIndex, boolean OneTBSOn */) throws Exception {
 		this.filePath = filepath;
 		this.spaceIndex = 4;
 		this.repo = new Reporter(filePath);
