@@ -21,14 +21,14 @@ public class App extends Application {
         //Create Controller
     	MainViewController controller = new MainViewController(mainView);
 
-        //Show stage
+        //Show View
         stage.setTitle("AutoGrader App");
         stage.getIcons().add(new Image(getClass().getResource("AutoGraderIcon.png").toExternalForm()));
         stage.setScene(new Scene(mainView.getView()));
         stage.show();
     }
 
-    public static void main(String[] args) {
+    public static void start() {
         launch();
     }
 
