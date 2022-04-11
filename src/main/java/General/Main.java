@@ -9,46 +9,52 @@ import javax.swing.UnsupportedLookAndFeelException;
 import com.google.gson.Gson;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
+import picocli.CommandLine;
 import mutators.IDAnalyzer;
 import mutators.Handler;
 
-
 public class Main {
-	
+	//Populates from CommandLineParser if via CLI, or MainViewController if via GUI
+	public static List<File> fileList = new ArrayList<File>();
 	private static String filepath;
-	public static Gson json = new Gson();
 	
 	public static void main(String args[]) throws Exception {
-		
-			// set better look and feel. Throws happen here.
-		UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		
-		//do main things
-			// open file browser get and store file path
-		JFileChooser fc = new JFileChooser();
-		fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-		if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-			java.io.File file = fc.getSelectedFile();
-			System.out.println(file.getPath());
-			filepath = file.getPath();
+		if(args.length > 0) {
+			CommandLineParser parser = new CommandLineParser();
+			CommandLine.run(parser, args);
+		}
+		else {
+			Gui.App.start();
 		}
 		
-			// send file path to translator
-		Handler trs = new Handler(filepath);
 		try {
-			trs.handle();
-		} catch (Exception e) {
-			System.out.println("error on pass to Translator");
+			// set better look and feel. Throws happen here.
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		
-		System.out.println("\n\n\n|-----------------------------Report--------------------------------|");
-		
-		System.out.println("done");
-		
-		// main program should have no other function besides launching and passing to respective mutators. ???
-		// maybe remain open window to use the function multiple times
+		for(File file : fileList) {
+			Handler trs = new Handler(file.getAbsolutePath());
+			try {
+				trs.handle();
+			} catch (Exception e) {
+				System.out.println("error on pass to Translator");
+				e.printStackTrace();
+			}
+			
+			
+			System.out.println("\n\n\n|-----------------------------Report--------------------------------|");
+			
+			System.out.println("done");
+			
+			// main program should have no other function besides launching and passing to respective mutators. ???
+			// maybe remain open window to use the function multiple times
+		}
 	}
 }

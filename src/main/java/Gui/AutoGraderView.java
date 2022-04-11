@@ -15,6 +15,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 public class AutoGraderView {
 
@@ -22,6 +24,7 @@ public class AutoGraderView {
 	VBox fileChooserRegion = new VBox();
 	Button openFileButton = new Button("Open File");
 	Button runButton = new Button("Run");
+	Button clearButton = new Button("Clear");
 	Button saveButton = new Button("Save");
     
     //FORMATTING
@@ -42,6 +45,8 @@ public class AutoGraderView {
 	//FILE NAMING
 	
 	//MISC
+    Label invalidDirectoryLabel = new Label("Warning: Invalid directory.");
+    TextField reportDirectory = new TextField("100");
     CheckBox importsAtTopOfFile = new CheckBox("All import statements at the top of the file");
     CheckBox noBreakContinueOrGoTo = new CheckBox("Avoid break, continue, and goto statements");
 
@@ -62,6 +67,10 @@ public class AutoGraderView {
     
     public Button getRunButton() {
     	return runButton;
+    }
+    
+    public Button getClearButton() {
+    	return clearButton;
     }
     
     public Button getSaveButton() {
@@ -104,6 +113,14 @@ public class AutoGraderView {
     	return commentBeforeEachMethod;
     }
     
+    public Label invalidDirectoryLabel() {
+    	return invalidDirectoryLabel;
+    }
+    
+    public TextField getReportDirectory() {
+    	return reportDirectory;
+    }
+    
     public CheckBox getImportsAtTopOfFile() {
     	return importsAtTopOfFile;
     }
@@ -130,9 +147,9 @@ public class AutoGraderView {
         fileChooserRegion.setPrefWidth(200);
         fileChooserRegion.getStyleClass().add("border");
         
-        HBox buttonBox = new HBox(100);
+        HBox buttonBox = new HBox(15);
         buttonBox.setAlignment(Pos.TOP_RIGHT);
-        buttonBox.getChildren().addAll(openFileButton, runButton);
+        buttonBox.getChildren().addAll(openFileButton, clearButton, runButton);
         
         vBox.getChildren().addAll(fileChooserRegion, buttonBox);
         hBox.getChildren().addAll(vBox, createOptionPanels(), saveButton);
@@ -242,8 +259,10 @@ public class AutoGraderView {
     	/* Phase 3
     	CheckBox option6 = new CheckBox("Put all code in a package in Java");
     	*/
-    	
-        vBox.getChildren().addAll(importsAtTopOfFile, noBreakContinueOrGoTo);
+        invalidDirectoryLabel.setVisible(false);
+        invalidDirectoryLabel.managedProperty().bind(invalidDirectoryLabel.visibleProperty());
+    	invalidDirectoryLabel.setTextFill(Color.RED);
+        vBox.getChildren().addAll(invalidDirectoryLabel, reportDirectory, importsAtTopOfFile, noBreakContinueOrGoTo);
     	
         TitledPane miscPane = new TitledPane("Miscellaneous", vBox);
         miscPane.setExpanded(false);
