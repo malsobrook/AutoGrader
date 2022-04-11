@@ -5,18 +5,21 @@ package General;
 import javax.swing.JFileChooser;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
+import com.google.gson.Gson;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import mutators.IndentAnalyzer;
 import picocli.CommandLine;
+import mutators.IDAnalyzer;
 import mutators.Handler;
 
 public class Main {
-	
 	//Populates from CommandLineParser if via CLI, or MainViewController if via GUI
 	public static List<File> fileList = new ArrayList<File>();
+	private static String filepath;
 	
 	public static void main(String args[]) throws Exception {
 		if(args.length > 0) {

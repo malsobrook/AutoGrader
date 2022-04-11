@@ -12,7 +12,7 @@ public class Handler {
 	private String[] keywordSubs = { "@",    "!",     "?",   "#",     "%",   "^",     "*",      "-",         "+"};
 		//"_, $, and & " are taken by letters, spaces, and tabs, respectively
 	
-	public Handler(String ogfilepath) {
+	public Handler(String ogfilepath /* json object pass */) {
 		this.ogfilepath = Objects.requireNonNull(ogfilepath);
 	}
 	
@@ -42,7 +42,7 @@ public class Handler {
 		bwr.close();
 		
 		// BracketAnalyzer bra = new BracketAnalyzer(path);
-		IDA ida = new IDA(path);
+		IDAnalyzer ida = new IDAnalyzer(path);
 		
 	}
 	
@@ -55,6 +55,7 @@ public class Handler {
 		output = removeSpecialChar(output);
 		output = commentRemover(output);
 		output = emptyQuotes(output);
+		output = detectConstructor(output);
 		output = detectMethod(output);
 		output = elifCondenser(output);
 		output = bracketCondenser(output);
@@ -136,9 +137,17 @@ public class Handler {
 		return output;
 	}
 	
-		// inputs special character in line if a method declaration is detected. Easiest way to detect methods of indent analyzer.
+		// inputs token in line if a method declaration is detected.
 	public String detectMethod(String input) {
-		if(input.matches("(?s).*\\b(public|private|protected|)\\b\\s+[\\$_\\w\\[\\]\\<\\>]+\\s+[\\$_\\w]+\\s*\\([^\\)]*\\).*")) {
+		if(input.matches("(?s).*\\b(public|private|protected)\\b\\s+[\\$_\\w\\[\\]\\<\\>]+\\s+[\\$_\\w]+\\s*\\([^\\)]*\\).*")) {
+			input = (input.substring(0, input.length()/2) + "`" + input.substring(input.length()/2));
+		}
+		return input;
+	}
+	
+		// inputs token in line if constructor is detected. 
+	public String detectConstructor(String input) {
+		if(input.matches("(?s).*\\b(public|private|protected)\\b\\s+[\\$_\\w]+\\s*\\([^\\)]*\\).*")) {
 			input = (input.substring(0, input.length()/2) + "`" + input.substring(input.length()/2));
 		}
 		return input;

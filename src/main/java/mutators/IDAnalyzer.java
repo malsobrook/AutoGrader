@@ -4,7 +4,7 @@ import java.io.*;
 import General.Reportable;
 import General.Reporter;
 
-public class IDA implements Reportable{
+public class IDAnalyzer implements Reportable{
 	
 	boolean OneTBS;
 	char[] carray;
@@ -33,7 +33,7 @@ public class IDA implements Reportable{
 	int nestLvl = 0;
 	
 	
-	public IDA (String filepath) throws Exception {
+	public IDAnalyzer (String filepath /*int spaceIndex, boolean OneTBSOn */) throws Exception {
 		this.filePath = filepath;
 		this.spaceIndex = 4;
 		this.repo = new Reporter(filePath);
@@ -120,11 +120,11 @@ public class IDA implements Reportable{
 			System.out.println("Line:" + lineNumb + "        " + actual + "    " + expectedIdt);
 		}
 		if (expectedIdt != actual) {
-				if (ca.length == 0) {
-					// ignore for now
-				} else {
-					this.repo.errorGen("Indentation error on", lineNumb);
-				}
+			if (ca.length == 0) {
+				// ignore for now
+			} else {
+				this.repo.errorGen("Indentation error on", lineNumb);
+			}
 		}
 		
 		
