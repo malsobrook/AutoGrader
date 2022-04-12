@@ -14,6 +14,12 @@ public class Reporter implements Reportable {
 	public String mapType;
 	public Stack<String> test = new Stack<String>();
 	
+	// repo items
+	public int percentage;
+	public int matchPercent;
+	public int correctPercent;
+	public String idtStyle;
+	
 	
 	public Reporter(String mapType) {
 		this.mapType = mapType;
@@ -23,14 +29,6 @@ public class Reporter implements Reportable {
 	public void errorGen(String errorType, int lineNumb) {
 		map.put(lineNumb, errorType);
 		test.push(errorType + ": " + String.valueOf(lineNumb));
-	}
-	
-	public void mapDone() {
-		superMap.put(mapType, map);
-	}
-	
-	public Map<String, Map<Integer, String>> getSuperMap(){
-		return this.superMap;
 	}
 	
 	public void deleteError(int lineNumb) {
@@ -47,6 +45,22 @@ public class Reporter implements Reportable {
 			return null;
 		}
 		return out;
+	}
+	
+	public int getMajorityIdt() {
+		return this.percentage;
+	}
+	
+	public String getIdtStyle() {
+		return this.idtStyle;
+	}
+	
+	public int getIdtMatch() {
+		return this.matchPercent;
+	}
+	
+	public int getIdtCorrect() {
+		return this.correctPercent;
 	}
 	
 }

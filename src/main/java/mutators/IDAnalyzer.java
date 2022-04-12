@@ -46,7 +46,7 @@ public class IDAnalyzer implements Reportable{
 		String temp = bfr.readLine();
 		lineNumb++;
 		
-		System.out.println("	  Actual	Expected");
+		System.out.println("	  Actual	Expected"); // delete
 		while(temp != null) {
 			carray = temp.toCharArray();
 			int ic = indentCounter(carray);
@@ -62,7 +62,7 @@ public class IDAnalyzer implements Reportable{
 			System.out.println("No indent discrepancies detected");
 		}
 			// test feature
-		String str = "Indent Consistency:	Spaces: " + spaceC + "	Tabs: " + tabC;
+		String str = "Indent Consistency:	Spaces: " + spaceC + "	Tabs: " + tabC;	// delete
 		System.out.println(str);
 		
 		bfr.close();
@@ -113,12 +113,13 @@ public class IDAnalyzer implements Reportable{
 			}
 		}
 		
-		
+			//delete
 		if (ca.length == 0) {
 			System.out.println("Line:" + lineNumb + "        " + "B" + "    " + expectedIdt);	// B for Blank Line
 		} else {
 			System.out.println("Line:" + lineNumb + "        " + actual + "    " + expectedIdt);
 		}
+		
 		if (expectedIdt != actual) {
 			if (ca.length == 0) {
 				// ignore for now
@@ -195,6 +196,19 @@ public class IDAnalyzer implements Reportable{
 	public String report() {
 		String str = repo.report();
 		return str;
+	}
+	
+	public void consistencyReport() {
+		int percentage;
+		if(spaceC > tabC) {
+			percentage = spaceC / (spaceC + tabC);
+		}
+		if (tabC > spaceC) {
+			percentage = tabC / (spaceC + tabC);
+		}
+		if (spaceC == tabC) {
+			percentage = 50;
+		}
 	}
 	
 }

@@ -12,7 +12,7 @@ public class Handler {
 	private String tempLine;
 	private String[] keywords =    {"if", "else", "while", "for", "class", "try", "catch", "throws", "interface"}; 
 	private String[] keywordSubs = { "@",    "!",     "?",   "#",     "%",   "^",     "*",      "-",         "+"};
-		//"_, $, and & " are taken by letters, spaces, and tabs, respectively
+		//_, $, and & " are taken by letters, spaces, and tabs, respectively
 	
 	public Handler(String ogfilepath, Map<?, ?> handleMap) {
 		this.ogfilepath = Objects.requireNonNull(ogfilepath);
@@ -23,29 +23,19 @@ public class Handler {
 	
 	// TODO VIST THIS METHOD TO REMOVE EXCESS WRITERS!!!!!!!!!!!!!!!
 	public void handle() throws Exception {
-		BufferedReader bfr = new BufferedReader(new FileReader(ogfilepath));
 		String path = createDumpFile();
 		BufferedWriter bwr = new BufferedWriter(new FileWriter(path));
-		tempLine = bfr.readLine();
 		
 		while(tempLine != null) {
-				// testing newer, limited translate to path2
 			String thing = tempLine;
 			thing = whiteOut(thing);
 			thing = spaceTabTransform(thing);
-			
-			
-				// original translate to path
-			tempLine = aggregateFunction(tempLine);
-			bwr.write(tempLine + "\n");
-			tempLine = bfr.readLine();
 		}
 		
-		bfr.close();
 		bwr.close();
 		
-		// BracketAnalyzer bra = new BracketAnalyzer(path);
-		IDAnalyzer ida = new IDAnalyzer(path);
+		// BracketAnalyzer bra = new BracketAnalyzer(path, map.get(BracketStyle);
+		IDAnalyzer ida = new IDAnalyzer(path /*, map.get(spaceIndex), map.getIndentationStyle*/);
 		
 	}
 	

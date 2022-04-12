@@ -58,8 +58,6 @@ public class Main {
 			}
 			
 			
-			System.out.println("\n\n\n|-----------------------------Report--------------------------------|");
-			
 			System.out.println("done");
 		}
 	}
