@@ -5,13 +5,13 @@ package General;
 import javax.swing.JFileChooser;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-
 import com.google.gson.Gson;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
-
 import picocli.CommandLine;
 import mutators.IDAnalyzer;
 import mutators.Handler;
@@ -19,7 +19,7 @@ import mutators.Handler;
 public class Main {
 	//Populates from CommandLineParser if via CLI, or MainViewController if via GUI
 	public static List<File> fileList = new ArrayList<File>();
-	private static String filepath;
+	private static String filepath = "userSettings.json";
 	
 	public static void main(String args[]) throws Exception {
 		if(args.length > 0) {
@@ -52,9 +52,15 @@ public class Main {
 			System.out.println("\n\n\n|-----------------------------Report--------------------------------|");
 			
 			System.out.println("done");
+		}
+	}
+	
+	public static void getJson(String filePath) throws Exception{
+		BufferedReader bfr = new BufferedReader(new FileReader(filePath));
+		String jsonStr = bfr.readLine();
+		
+		while (bfr.readLine() != null) {
 			
-			// main program should have no other function besides launching and passing to respective mutators. ???
-			// maybe remain open window to use the function multiple times
 		}
 	}
 }
