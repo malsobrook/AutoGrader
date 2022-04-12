@@ -6,12 +6,20 @@ import javax.swing.JFileChooser;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import picocli.CommandLine;
 import mutators.IDAnalyzer;
 import mutators.Handler;
@@ -38,9 +46,10 @@ public class Main {
 			e.printStackTrace();
 		}
 		
+		Map<?, ?> handleMap = getJson(filepath);
 		
 		for(File file : fileList) {
-			Handler trs = new Handler(file.getAbsolutePath());
+			Handler trs = new Handler(file.getAbsolutePath(), handleMap);
 			try {
 				trs.handle();
 			} catch (Exception e) {
@@ -55,12 +64,16 @@ public class Main {
 		}
 	}
 	
-	public static void getJson(String filePath) throws Exception{
-		BufferedReader bfr = new BufferedReader(new FileReader(filePath));
-		String jsonStr = bfr.readLine();
+		// returns a map version of the json file stored locally
+	public static Map<?, ?> getJson(String filePath) throws Exception{
+		Gson gson = new Gson();
+		Reader reader = Files.newBufferedReader(Paths.get(filePath));
+		Map<?, ?> map = gson.fromJson(reader, Map.class);
+		for (Map.Entry<?, ?> entry : map.entrySet()) {
+	        System.out.println(entry.getKey() + "=" + entry.getValue());
+	    }
+		reader.close();
 		
-		while (bfr.readLine() != null) {
-			
-		}
+		return map;
 	}
 }

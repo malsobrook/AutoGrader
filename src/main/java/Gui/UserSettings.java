@@ -12,15 +12,16 @@ public class UserSettings {
 	private static UserSettings instance;
 	   
 	//This can be housed somewhere else or stay here
-	public enum IndentationStyles { Option1, Option2, Option3; }
-	public enum BracketStyles { Option1, Option2, Option3; }
+	public enum IndentationStyles { Option1, Option2; }	 //Space or tab, should be indentation type not style
+		// NEED AN INTEGER VALUE FOR spaceIndex !!!
+	public enum BracketStyles { Option1, Option2; }		// inline or nextline	
 	
 	//FORMATTING
 	private IndentationStyles indentationRequirement;
 	private BracketStyles bracePlacementStyle;
-	private int maxLineLength;
-	private boolean excludeStatementFromLoop;
-	private boolean seperateLineForCondition;
+	private int maxLineLength;					// default 80
+	private boolean excludeStatementFromLoop;	// probs not functional
+	private boolean seperateLineForCondition;	// ditto ^
 	
 	//INDENTIFIER
 	private boolean uppercaseClassNames;

@@ -1,19 +1,22 @@
 package mutators;
 
 import java.io.*;
+import java.util.Map;
 import java.util.Objects;
 import mutators.*;
 
 public class Handler {
 	private String ogfilepath;
+	private Map<?, ?> handleMap;
 	private char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 	private String tempLine;
 	private String[] keywords =    {"if", "else", "while", "for", "class", "try", "catch", "throws", "interface"}; 
 	private String[] keywordSubs = { "@",    "!",     "?",   "#",     "%",   "^",     "*",      "-",         "+"};
 		//"_, $, and & " are taken by letters, spaces, and tabs, respectively
 	
-	public Handler(String ogfilepath /* json object pass */) {
+	public Handler(String ogfilepath, Map<?, ?> handleMap) {
 		this.ogfilepath = Objects.requireNonNull(ogfilepath);
+		this.handleMap = handleMap;
 	}
 	
 		// takes given file and returns easy to read version, translator only deals with indents and keywords
