@@ -3,42 +3,52 @@ package mutators;
 import java.io.*;
 import java.util.Map;
 import java.util.Objects;
+
+import General.Reporter;
 import mutators.*;
 
 public class Handler {
 	private String ogfilepath;
-	private Map<?, ?> handleMap;
+	private Map<String, ?> handleMap;
 	private char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 	private String tempLine;
 	private String[] keywords =    {"if", "else", "while", "for", "class", "try", "catch", "throws", "interface"}; 
 	private String[] keywordSubs = { "@",    "!",     "?",   "#",     "%",   "^",     "*",      "-",         "+"};
 		//_, $, and & " are taken by letters, spaces, and tabs, respectively
+	public Reporter repo;
 	
-	public Handler(String ogfilepath, Map<?, ?> handleMap) {
+	
+	public Handler(String ogfilepath, Map<String, ?> handleMap) {
 		this.ogfilepath = Objects.requireNonNull(ogfilepath);
 		this.handleMap = handleMap;
+		this.repo = new Reporter("handler");
 	}
 	
-		// takes given file and returns easy to read version, translator only deals with indents and keywords
 	
-	// TODO VIST THIS METHOD TO REMOVE EXCESS WRITERS!!!!!!!!!!!!!!!
 	public void handle() throws Exception {
 		String path = createDumpFile();
+		BufferedReader bfr = new BufferedReader(new FileReader(ogfilepath));
 		BufferedWriter bwr = new BufferedWriter(new FileWriter(path));
+		tempLine = bfr.readLine();
 		
 		while(tempLine != null) {
-			String thing = tempLine;
-			thing = whiteOut(thing);
-			thing = spaceTabTransform(thing);
+			tempLine = aggregateFunction(tempLine);
+			bwr.write(tempLine + "\n");
+			tempLine = bfr.readLine();
 		}
 		
 		bwr.close();
+		bfr.close();
 		
-		// BracketAnalyzer bra = new BracketAnalyzer(path, map.get(BracketStyle);
-		IDAnalyzer ida = new IDAnalyzer(path /*, map.get(spaceIndex), map.getIndentationStyle*/);
+
+		// BracketAnalyzer bka = new BracketAnalyzer(path, handlemap.getProperties);
+													// change to SpaceIndex
+		int value = (int) Math.round((double) handleMap.get("maxLineLength") ); 
+		IDAnalyzer ida = new IDAnalyzer(path, value, ( (String) handleMap.get("IndentationRequirement") ) );
 		
+		// int value = (int) Math.round((double) handleMap.get("maxLineLength") ); 
+		MiscAnalyzer mca = new MiscAnalyzer(ogfilepath, value);
 	}
-	
 	
 	
 	public String aggregateFunction(String input) {
@@ -149,7 +159,7 @@ public class Handler {
 		// creates a dumpfile for translated documents that will be stored locally, temporarily. 
 		// May in future support option to check/validate files in dumplocation to prevent overwriting
 	public String createDumpFile() {
-		String path = System.getProperty("user.home") + File.separator + "dump.java";
+		String path = "dump.txt";
 		File dumpFile = new File(path);
 		return dumpFile.getPath();
 	}

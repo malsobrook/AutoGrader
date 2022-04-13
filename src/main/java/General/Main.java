@@ -46,7 +46,7 @@ public class Main {
 			e.printStackTrace();
 		}
 		
-		Map<?, ?> handleMap = getJson(filepath);
+		Map<String, ?> handleMap = getJson(filepath);
 		
 		for(File file : fileList) {
 			Handler trs = new Handler(file.getAbsolutePath(), handleMap);
@@ -63,12 +63,12 @@ public class Main {
 	}
 	
 		// returns a map version of the json file stored locally
-	public static Map<?, ?> getJson(String filePath) throws Exception{
+	public static Map<String, ?> getJson(String filePath) throws Exception{
 		Gson gson = new Gson();
 		Reader reader = Files.newBufferedReader(Paths.get(filePath));
-		Map<?, ?> map = gson.fromJson(reader, Map.class);
-		for (Map.Entry<?, ?> entry : map.entrySet()) {
-	        System.out.println(entry.getKey() + "=" + entry.getValue());
+		Map<String, ?> map = gson.fromJson(reader, Map.class);
+		for (Map.Entry<String, ?> entry : map.entrySet()) {
+	        // System.out.println(entry.getKey() + "=" + entry.getValue());
 	    }
 		reader.close();
 		

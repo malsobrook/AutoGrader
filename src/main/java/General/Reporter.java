@@ -11,7 +11,7 @@ public class Reporter implements Reportable {
 	public Map<Integer, String> map = new HashMap<Integer, String>();
 	public Map<String, Map<Integer, String>> superMap = new HashMap<String, Map<Integer, String>>();
 	public ArrayList<Map<String, Map<Integer, String>>> mapList = new ArrayList<Map<String, Map<Integer, String>>>();
-	public String mapType;
+	public String errorType;
 	public Stack<String> test = new Stack<String>();
 	
 	// repo items
@@ -21,8 +21,8 @@ public class Reporter implements Reportable {
 	public String idtStyle;
 	
 	
-	public Reporter(String mapType) {
-		this.mapType = mapType;
+	public Reporter(String errorType) {
+		this.errorType = errorType;
 	}
 	
 	
@@ -47,16 +47,30 @@ public class Reporter implements Reportable {
 		return out;
 	}
 	
+		// get and set the percentage of the majority indent style used
 	public int getMajorityIdt() {
 		return this.percentage;
 	}
 	
+	public void setMajorityIdt(int i) {
+		this.percentage = i;
+	}
+	
+		// get and set the majority indent style used
 	public String getIdtStyle() {
 		return this.idtStyle;
 	}
 	
+	public void setIdtStyle(String s) {
+		this.idtStyle = s;
+	}
+	
+		// assess and return the style used with the style demanded.
 	public int getIdtMatch() {
 		return this.matchPercent;
+	}
+	
+	public void setIdtMatch() {
 	}
 	
 	public int getIdtCorrect() {

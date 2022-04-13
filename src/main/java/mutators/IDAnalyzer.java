@@ -33,10 +33,10 @@ public class IDAnalyzer implements Reportable{
 	int nestLvl = 0;
 	
 	
-	public IDAnalyzer (String filepath /*int spaceIndex, boolean OneTBSOn */) throws Exception {
+	public IDAnalyzer (String filepath, int spaceIndex, String IdtRequirement) throws Exception {
 		this.filePath = filepath;
-		this.spaceIndex = 4;
-		this.repo = new Reporter(filePath);
+		this.spaceIndex = spaceIndex;
+		this.repo = new Reporter("indent");
 		this.OneTBS = true;
 		this.analyze();
 	}
@@ -46,7 +46,6 @@ public class IDAnalyzer implements Reportable{
 		String temp = bfr.readLine();
 		lineNumb++;
 		
-		System.out.println("	  Actual	Expected"); // delete
 		while(temp != null) {
 			carray = temp.toCharArray();
 			int ic = indentCounter(carray);
@@ -54,6 +53,7 @@ public class IDAnalyzer implements Reportable{
 			temp = bfr.readLine();
 			lineNumb++;
 		}
+		
 		System.out.println("\n\n\n|-----------------------------Report--------------------------------|");
 		String report = report();
 		if(report != null) {
@@ -167,19 +167,8 @@ public class IDAnalyzer implements Reportable{
 					nextLineBracket = false;
 					expectedIdt++;
 				}
-			}
-			
-			
+			}	
 		}
-		
-		// starting from break
-		// assess indent level
-		
-		// if we broke out, run script again starting from index we broke on (default 0)
-		// method for this
-		
-		
-		
 	}
 	
 
@@ -209,6 +198,7 @@ public class IDAnalyzer implements Reportable{
 		if (spaceC == tabC) {
 			percentage = 50;
 		}
+		
 	}
 	
 }

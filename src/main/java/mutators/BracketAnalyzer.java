@@ -20,7 +20,7 @@ public class BracketAnalyzer implements Reportable {
 	//								if, 	else, 	while, 	  for,  try,  catch,  class, (represents methods/constructors)
 
 	private LineNumberReader bracketReader;
-	public Reporter reporter = new Reporter("Bracket");
+	public Reporter reporter = new Reporter("bracket");
 
 
 	public BracketAnalyzer(String filepath) throws Exception {
