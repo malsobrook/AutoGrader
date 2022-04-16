@@ -5,11 +5,11 @@ import java.util.Map;
 import java.util.Objects;
 
 import General.Reporter;
+import Gui.UserSettings;
 import mutators.*;
 
 public class Handler {
 	private String ogfilepath;
-	private Map<String, ?> handleMap;
 	private char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 	private String tempLine;
 	private String[] keywords =    {"if", "else", "while", "for", "class", "try", "catch", "throws", "interface"}; 
@@ -18,9 +18,8 @@ public class Handler {
 	public Reporter repo;
 	
 	
-	public Handler(String ogfilepath, Map<String, ?> handleMap) {
+	public Handler(String ogfilepath) {
 		this.ogfilepath = Objects.requireNonNull(ogfilepath);
-		this.handleMap = handleMap;
 		this.repo = new Reporter("handler");
 	}
 	
@@ -43,11 +42,10 @@ public class Handler {
 
 		// BracketAnalyzer bka = new BracketAnalyzer(path, handlemap.getProperties);
 													// change to SpaceIndex
-		int value = (int) Math.round((double) handleMap.get("maxLineLength") ); 
-		IDAnalyzer ida = new IDAnalyzer(path, value, ( (String) handleMap.get("IndentationRequirement") ) );
+		IDAnalyzer ida = new IDAnalyzer(path, UserSettings.getInstance().getMaxLineLength(), UserSettings.getInstance().getIndentationRequirement().toString() );
 		
 		// int value = (int) Math.round((double) handleMap.get("maxLineLength") ); 
-		MiscAnalyzer mca = new MiscAnalyzer(ogfilepath, value);
+		MiscAnalyzer mca = new MiscAnalyzer(ogfilepath, UserSettings.getInstance().getMaxLineLength());
 	}
 	
 	
