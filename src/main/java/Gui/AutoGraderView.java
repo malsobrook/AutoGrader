@@ -1,7 +1,7 @@
 package Gui;
 
 import Gui.UserSettings.BracketStyles;
-import Gui.UserSettings.IndentationStyles;
+import Gui.UserSettings.IndentationTypes;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -28,9 +28,10 @@ public class AutoGraderView {
 	Button saveButton = new Button("Save");
     
     //FORMATTING
-	ComboBox indentationStyle = new ComboBox(FXCollections.observableArrayList(UserSettings.IndentationStyles.values()));
+	ComboBox indentationType = new ComboBox(FXCollections.observableArrayList(UserSettings.IndentationTypes.values()));
+	TextField numberOfSpaces = new TextField();
 	ComboBox bracketStyle = new ComboBox(FXCollections.observableArrayList(UserSettings.BracketStyles.values()));
-    TextField maxLineLength = new TextField("80");
+    TextField maxLineLength = new TextField();
     CheckBox excludeStatementFromLoop = new CheckBox("Exclude statement in the body of a loop");
     CheckBox seperateLineForCondition = new CheckBox("Exclude conditional from same line as the condition");
 	
@@ -77,8 +78,12 @@ public class AutoGraderView {
     	return saveButton;
     }
 
-    public ComboBox getIndentationStyle() {
-    	return indentationStyle;
+    public ComboBox getIndentationType() {
+    	return indentationType;
+    }
+    
+    public TextField getNumberOfSpaces() {
+    	return numberOfSpaces;
     }
     
     public ComboBox getBracketStyle() {
@@ -113,7 +118,7 @@ public class AutoGraderView {
     	return commentBeforeEachMethod;
     }
     
-    public Label invalidDirectoryLabel() {
+    public Label getInvalidDirectoryLabel() {
     	return invalidDirectoryLabel;
     }
     
@@ -181,7 +186,10 @@ public class AutoGraderView {
     	HBox bracketBox = new HBox(5);
     	HBox lineLengthBox = new HBox(5);
     	
-    	indentationBox.getChildren().addAll(option1, indentationStyle);
+    	numberOfSpaces.setPromptText("# of spaces");
+    	numberOfSpaces.setVisible(false);
+    	numberOfSpaces.managedProperty().bind(numberOfSpaces.visibleProperty());
+    	indentationBox.getChildren().addAll(option1, indentationType, numberOfSpaces);
     	bracketBox.getChildren().addAll(option2, bracketStyle);
     	lineLengthBox.getChildren().addAll(option3, maxLineLength);
     	
@@ -262,6 +270,7 @@ public class AutoGraderView {
         invalidDirectoryLabel.setVisible(false);
         invalidDirectoryLabel.managedProperty().bind(invalidDirectoryLabel.visibleProperty());
     	invalidDirectoryLabel.setTextFill(Color.RED);
+    	reportDirectory.setPromptText("Directory Path For Exported Reports");
         vBox.getChildren().addAll(invalidDirectoryLabel, reportDirectory, importsAtTopOfFile, noBreakContinueOrGoTo);
     	
         TitledPane miscPane = new TitledPane("Miscellaneous", vBox);

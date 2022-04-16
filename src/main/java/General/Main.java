@@ -9,6 +9,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import Gui.UserSettings.IndentationTypes;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -17,6 +19,7 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +30,6 @@ import mutators.Handler;
 public class Main {
 	//Populates from CommandLineParser if via CLI, or MainViewController if via GUI
 	public static List<File> fileList = new ArrayList<File>();
-	private static String filepath = "userSettings.json";
 	
 	public static void main(String args[]) throws Exception {
 		if(args.length > 0) {
@@ -46,10 +48,8 @@ public class Main {
 			e.printStackTrace();
 		}
 		
-		Map<String, ?> handleMap = getJson(filepath);
-		
 		for(File file : fileList) {
-			Handler trs = new Handler(file.getAbsolutePath(), handleMap);
+			Handler trs = new Handler(file.getAbsolutePath());
 			try {
 				trs.handle();
 			} catch (Exception e) {
@@ -60,18 +60,22 @@ public class Main {
 			
 			System.out.println("done");
 		}
-	}
-	
-		// returns a map version of the json file stored locally
-	public static Map<String, ?> getJson(String filePath) throws Exception{
-		Gson gson = new Gson();
-		Reader reader = Files.newBufferedReader(Paths.get(filePath));
-		Map<String, ?> map = gson.fromJson(reader, Map.class);
-		for (Map.Entry<String, ?> entry : map.entrySet()) {
-	        // System.out.println(entry.getKey() + "=" + entry.getValue());
-	    }
-		reader.close();
 		
-		return map;
+//		Reporter reporter = new Reporter("test");
+//		reporter.setIdtMatch();
+//		reporter.setIdtStyle(IndentationTypes.Tab.toString());
+//		reporter.setMajorityIdt(100);
+//		template report = new template("Main.java", reporter);
+//		
+//		//Using AddSummaryLine method
+//		Map<String, String> map = new HashMap<String, String>();
+//		map.put("Majority Style:       %", reporter.getIdtStyle().toString());
+//		map.put("% Match with choice:  %", String.valueOf(reporter.getIdtMatch()));
+//		map.put("% Correctness:		  %", String.valueOf(reporter.getIdtCorrect()));
+//		report.AddSummaryLine("Indentation Consistency: %" + reporter.getMajorityIdt(), map);
+//		
+//		report.AddNote("HELLO THIS IS A TEST");
+//		report.GenerateReport();
+		
 	}
 }

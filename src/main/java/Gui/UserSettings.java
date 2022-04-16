@@ -6,20 +6,19 @@ import java.io.FileWriter;
 import com.google.gson.Gson;
 
 import Gui.UserSettings.BracketStyles;
-import Gui.UserSettings.IndentationStyles;
+import Gui.UserSettings.IndentationTypes;
 
 public class UserSettings {
 	private static UserSettings instance;
 	   
-	//This can be housed somewhere else or stay here
-	public enum IndentationStyles { Option1, Option2; }	 //Space or tab, should be indentation type not style
-		// NEED AN INTEGER VALUE FOR spaceIndex !!!
-	public enum BracketStyles { Option1, Option2; }		// inline or nextline	
+	public enum IndentationTypes { Spaces, Tab; }
+	public enum BracketStyles { Inline, Newline; }
 	
 	//FORMATTING
-	private IndentationStyles indentationRequirement;
+	private IndentationTypes indentationRequirement;
+	private int numberOfSpaces;
 	private BracketStyles bracePlacementStyle;
-	private int maxLineLength;					// default 80
+	private int maxLineLength;				
 	private boolean excludeStatementFromLoop;	// probs not functional
 	private boolean seperateLineForCondition;	// ditto ^
 	
@@ -37,12 +36,20 @@ public class UserSettings {
 	private boolean importsAtTopOfFile;
 	private boolean noBreakContinueOrGoTo;
 	
-	public IndentationStyles getIndentationRequirement() {
+	public IndentationTypes getIndentationRequirement() {
 		return indentationRequirement;
 	}
 
-	public void setIndentationRequirement(IndentationStyles indentationRequirement) {
+	public void setIndentationRequirement(IndentationTypes indentationRequirement) {
 		this.indentationRequirement = indentationRequirement;
+	}
+	
+	public int getNumberOfSpaces() {
+		return numberOfSpaces;
+	}
+
+	public void setNumberOfSpaces(int numberOfSpaces) {
+		this.numberOfSpaces = numberOfSpaces;
 	}
 
 	public BracketStyles getBracePlacementStyle() {
@@ -126,7 +133,10 @@ public class UserSettings {
 	}
 	
    private UserSettings() {
+	    this.indentationRequirement = IndentationTypes.Tab;
+	    this.numberOfSpaces = 4;
 		this.maxLineLength = 80;
+		this.bracePlacementStyle = BracketStyles.Inline;
 		this.seperateLineForCondition = false;
 		this.uppercaseClassNames = false;
 		this.lowercaseVarNames = false;

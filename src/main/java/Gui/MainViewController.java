@@ -12,16 +12,15 @@ import java.util.Optional;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.apache.commons.io.FilenameUtils;
-
 import General.Main;
 import Gui.UserSettings.BracketStyles;
-import Gui.UserSettings.IndentationStyles;
+import Gui.UserSettings.IndentationTypes;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 
@@ -30,6 +29,8 @@ public class MainViewController {
     //Model
     List<File> fileList = new ArrayList<File>();
     UserSettings obj = UserSettings.getInstance();
+    ImageView directoryImage = new ImageView(getClass().getResource("directory.png").toExternalForm());
+    ImageView fileImage = new ImageView(getClass().getResource("file.png").toExternalForm());
 
     public MainViewController(AutoGraderView view){
         setView(view);
@@ -37,8 +38,12 @@ public class MainViewController {
 
     public void setView(AutoGraderView view){    
     	loadSettings(view);
+    	
+    	directoryImage.setFitHeight(20);
+    	directoryImage.setFitWidth(20);
+    	fileImage.setFitHeight(20);
+    	fileImage.setFitWidth(20);
         
-    	 
     	//Adds user selected files and closes the view.
         view.getRunButton().setOnAction(event -> {
         	Main.fileList = this.fileList;
@@ -51,6 +56,34 @@ public class MainViewController {
         	view.getFileChooserRegion().getChildren().clear();
         });
         
+        view.getIndentationType().setOnAction((event) -> {
+        	if(view.getIndentationType().getSelectionModel().getSelectedItem() == IndentationTypes.Spaces) {
+        		view.getNumberOfSpaces().setVisible(true);
+        	}
+        	else {
+        		view.getNumberOfSpaces().setVisible(false);
+        		view.getNumberOfSpaces().setText("");
+        	}
+        });
+        
+        view.getMaxLineLength().focusedProperty().addListener((arg0, oldValue, newValue) -> {
+            if (!newValue) { 
+                    if (!view.getMaxLineLength().getText().matches("^[1-9]\\d*$")) {
+                    	view.getMaxLineLength().setText("");
+                    	view.getMaxLineLength().setPromptText("Enter a whole number greater than zero.");
+                    }
+                }
+            });
+        
+        view.getNumberOfSpaces().focusedProperty().addListener((arg0, oldValue, newValue) -> {
+            if (!newValue) {
+                    if (!view.getNumberOfSpaces().getText().matches("^[1-9]\\d*$")) {
+                    	view.getNumberOfSpaces().setText("");
+                    	view.getNumberOfSpaces().setPromptText("Enter a whole number greater than zero.");
+                    }
+                }
+            });
+        
         //Populates UserSettings with defined settings and saves to userSettings.json
         view.getSaveButton().setOnAction(event -> { 
         	saveSettings(view);
@@ -58,20 +91,20 @@ public class MainViewController {
 		 });
         
         view.getReportDirectory().focusedProperty().addListener((arg0, oldValue, newValue) -> {
-        	//FREEZES SCREEN WHEN DEBUGGING
-            if (!newValue) { //when focus lost
-            	if(!Files.exists(Path.of(view.getReportDirectory().toString()))) {
-					view.invalidDirectoryLabel().setVisible(true);
+            if (!newValue) { 
+            	if(!Files.exists(Path.of(view.getReportDirectory().getText()))) {
+					view.getInvalidDirectoryLabel().setVisible(true);
 					view.getReportDirectory().setText("");
 				}
 				else {
-					view.invalidDirectoryLabel().setVisible(false);
+					view.getInvalidDirectoryLabel().setVisible(false);
 				}
             }
         });
         
         //Opens FileChooser control
 		 view.getOpenFileButton().setOnAction(event -> { 
+			int oldValue = this.fileList.size();
 			JFileChooser fc = new JFileChooser("Open File Resource");
 			fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 			fc.setFileFilter(new FileNameExtensionFilter("Java file", new String[] {"java", "jar"}));
@@ -93,8 +126,23 @@ public class MainViewController {
 					e.printStackTrace();
 				}
 				
-				view.getFileChooserRegion().getChildren().add(new Label(file.getName()));
-				System.out.println(fileList.size());
+				if(this.fileList.size() == oldValue) {
+					//Show message that no .java or .jar were found
+					Alert alert = new Alert(AlertType.ERROR);
+		    		alert.setTitle("No Files Detected");
+		    		alert.setHeaderText("No Files Detected");
+		    		alert.setContentText(file.getAbsolutePath() + " did not contain any .java or .jar files.");
+		    		alert.show();
+				}
+				else {
+					if(file.isDirectory()) {
+						view.getFileChooserRegion().getChildren().add(new Label(file.getName(), directoryImage));
+					}
+					else {
+						view.getFileChooserRegion().getChildren().add(new Label(file.getName(), fileImage));
+					}
+				}
+				System.out.println(fileList.size()); // TODO Remove this counter
 			}
 			 event.consume();
 		 });
@@ -110,6 +158,7 @@ public class MainViewController {
         
         //Defines logic for accepting drag files
         view.getFileChooserRegion().setOnDragDropped(event -> {
+        	int oldValue = this.fileList.size();
 			Dragboard board = event.getDragboard();
 			if (board.hasFiles()) {
 				board.getFiles().forEach(file -> {
@@ -129,8 +178,23 @@ public class MainViewController {
 						e.printStackTrace();
 					}
 					
-					view.getFileChooserRegion().getChildren().add(new Label(file.getName()));
-					System.out.println(fileList.size());
+					if(this.fileList.size() == oldValue) {
+						//Show message that no .java or .jar were found
+						Alert alert = new Alert(AlertType.ERROR);
+			    		alert.setTitle("No Files Detected");
+			    		alert.setHeaderText("No Files Detected");
+			    		alert.setContentText(file.getAbsolutePath() + " did not contain any .java or .jar files.");
+			    		alert.show();
+					}
+					else {
+						if(file.isDirectory()) {
+							view.getFileChooserRegion().getChildren().add(new Label(file.getName(), directoryImage));
+						}
+						else {
+							view.getFileChooserRegion().getChildren().add(new Label(file.getName(), fileImage));
+						}
+					}
+					System.out.println(fileList.size()); // TODO Remove this counter
 				});
 
 				event.setDropCompleted(true);
@@ -162,8 +226,9 @@ public class MainViewController {
     
     //Saves view settings to UserSettings and updates userSettings.json
     private void saveSettings(AutoGraderView view) {
-    	obj.setIndentationRequirement((IndentationStyles) view.getIndentationStyle().getValue());
-    	obj.setBracePlacementStyle((BracketStyles) view.getBracketStyle().getValue());
+    	obj.setIndentationRequirement(Enum.valueOf(IndentationTypes.class, view.getIndentationType().getValue().toString()));
+    	obj.setNumberOfSpaces(Integer.valueOf(view.getNumberOfSpaces().getText()));
+    	obj.setBracePlacementStyle(Enum.valueOf(BracketStyles.class, view.getBracketStyle().getValue().toString()));
     	obj.setMaxLineLength(Integer.valueOf(view.getMaxLineLength().getText()));
     	obj.setExcludeStatementFromLoop(view.getExcludeStatementFromLoop().isSelected());
     	obj.setSeperateLineForCondition(view.getSeperateLineForCondition().isSelected());
@@ -179,7 +244,8 @@ public class MainViewController {
     
     //Pulls default UserSettings values to initially populate view
     private void loadSettings(AutoGraderView view) {
-    	view.getIndentationStyle().setValue(obj.getIndentationRequirement());
+    	view.getIndentationType().setValue(obj.getIndentationRequirement());
+    	view.getNumberOfSpaces().setText(String.valueOf(obj.getNumberOfSpaces()));
     	view.getBracketStyle().setValue(obj.getBracePlacementStyle());
     	view.getMaxLineLength().setText(String.valueOf(obj.getMaxLineLength()));
     	view.getExcludeStatementFromLoop().setSelected(obj.isExcludeStatementFromLoop());

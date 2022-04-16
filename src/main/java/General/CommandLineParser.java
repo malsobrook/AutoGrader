@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 import Gui.UserSettings;
 import Gui.UserSettings.BracketStyles;
-import Gui.UserSettings.IndentationStyles;
+import Gui.UserSettings.IndentationTypes;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
@@ -35,11 +35,14 @@ public class CommandLineParser implements Runnable {
     public String directory;
     
     //FORMATTING
-    @Option(names = { "--indentationRequirement"}, description = "Valid values: Option1, Option2, Option3")
-    public String indentationRequirement = IndentationStyles.Option1.toString();
+    @Option(names = { "--indentationRequirement"}, description = "Valid values: \"Spaces\" or \"Tabs.\"")
+    public String indentationRequirement = IndentationTypes.Spaces.toString();
     
-    @Option(names = { "--bracePlacementStyle"}, description = "Valid values: Option1, Option2, Option3")
-    public String bracePlacementStyle = BracketStyles.Option1.toString();
+    @Option(names = { "--spaces"}, description = "Used to specify number of spaces when using --indentationRequirement=Spaces")
+    public int numberOfSpaces;
+    
+    @Option(names = { "--bracePlacementStyle"}, description = "Valid values: \"Inline\" or \"Newline.\"")
+    public String bracePlacementStyle = BracketStyles.Inline.toString();
     
     @Option(names = { "--maxLineLength"}, description = "The max length of a line in the file.")
     public int maxLineLength;
@@ -75,23 +78,25 @@ public class CommandLineParser implements Runnable {
 
 	@Override
 	public void run() {
-		if(this.files.isEmpty() && this.directory == null) {
-			System.out.println("No file(s) or directory defined. Include a file or a directory path. ");
-			System.exit(0);
-		}
+		Validation();
 		
 		if(this.directory != null) {
 			try {
+				int oldValue = this.files.size();
 				Files.find(Paths.get(this.directory),
 				           Integer.MAX_VALUE,
 				           (filePath, fileAttr) -> fileAttr.isRegularFile())
 				        .forEach(x -> { 
 				        	File subFile = x.toFile();
 				            String ext = subFile.getName().lastIndexOf(".") == -1 ? "" : subFile.getName().substring(subFile.getName().lastIndexOf("."));
-				            if((ext.equals(".java") || ext.equals(".jar")) && checkFileSize(subFile)) {
+				            if((ext.equals(".java") || ext.equals(".jar")) && CheckFileSize(subFile)) {
 				            	Main.fileList.add(subFile);
 				            }
 				        });
+				if(this.files.size() == oldValue) {
+					System.out.println(this.directory + " did not contain any .java or .jar files.");
+					System.exit(0);
+				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -105,7 +110,7 @@ public class CommandLineParser implements Runnable {
 		UserSettings obj = UserSettings.getInstance();
     	
 		if(!this.useJson) {
-	    	obj.setIndentationRequirement(IndentationStyles.valueOf(this.indentationRequirement));
+	    	obj.setIndentationRequirement(IndentationTypes.valueOf(this.indentationRequirement));
 	    	obj.setBracePlacementStyle(BracketStyles.valueOf(this.bracePlacementStyle));
 	    	obj.setMaxLineLength(this.maxLineLength);
 	    	obj.setExcludeStatementFromLoop(this.excludeStatementFromLoop);
@@ -124,7 +129,7 @@ public class CommandLineParser implements Runnable {
 	}
 	
 	//Alerts user if file size is larger than 1GB.
-    private Boolean checkFileSize(File file) {
+    private Boolean CheckFileSize(File file) {
     	if(file.length() > 1e+9) {
     		Scanner reader = new Scanner(System.in);
     		System.out.println("***Large File Detected***");
@@ -138,5 +143,38 @@ public class CommandLineParser implements Runnable {
     		}
     	}
     	return true;
+    }
+    
+    private void Validation() {
+    	if(this.files.isEmpty() && this.directory == null) {
+			System.out.println("No file(s) or directory defined. Include a file or a directory path. ");
+			System.exit(0);
+		}		
+		
+		try {
+			Enum.valueOf(IndentationTypes.class, this.indentationRequirement);
+		}
+		catch (Exception ex) {
+			System.out.println(this.indentationRequirement + " is not a valid Indentation Requirement type. Use -h for more information.");
+			System.exit(0);
+		}
+		
+		try {
+			Enum.valueOf(BracketStyles.class, this.bracePlacementStyle);
+		}
+		catch (Exception ex) {
+			System.out.println(this.bracePlacementStyle + " is not a valid Bracket Placement style. Use -h for more information.");
+			System.exit(0);
+		}
+		
+		if(Enum.valueOf(IndentationTypes.class, this.indentationRequirement) == IndentationTypes.Spaces && !(this.numberOfSpaces > 0)) {
+			System.out.println("Error: --spaces must an integer greater than zero when using --indentationRequirement=Spaces");
+			System.exit(0);
+		}
+		
+		if(!(this.maxLineLength > 0)) {
+			System.out.println("Error: --maxLineLength must an integer greater than zero.");
+			System.exit(0);
+		}
     }
 }
