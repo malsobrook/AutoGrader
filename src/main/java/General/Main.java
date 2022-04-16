@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import Gui.UserSettings.BracketStyles;
 import Gui.UserSettings.IndentationTypes;
 
 import java.io.BufferedReader;
@@ -61,21 +62,12 @@ public class Main {
 			System.out.println("done");
 		}
 		
-//		Reporter reporter = new Reporter("test");
-//		reporter.setIdtMatch();
-//		reporter.setIdtStyle(IndentationTypes.Tab.toString());
-//		reporter.setMajorityIdt(100);
-//		template report = new template("Main.java", reporter);
-//		
-//		//Using AddSummaryLine method
-//		Map<String, String> map = new HashMap<String, String>();
-//		map.put("Majority Style:       %", reporter.getIdtStyle().toString());
-//		map.put("% Match with choice:  %", String.valueOf(reporter.getIdtMatch()));
-//		map.put("% Correctness:		  %", String.valueOf(reporter.getIdtCorrect()));
-//		report.AddSummaryLine("Indentation Consistency: %" + reporter.getMajorityIdt(), map);
-//		
-//		report.AddNote("HELLO THIS IS A TEST");
-//		report.GenerateReport();
+		template report = new template("Main.java");
+		report.AddIndentationField(95, 90, IndentationTypes.Tab.toString(), 95, 100);
+		report.AddBracketField(80, 75, BracketStyles.Inline.toString(), 80, 85);
+		report.AddMiscField(50, true, false);
+		report.AddNote("File did not compile.");
+		report.GenerateReport();
 		
 	}
 }

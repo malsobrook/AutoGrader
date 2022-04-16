@@ -45,6 +45,10 @@ public class MiscAnalyzer implements Reportable {
 		
 	}
 	
+	public void commentAtTopOfFile() {
+		
+	}
+	
 	@Override
 	public String report() {
 		// TODO Auto-generated method stub

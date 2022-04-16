@@ -165,13 +165,12 @@ public class AutoGraderView {
     	VBox stackedPanels = new VBox();
     	   
         stackedPanels.getChildren().addAll(createFormattingOptions(), createIdentifierOptions(), 
-    								createCommentingOptions(), createFileNamingOptions(), 
+    								createCommentingOptions(), 
     								createMiscOptions());
         stackedPanels.getStyleClass().add("backgroundMainPanel");
         
         ScrollPane scroll = new ScrollPane(stackedPanels);
-        scroll.setFitToWidth(true);
-        scroll.setFitToHeight(true);
+        scroll.setMaxHeight(400);
         return scroll;
     }
     
@@ -218,6 +217,7 @@ public class AutoGraderView {
         TitledPane indentifierPane = new TitledPane("Indentifier", vBox);
         indentifierPane.setExpanded(false);
     	
+        indentifierPane.setExpanded(true);
     	return indentifierPane;
     }
     
@@ -234,6 +234,7 @@ public class AutoGraderView {
         TitledPane commentPane = new TitledPane("Commenting", vBox);
         commentPane.setExpanded(false);
     	
+        commentPane.setExpanded(true);
     	return commentPane;
     }
     
@@ -252,6 +253,7 @@ public class AutoGraderView {
         TitledPane fileNamingPane = new TitledPane("File Naming", vBox);
         fileNamingPane.setExpanded(false);
     	
+        fileNamingPane.setExpanded(true);
     	return fileNamingPane;
     }
     
@@ -276,6 +278,7 @@ public class AutoGraderView {
         TitledPane miscPane = new TitledPane("Miscellaneous", vBox);
         miscPane.setExpanded(false);
     	
+        miscPane.setExpanded(true);
     	return miscPane;
     }
 

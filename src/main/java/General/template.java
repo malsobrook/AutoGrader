@@ -12,144 +12,123 @@ import com.google.gson.Gson;
 
 public class template {
 
-		private String f;
+		private String fileName;
 		private LocalDate date;
-		private Reporter repo;
 		private List<String> notes = new ArrayList<String>();
-		private List<String> summaryFields = new ArrayList<String>();
+		private String header = 
+		"<!DOCTYPE html>"
+		+ "<html lang=\"en\">"
+		+ "<meta charset=\"UTF-8\">"
+		+ "<title>AutoGrader Results</title>"
+		+ "<style>"
+		+ "    .main {"
+		+ "        max-width: 75%;"
+		+ "        margin: auto;"
+		+ "    }"
+		+ "    h1 {"
+		+ "        text-align: center;"
+		+ "        margin: 0;"
+		+ "    }"
+		+ "    .reportInfo {"
+		+ "        display: flex;"
+		+ "        justify-content: space-between;"
+		+ "        font-size: 18px;"
+		+ "    }"
+		+ "</style>"
+		+ "<body>"
+		+ "<div class=\"main\">"
+		+ "    <h1>AutoGrader Results</h1>";
+		private String indentationField;
+		private String bracketField;
+		private String miscField;
+		private final String footer = 
+		"</div>"
+		+ "</body>"
+		+ "</html>";
 		
-		public template(String fileName, Reporter repo) {
-			this.f = fileName;
-			this.repo = repo;
+		public template(String fileName) {
+			this.fileName = fileName;
+			this.header += "    <div class=\"reportInfo\">"
+						+ "        <p style=\"padding-left: 25%\">"+this.fileName+"</p>"
+						+ "        <p style=\"padding-right: 25%\">"+date.now()+"</p>"
+						+ "    </div>";
 		}
 		
 		public void GenerateReport() {
-			String str = this.GenerateHeader();
-			str += this.GenerateSummary();
-			if(this.notes.size() > 0) {
-				str += this.GenerateNotes();
-			}
-			str += this.GenerateFooter();
+			StringBuilder reportStringBuilder = new StringBuilder();
+			reportStringBuilder.append(this.header);
+			reportStringBuilder.append(this.GenerateSummary());
+			reportStringBuilder.append(this.notes.size() > 0 ? this.GenerateNotes() : "");
+			reportStringBuilder.append(this.footer);
 			
 			try {
-		      FileWriter myWriter = new FileWriter(this.f + date.now().toString() + ".html");
-		      myWriter.write(str);
+		      FileWriter myWriter = new FileWriter(this.fileName + date.now().toString() + ".html");
+		      myWriter.write(reportStringBuilder.toString());
 		      myWriter.close();
 		      System.out.println("Successfully wrote to the file.");
 		    } catch (IOException e) {
 		      System.out.println("An error occurred.");
 		      e.printStackTrace();
 		    }
-	        
-		}
-		
-			// generate a html document that is the final report. name of the document will be the original document name + "report".
-		private String GenerateHeader() {
-			String str = 
-			"<!DOCTYPE html>\r\n"
-			+ "<html lang=\"en\">\r\n"
-			+ "<meta charset=\"UTF-8\">\r\n"
-			+ "<title>AutoGrader Results</title>\r\n"
-			+ "\r\n"
-			+ "<style>\r\n"
-			+ "    .main {\r\n"
-			+ "        max-width: 75%;\r\n"
-			+ "        margin: auto;\r\n"
-			+ "    }\r\n"
-			+ "    h1 {\r\n"
-			+ "        text-align: center;\r\n"
-			+ "        margin: 0;\r\n"
-			+ "    }\r\n"
-			+ "    .reportInfo {\r\n"
-			+ "        display: flex; \r\n"
-			+ "        justify-content: space-between;\r\n"
-			+ "        font-size: 18px;\r\n"
-			+ "    }\r\n"
-			+ "</style>\r\n"
-			+ "\r\n"
-			+ "<body>\r\n"
-			+ "\r\n"
-			+ "<div class=\"main\">\r\n"
-			+ "    <h1>AutoGrader Results</h1>\r\n"
-			+ "    <div class=\"reportInfo\">\r\n"
-			+ "        <p style=\"padding-left: 25%\">"+this.f+"</p>\r\n"
-			+ "        <p style=\"padding-right: 25%\">"+date.now()+"</p>\r\n"
-			+ "    </div>";
-			return str;
-		}
-		
-		private String GenerateSummary() {
-			String str = 
-			"<div class=\"summaryField\">\r\n"
-			+ "            <hr><h2>Summary</h2><hr>\r\n";
-
-			//There are two options in which we can add fields to the summary section (1/2)
-			//str += AddIndentationField();
-			
-			//There are two options in which we can add fields to the summary section (2/2)
-			for (String entry : summaryFields) {
-				str += entry;
-			}
-			
-			str += "</div>";
-			return str;
-		}
-		
-		private String GenerateNotes() {
-			String str = 
-			"<div class=\"notesField\">\r\n"
-			+ "            <hr><h2>Notes</h2><hr>\r\n"
-			+ "            <ul>\r\n";
-			
-			for (String note : this.notes) {
-				str += "<li>" + note + "</li>\r\n";
-			}
-			
-			str += 
-			"            </ul>\r\n"
-			+ "        </div>";
-			return str;
-		}
-		
-		private String GenerateFooter() {
-			String str = 
-			"</div>\r\n"
-			+ "\r\n"
-			+ "</body>\r\n"
-			+ "</html>";
-			return str;
 		}
 		
 		public void AddNote(String note) {
 			notes.add(note);
 		}
 		
-		//There are two options in which we can add fields to the summary section (1/2)
-		//Non-generic and mostly hard-coded
-		public String AddIndentationField() {
-			String str = 
-			"<h3>Indentation Consistency: %" + repo.getMajorityIdt() + "</h3>\r\n"
-			+ "<p>&emsp;Majority Style:       %" + repo.getIdtStyle() + "</p>"
-			+ "<p>&emsp;% Match with choice:  %" + repo.getIdtMatch() + "</p>"
-			+ "<p>&emsp;% Correctness:		  %" + repo.getIdtCorrect() + "</p>";
-			return str;
+		public void AddIndentationField(int indentationScore, int indentConsistency, String indentationStyle, int choiceConsistency, int indentCorrectness) {
+			this.indentationField = "<h3>Indentation Score: " + indentationScore + "%</h3>"
+									+ "<table>"
+									+ "<tr><td>&emsp;Indentation Consistency:</td><td>" + indentConsistency + "%</td></tr>"
+									+ "<tr><td>&emsp;Indentation Style Chosen:</td><td>" + indentationStyle + "</td></tr>"
+									+ "<tr><td>&emsp;Consistent with Choice:</td><td>" + choiceConsistency + "%</td></tr>"
+									+ "<tr><td>&emsp;Indentation Correctness:</td><td>" + indentCorrectness + "%</td></tr>"
+									+ "</table>";
 		}
-		//There are two options in which we can add fields to the summary section (2/2)
-		//Generic and less to hard-code in the report.
-		public void AddSummaryLine(String parameterName, Map<String, ?> map) {
-			String str = 
-			"<h3>"+ parameterName +"</h3>\r\n"
-			+"<table>";
+		
+		public void AddBracketField(int bracketScore, int bracketConsistency, String bracketStyle, int choiceConsistency, int bracketCorrectness) {
+			this.bracketField = "<h3>Bracket Score: " + bracketScore + "%</h3>"
+								+ "<table>"
+								+ "<tr><td>&emsp;Bracket Consistency:</td><td>" + bracketConsistency + "%</td></tr>"
+								+ "<tr><td>&emsp;Bracket Style Chosen:</td><td>" + bracketStyle + "</td></tr>"
+								+ "<tr><td>&emsp;Consistent with Choice:</td><td>" + choiceConsistency + "%</td></tr>"
+								+ "<tr><td>&emsp;Bracket Correctness:</td><td>" + bracketCorrectness + "%</td></tr>"
+								+ "</table>";
+		}
+		
+		public void AddMiscField(int miscScore, boolean importsAtTop, boolean commentAtTop) {
+			this.miscField = "<h3>Bracket Score: " + miscScore + "%</h3>"
+							+ "<table>"
+							+ "<tr><td>&emsp;All Import At Top:</td><td>" + (importsAtTop ? "Y" : "N") + "</td></tr>"
+							+ "<tr><td>&emsp;Comment Block At Top:</td><td>" + (commentAtTop ? "Y" : "N") + "</td></tr>"
+							+ "</table>";
+		}
+		
+		private String GenerateSummary() {
+			StringBuilder summaryStringBuilder = new StringBuilder();
+			summaryStringBuilder.append("<div class=\"summaryField\">"
+										+ "<hr><h2>Summary</h2><hr>");
 			
-			for (Map.Entry<String, ?> entry : map.entrySet()) {
-				str +=
-				"<tr>\r\n"
-				+ "<td>" + entry.getKey() + "</td>"
-				+ "<td>" + entry.getValue() + "</td>"
-				+ "</tr>";
+			summaryStringBuilder.append(this.indentationField == null ? "" : this.indentationField);
+			summaryStringBuilder.append(this.bracketField == null ? "" : this.bracketField);
+			summaryStringBuilder.append(this.miscField == null ? "" : this.miscField);
+			
+			summaryStringBuilder.append("</div>");
+			return summaryStringBuilder.toString();
+		}
+		
+		private String GenerateNotes() {
+			StringBuilder noteStringBuilder = new StringBuilder();
+			noteStringBuilder.append("<div class=\"notesField\">"
+									+ "<hr><h2>Notes</h2><hr>"
+									+ "<ul>");
+			
+			for (String note : this.notes) {
+				noteStringBuilder.append("<li>" + note + "</li>");
 			}
 			
-			str += "</table>";
-			this.summaryFields.add(str);
+			noteStringBuilder.append("</ul>"
+									+ "</div>");
+			return noteStringBuilder.toString();
 		}
 }
