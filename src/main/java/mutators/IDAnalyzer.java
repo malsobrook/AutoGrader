@@ -187,8 +187,18 @@ public class IDAnalyzer implements Reportable{
 		return str;
 	}
 	
-	public Reporter getReporter() {
-		return this.repo;
+	public void consistencyReport() {
+		int percentage;
+		if(spaceC > tabC) {
+			percentage = spaceC / (spaceC + tabC);
+		}
+		if (tabC > spaceC) {
+			percentage = tabC / (spaceC + tabC);
+		}
+		if (spaceC == tabC) {
+			percentage = 50;
+		}
+		
 	}
 	
 }
