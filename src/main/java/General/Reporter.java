@@ -70,7 +70,8 @@ public class Reporter implements Reportable {
 		return this.matchPercent;
 	}
 	
-	public void setIdtMatch() {
+	public void setIdtMatch(int i) {
+		this.correctPercent = i;
 	}
 	
 	public int getIdtCorrect() {

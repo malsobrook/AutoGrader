@@ -2,13 +2,13 @@ package General;
 
 import java.time.LocalDate;
 
-public class template {
+public class Template {
 
 		private String f;
 		private LocalDate date;
 		private Reporter repo;
 		
-		public template(String fileName, Reporter repo) {
+		public Template(String fileName, Reporter repo) {
 		this.f = fileName;
 		this.repo = repo;
 		}
@@ -18,8 +18,8 @@ public class template {
 		public String generateSheet() {
 			String str = 
 			"*********************************************************\n" +
-			"					Autograder Results					  \n" +
-			"         " + f + "				"	+ date.now() + "\n" +
+			"                    Autograder Results	                  \n" +
+			"         " + f +   "                   " + date.now() + "\n" +
 			"*********************************************************\n" +
 			"***********************Summary***************************\n" +
 			"\n" +

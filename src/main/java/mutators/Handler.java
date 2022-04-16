@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import General.Reporter;
+import General.Template;
 import mutators.*;
 
 public class Handler {
@@ -17,6 +18,10 @@ public class Handler {
 		//_, $, and & " are taken by letters, spaces, and tabs, respectively
 	public Reporter repo;
 	
+	//analyzers
+	IDAnalyzer ida;
+	BracketAnalyzer bka;
+	MiscAnalyzer mca;
 	
 	public Handler(String ogfilepath, Map<String, ?> handleMap) {
 		this.ogfilepath = Objects.requireNonNull(ogfilepath);
@@ -41,13 +46,18 @@ public class Handler {
 		bfr.close();
 		
 
-		// BracketAnalyzer bka = new BracketAnalyzer(path, handlemap.getProperties);
+		// bka = new BracketAnalyzer(path, handlemap.getProperties);
 													// change to SpaceIndex
 		int value = (int) Math.round((double) handleMap.get("maxLineLength") ); 
-		IDAnalyzer ida = new IDAnalyzer(path, value, ( (String) handleMap.get("IndentationRequirement") ) );
+		ida = new IDAnalyzer(path, value, ( (String) handleMap.get("IndentationRequirement") ) );
 		
 		// int value = (int) Math.round((double) handleMap.get("maxLineLength") ); 
-		MiscAnalyzer mca = new MiscAnalyzer(ogfilepath, value);
+		mca = new MiscAnalyzer(ogfilepath, value);
+		
+		setRepoValues();
+		
+		Template template = new Template(ogfilepath, repo);
+		System.out.println(template.generateSheet());
 	}
 	
 	
@@ -181,5 +191,11 @@ public class Handler {
 		// then return that String
 		
 		return null;
+	}
+	
+	public void setRepoValues() {
+		repo.setIdtMatch(ida.getReporter().getIdtMatch());
+		repo.setIdtStyle(ida.getReporter().getIdtStyle());
+		repo.setMajorityIdt(ida.getReporter().getMajorityIdt());
 	}
 }
