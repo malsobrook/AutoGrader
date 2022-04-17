@@ -7,28 +7,37 @@ import java.util.Stack;
 
 public class Reporter implements Reportable {
 		// stores two maps, one with all the linenumbers and error messages, and one with only one value
-		// the first value is the type of error (brackets, indents, comments, etc) and the other value the previous map.
 	public Map<Integer, String> map = new HashMap<Integer, String>();
-	public Map<String, Map<Integer, String>> superMap = new HashMap<String, Map<Integer, String>>();
 	public ArrayList<Map<String, Map<Integer, String>>> mapList = new ArrayList<Map<String, Map<Integer, String>>>();
 	public String errorType;
 	public Stack<String> test = new Stack<String>();
+	public ArrayList<Integer> IDALineNumbs = new ArrayList();
+	public ArrayList<Integer> BracketLineNumbs = new ArrayList();
 	
 	// repo items
-	public int percentage;
-	public int matchPercent;
-	public int correctPercent;
-	public String idtStyle;
+	public double IDAConsistentPercentage;
+	public double IDAMatchPercent;
+	public double IDACorrectPercent;
+	public double IDAScore;
+	public String IDAStyle;
 	
 	
 	public Reporter(String errorType) {
 		this.errorType = errorType;
+		
 	}
 	
 	
 	public void errorGen(String errorType, int lineNumb) {
 		map.put(lineNumb, errorType);
 		test.push(errorType + ": " + String.valueOf(lineNumb));
+		if (errorType.equals("indent")) {
+			this.IDALineNumbs.add(lineNumb);
+		}
+		if (errorType.equals("Bracket")) {
+			this.BracketLineNumbs.add(lineNumb);
+		}
+		
 	}
 	
 	public void deleteError(int lineNumb) {
@@ -48,33 +57,43 @@ public class Reporter implements Reportable {
 	}
 	
 		// get and set the percentage of the majority indent style used
-	public int getMajorityIdt() {
-		return this.percentage;
+	public double getMajorityIDA() {
+		return this.IDAConsistentPercentage;
 	}
 	
-	public void setMajorityIdt(int i) {
-		this.percentage = i;
+	public void setMajorityIDA(double i) {
+		this.IDAConsistentPercentage = i*100;
 	}
 	
 		// get and set the majority indent style used
 	public String getIdtStyle() {
-		return this.idtStyle;
+		return this.IDAStyle;
 	}
 	
 	public void setIdtStyle(String s) {
-		this.idtStyle = s;
+		this.IDAStyle = s;
 	}
 	
 		// assess and return the style used with the style demanded.
-	public int getIdtMatch() {
-		return this.matchPercent;
+	public double getIDAMatchPercent() {
+		return this.IDAMatchPercent;
 	}
 	
-	public void setIdtMatch() {
+	public void setIDAMatchPercent(double i) {
+		this.IDAMatchPercent = i*100;
 	}
 	
-	public int getIdtCorrect() {
-		return this.correctPercent;
+	public double getIDACorrectPercent() {
+		return this.IDACorrectPercent;
+	}
+	
+	public void setIDACorrectPercent(double i) {
+		this.IDACorrectPercent = i*100;
+	}
+	
+	public double calculateIDAScore() {
+		double result = ( (IDAMatchPercent + IDAConsistentPercentage + IDACorrectPercent) / 3 );
+		return result;
 	}
 	
 }
