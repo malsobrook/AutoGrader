@@ -3,6 +3,7 @@ package mutators;
 import java.io.*;
 import General.Reportable;
 import General.Reporter;
+import Gui.UserSettings;
 
 public class IDAnalyzer implements Reportable{
 	
@@ -31,12 +32,12 @@ public class IDAnalyzer implements Reportable{
 	int unclosedbrackets = 0;
 	int expectedIdt = 0;
 	int nestLvl = 0;
+	int errorCount = 0;
 	
-	
-	public IDAnalyzer (String filepath, int spaceIndex, String IdtRequirement) throws Exception {
+	public IDAnalyzer (String filepath, Reporter handlerReporter) throws Exception {
 		this.filePath = filepath;
-		this.spaceIndex = spaceIndex;
-		this.repo = new Reporter("indent");
+		this.spaceIndex = UserSettings.getInstance().getNumberOfSpaces();
+		this.repo = handlerReporter;
 		this.OneTBS = true;
 		this.analyze();
 	}
@@ -53,8 +54,8 @@ public class IDAnalyzer implements Reportable{
 			temp = bfr.readLine();
 			lineNumb++;
 		}
+
 		
-		System.out.println("\n\n\n|-----------------------------Report--------------------------------|");
 		String report = report();
 		if(report != null) {
 			System.out.println(report);
@@ -65,6 +66,7 @@ public class IDAnalyzer implements Reportable{
 		String str = "Indent Consistency:	Spaces: " + spaceC + "	Tabs: " + tabC;	// delete
 		System.out.println(str);
 		
+		this.setRepoValues();
 		bfr.close();
 		
 	}
@@ -125,6 +127,7 @@ public class IDAnalyzer implements Reportable{
 				// ignore for now
 			} else {
 				this.repo.errorGen("Indentation error on", lineNumb);
+				errorCount++;
 			}
 		}
 		
@@ -187,18 +190,35 @@ public class IDAnalyzer implements Reportable{
 		return str;
 	}
 	
-	public void consistencyReport() {
-		int percentage;
-		if(spaceC > tabC) {
-			percentage = spaceC / (spaceC + tabC);
-		}
+	public void setRepoValues() {
+			// indent consistency
 		if (tabC > spaceC) {
-			percentage = tabC / (spaceC + tabC);
+			this.repo.setMajorityIDA((double)tabC / (double)(spaceC + tabC));
 		}
-		if (spaceC == tabC) {
-			percentage = 50;
+		if (tabC < spaceC) {
+			this.repo.setMajorityIDA((double)spaceC / (double)(spaceC + tabC));
+		}
+		if (tabC == 0 && spaceC == 0) {
+			this.repo.setMajorityIDA(0);
+		}
+		if (tabC == spaceC) {
+			this.repo.setMajorityIDA(0.5);
 		}
 		
+			// consistency with choice
+		if ( UserSettings.getInstance().getIndentationRequirement().toString().equals("Tab") ) {
+			this.repo.setIDAMatchPercent( ((double)tabC / (double)(spaceC + tabC)) );
+		}
+		if ( UserSettings.getInstance().getIndentationRequirement().toString().equals("Space") ) {
+			this.repo.setIDAMatchPercent( ((double)spaceC / (double)(spaceC + tabC)) );
+		}
+		
+			// indent correctness
+		if ( this.errorCount == 0) {
+			this.repo.setIDACorrectPercent(1.0);
+		} else {
+			this.repo.setIDACorrectPercent( ((double)lineNumb - (double)errorCount) / (double)lineNumb);
+		}
 	}
 	
 }

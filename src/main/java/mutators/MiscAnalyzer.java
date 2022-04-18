@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 
 import General.Reportable;
-import General.template;
+import General.Template;
 import Gui.UserSettings;
 
 	// Going to use this class to generate and report on the simple features of the product
@@ -89,7 +89,7 @@ public class MiscAnalyzer implements Reportable {
 		int passedChecks = 0;
 		
 		// TODO Remove and replace with the instance variable for report per file
-		template report = new template(filepath);
+		Template report = new Template(filepath);
 		
 		try {
 			if(UserSettings.getInstance().isImportsAtTopOfFile()) {

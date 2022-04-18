@@ -4,9 +4,14 @@ import java.io.*;
 import java.util.Map;
 import java.util.Objects;
 
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
+
 import General.Reporter;
-import General.template;
+import General.Template;
 import Gui.UserSettings;
+import Gui.UserSettings.BracketStyles;
+import Gui.UserSettings.IndentationTypes;
 import mutators.*;
 
 public class Handler {
@@ -17,13 +22,13 @@ public class Handler {
 	private String[] keywordSubs = { "@",    "!",     "?",   "#",     "%",   "^",     "*",      "-",         "+"};
 		//_, $, and & " are taken by letters, spaces, and tabs, respectively
 	public Reporter repo;
-	public template report;
+	public Template report;
 	
 	
 	public Handler(String ogfilepath) {
 		this.ogfilepath = Objects.requireNonNull(ogfilepath);
 		this.repo = new Reporter("handler");
-		this.report = new template(ogfilepath);
+		this.report = new Template(ogfilepath);
 	}
 	
 	
@@ -43,12 +48,11 @@ public class Handler {
 		bfr.close();
 		
 
-		// BracketAnalyzer bka = new BracketAnalyzer(path, handlemap.getProperties);
-													// change to SpaceIndex
-		IDAnalyzer ida = new IDAnalyzer(path, UserSettings.getInstance().getMaxLineLength(), UserSettings.getInstance().getIndentationRequirement().toString() );
 		
-		// int value = (int) Math.round((double) handleMap.get("maxLineLength") ); 
+		IDAnalyzer ida = new IDAnalyzer(path, repo );
 		MiscAnalyzer mca = new MiscAnalyzer(ogfilepath, UserSettings.getInstance().getMaxLineLength());
+		
+		report();
 	}
 	
 	
@@ -176,11 +180,36 @@ public class Handler {
 		bfr.close();
 	}
 	
-	public String report() {
-		// for each subfile that makes a report
-			// append that report to a stringbuilder via its method
-		// then return that String
+	public String report() throws Exception {
+		File file = new File(ogfilepath);
+		Template templateHTML = new Template(file.getName());
+		templateHTML.AddIndentationField(repo.calculateIDAScore(), repo.getIDAMatchPercent() , UserSettings.getInstance().getIndentationRequirement().toString(), repo.getMajorityIDA(), repo.getIDACorrectPercent());
+		templateHTML.AddBracketField(777.0, 777.0, UserSettings.getInstance().getBracePlacementStyle().toString(), 777.0, 777.0);
+		templateHTML.AddMiscField(777.0, true, false);
+		this.attemptCompile(templateHTML);
+		// templateHTML.AddNote("File did not compile."); // replace this with a method that actually attempts to compile the file
+		templateHTML.GenerateReport();
 		
 		return null;
+	}
+	
+		// attempts to compile the current source file
+	public void attemptCompile(Template templateHTML) throws Exception {
+		File file = new File(ogfilepath);
+		Process p = Runtime.getRuntime().exec("cmd");
+		
+		try {
+		p = Runtime.getRuntime().exec( ("javac " + file.getName()) );
+		} catch (Exception e) {
+			templateHTML.AddNote("Failed to execute compilation command");
+		}
+		
+		if (p.waitFor() != 0 ) {
+			templateHTML.AddNote("File did not complie");
+		} else {
+			templateHTML.AddNote("Compiled successfully");
+		}
+		
+		System.out.println("here");
 	}
 }

@@ -10,7 +10,7 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 
-public class template {
+public class Template {
 
 		private String fileName;
 		private LocalDate date;
@@ -46,7 +46,7 @@ public class template {
 		+ "</body>"
 		+ "</html>";
 		
-		public template(String fileName) {
+		public Template(String fileName) {
 			this.fileName = fileName;
 			this.header += "    <div class=\"reportInfo\">"
 						+ "        <p style=\"padding-left: 25%\">"+this.fileName+"</p>"
@@ -62,7 +62,7 @@ public class template {
 			reportStringBuilder.append(this.footer);
 			
 			try {
-		      FileWriter myWriter = new FileWriter(this.fileName + date.now().toString() + ".html");
+		      FileWriter myWriter = new FileWriter(this.fileName + "AGReport" + date.now() + ".html");
 		      myWriter.write(reportStringBuilder.toString());
 		      myWriter.close();
 		      System.out.println("Successfully wrote to the file.");
@@ -76,28 +76,28 @@ public class template {
 			notes.add(note);
 		}
 		
-		public void AddIndentationField(int indentationScore, int indentConsistency, String indentationStyle, int choiceConsistency, int indentCorrectness) {
+		public void AddIndentationField(double indentationScore, double e, String indentationStyle, double choiceConsistency, double d) {
 			this.indentationField = "<h3>Indentation Score: " + indentationScore + "%</h3>"
 									+ "<table>"
-									+ "<tr><td>&emsp;Indentation Consistency:</td><td>" + indentConsistency + "%</td></tr>"
+									+ "<tr><td>&emsp;Indentation Consistency:</td><td>" + e + "%</td></tr>"
 									+ "<tr><td>&emsp;Indentation Style Chosen:</td><td>" + indentationStyle + "</td></tr>"
 									+ "<tr><td>&emsp;Consistent with Choice:</td><td>" + choiceConsistency + "%</td></tr>"
-									+ "<tr><td>&emsp;Indentation Correctness:</td><td>" + indentCorrectness + "%</td></tr>"
+									+ "<tr><td>&emsp;Indentation Correctness:</td><td>" + d + "%</td></tr>"
 									+ "</table>";
 		}
 		
-		public void AddBracketField(int bracketScore, int bracketConsistency, String bracketStyle, int choiceConsistency, int bracketCorrectness) {
-			this.bracketField = "<h3>Bracket Score: " + bracketScore + "%</h3>"
+		public void AddBracketField(double d, double e, String bracketStyle, double f, double g) {
+			this.bracketField = "<h3>Bracket Score: " + d + "%</h3>"
 								+ "<table>"
-								+ "<tr><td>&emsp;Bracket Consistency:</td><td>" + bracketConsistency + "%</td></tr>"
+								+ "<tr><td>&emsp;Bracket Consistency:</td><td>" + e + "%</td></tr>"
 								+ "<tr><td>&emsp;Bracket Style Chosen:</td><td>" + bracketStyle + "</td></tr>"
-								+ "<tr><td>&emsp;Consistent with Choice:</td><td>" + choiceConsistency + "%</td></tr>"
-								+ "<tr><td>&emsp;Bracket Correctness:</td><td>" + bracketCorrectness + "%</td></tr>"
+								+ "<tr><td>&emsp;Consistent with Choice:</td><td>" + f + "%</td></tr>"
+								+ "<tr><td>&emsp;Bracket Correctness:</td><td>" + g + "%</td></tr>"
 								+ "</table>";
 		}
 		
-		public void AddMiscField(double miscScore, boolean importsAtTop, boolean commentAtTop) {
-			this.miscField = "<h3>Bracket Score: " + miscScore + "%</h3>"
+		public void AddMiscField(double d, boolean importsAtTop, boolean commentAtTop) {
+			this.miscField = "<h3>Miscellaneous Score: " + d + "%</h3>"
 							+ "<table>"
 							+ "<tr><td>&emsp;All Import At Top:</td><td>" + (importsAtTop ? "Y" : "N") + "</td></tr>"
 							+ "<tr><td>&emsp;Comment Block At Top:</td><td>" + (commentAtTop ? "Y" : "N") + "</td></tr>"
