@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import General.Reporter;
+import General.template;
 import Gui.UserSettings;
 import mutators.*;
 
@@ -16,11 +17,13 @@ public class Handler {
 	private String[] keywordSubs = { "@",    "!",     "?",   "#",     "%",   "^",     "*",      "-",         "+"};
 		//_, $, and & " are taken by letters, spaces, and tabs, respectively
 	public Reporter repo;
+	public template report;
 	
 	
 	public Handler(String ogfilepath) {
 		this.ogfilepath = Objects.requireNonNull(ogfilepath);
 		this.repo = new Reporter("handler");
+		this.report = new template(ogfilepath);
 	}
 	
 	

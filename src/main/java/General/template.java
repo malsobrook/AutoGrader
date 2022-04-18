@@ -96,7 +96,7 @@ public class template {
 								+ "</table>";
 		}
 		
-		public void AddMiscField(int miscScore, boolean importsAtTop, boolean commentAtTop) {
+		public void AddMiscField(double miscScore, boolean importsAtTop, boolean commentAtTop) {
 			this.miscField = "<h3>Bracket Score: " + miscScore + "%</h3>"
 							+ "<table>"
 							+ "<tr><td>&emsp;All Import At Top:</td><td>" + (importsAtTop ? "Y" : "N") + "</td></tr>"
