@@ -29,8 +29,6 @@ public class MainViewController {
     //Model
     List<File> fileList = new ArrayList<File>();
     UserSettings obj = UserSettings.getInstance();
-    ImageView directoryImage = new ImageView(getClass().getResource("directory.png").toExternalForm());
-    ImageView fileImage = new ImageView(getClass().getResource("file.png").toExternalForm());
 
     public MainViewController(AutoGraderView view){
         setView(view);
@@ -38,11 +36,6 @@ public class MainViewController {
 
     public void setView(AutoGraderView view){    
     	loadSettings(view);
-    	
-    	directoryImage.setFitHeight(20);
-    	directoryImage.setFitWidth(20);
-    	fileImage.setFitHeight(20);
-    	fileImage.setFitWidth(20);
         
     	//Adds user selected files and closes the view.
         view.getRunButton().setOnAction(event -> {
@@ -136,9 +129,15 @@ public class MainViewController {
 				}
 				else {
 					if(file.isDirectory()) {
+					    ImageView directoryImage = new ImageView(getClass().getResource("directory.png").toExternalForm());
+						directoryImage.setFitHeight(20);
+				    	directoryImage.setFitWidth(20);
 						view.getFileChooserRegion().getChildren().add(new Label(file.getName(), directoryImage));
 					}
 					else {
+					    ImageView fileImage = new ImageView(getClass().getResource("file.png").toExternalForm());
+				    	fileImage.setFitHeight(20);
+				    	fileImage.setFitWidth(20);
 						view.getFileChooserRegion().getChildren().add(new Label(file.getName(), fileImage));
 					}
 				}
@@ -188,9 +187,15 @@ public class MainViewController {
 					}
 					else {
 						if(file.isDirectory()) {
+						    ImageView directoryImage = new ImageView(getClass().getResource("directory.png").toExternalForm());
+							directoryImage.setFitHeight(20);
+					    	directoryImage.setFitWidth(20);
 							view.getFileChooserRegion().getChildren().add(new Label(file.getName(), directoryImage));
 						}
 						else {
+						    ImageView fileImage = new ImageView(getClass().getResource("file.png").toExternalForm());
+					    	fileImage.setFitHeight(20);
+					    	fileImage.setFitWidth(20);
 							view.getFileChooserRegion().getChildren().add(new Label(file.getName(), fileImage));
 						}
 					}
