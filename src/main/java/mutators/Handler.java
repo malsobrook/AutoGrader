@@ -22,11 +22,13 @@ public class Handler {
 	private String[] keywordSubs = { "@",    "!",     "?",   "#",     "%",   "^",     "*",      "-",         "+"};
 		//_, $, and & " are taken by letters, spaces, and tabs, respectively
 	public Reporter repo;
+	public Template report;
 	
 	
 	public Handler(String ogfilepath) {
 		this.ogfilepath = Objects.requireNonNull(ogfilepath);
 		this.repo = new Reporter("handler");
+		this.report = new Template(ogfilepath);
 	}
 	
 	

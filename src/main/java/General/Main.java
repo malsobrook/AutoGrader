@@ -2,30 +2,11 @@ package General;
 // main class
 // main > handler > analyzer > flagging > production > done
 
-import javax.swing.JFileChooser;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import Gui.UserSettings.BracketStyles;
-import Gui.UserSettings.IndentationTypes;
-
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import picocli.CommandLine;
-import mutators.IDAnalyzer;
 import mutators.Handler;
 
 public class Main {
@@ -62,5 +43,11 @@ public class Main {
 			System.out.println("done");
 		}
 		
+//		Template report = new Template ("Main.java");
+//		report.AddIndentationField(95, 90, IndentationTypes.Tab.toString(), 95, 100);
+//		report.AddBracketField(80, 75, BracketStyles.Inline.toString(), 80, 85);
+//		report.AddMiscField(50, true, false);
+//		report.AddNote("File did not compile.");
+//		report.GenerateReport();
 	}
 }
