@@ -197,14 +197,14 @@ public class Handler {
 	public void attemptCompile(Template templateHTML) throws Exception {
 		File file = new File(ogfilepath);
 		Process p = Runtime.getRuntime().exec("cmd");
-		
+		Process p1 = null;
 		try {
-		p = Runtime.getRuntime().exec( ("javac " + file.getName()) );
+		p1 = Runtime.getRuntime().exec( ("javac " + file.getPath()) );
 		} catch (Exception e) {
 			templateHTML.AddNote("Failed to execute compilation command");
 		}
 		
-		if (p.waitFor() != 0 ) {
+		if (p1.waitFor() != 0 ) {
 			templateHTML.AddNote("File did not complie");
 		} else {
 			templateHTML.AddNote("Compiled successfully");
