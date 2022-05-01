@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 
 import General.Reportable;
+import General.Reporter;
 import General.Template;
 import Gui.UserSettings;
 
@@ -16,9 +17,11 @@ public class MiscAnalyzer implements Reportable {
 	public int lineLength;
 	public String filepath;
 	public BufferedReader fileReader;
+	public Reporter repo;
 	
-	public MiscAnalyzer(String filepath, int lineLength) {
+	public MiscAnalyzer(String filepath, int lineLength, Reporter repo) throws Exception {
 		this.filepath = filepath;
+		this.repo = repo;
 		this.lineLength = lineLength;
 		try {
 			fileReader = new BufferedReader(new FileReader(filepath));
@@ -26,6 +29,8 @@ public class MiscAnalyzer implements Reportable {
 			// TODO Add messaged that filepath couldn't be found
 			e.printStackTrace();
 		}
+		this.importAtTop();
+		this.commentAtTopOfFile();
 	}
 	
 	
@@ -62,22 +67,29 @@ public class MiscAnalyzer implements Reportable {
 			
 			//Return false if any imports found after the top of the file
 			if(pastTopOfFile == true && importFound == true) {
+				repo.setImportsAtTop(false);
 				return false;
 			}
 		}
+		repo.setImportsAtTop(true);
 		//Only when no imports are found or all are at the top
 		return true;
-	}
-	
-	public void commentHandler() {
-
 	}
 	
 	//Parses file to ensure the first entry to the file is a comment.
 	public boolean commentAtTopOfFile() throws IOException {
 		String line = fileReader.readLine();
-		if(line.isBlank()) {
+		if( ( line != null) && line.isBlank()) {
 			line = fileReader.readLine();
+		}
+		if (line == null) {
+			repo.setCommentAtTop(false);
+			return false;
+		}
+		if (line.matches("^(\\/\\/|\\/\\*).*")) {
+			repo.setCommentAtTop(true);
+		} else {
+			repo.setCommentAtTop(false);
 		}
 		
 		return line.matches("^(\\/\\/|\\/\\*).*");
@@ -90,22 +102,6 @@ public class MiscAnalyzer implements Reportable {
 		
 		// TODO Remove and replace with the instance variable for report per file
 		Template report = new Template(filepath);
-		
-		try {
-			if(UserSettings.getInstance().isImportsAtTopOfFile()) {
-				passedChecks += this.importAtTop() ? 1 : 0;
-				count++;
-			}
-			if(UserSettings.getInstance().isCommentBlockAtTopOfFile()) {
-				passedChecks += this.commentAtTopOfFile() ? 1 : 0;
-				count++;
-			}
-			
-			report.AddMiscField(passedChecks/count, this.importAtTop(), this.commentAtTopOfFile());
-		} catch (IOException e) {
-			// TODO Add message for IOException failure.
-			e.printStackTrace();
-		}
 		return null;
 	}
 

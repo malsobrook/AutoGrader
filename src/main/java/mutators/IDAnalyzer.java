@@ -54,17 +54,6 @@ public class IDAnalyzer implements Reportable{
 			temp = bfr.readLine();
 			lineNumb++;
 		}
-
-		
-		String report = report();
-		if(report != null) {
-			System.out.println(report);
-		} else {
-			System.out.println("No indent discrepancies detected");
-		}
-			// test feature
-		String str = "Indent Consistency:	Spaces: " + spaceC + "	Tabs: " + tabC;	// delete
-		System.out.println(str);
 		
 		this.setRepoValues();
 		bfr.close();
