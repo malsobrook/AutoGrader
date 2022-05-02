@@ -2,9 +2,7 @@ package Gui;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 
@@ -22,9 +20,10 @@ public class App extends Application {
     	MainViewController controller = new MainViewController(mainView);
 
         //Show View
-        stage.setTitle("AutoGrader App");
+        stage.setTitle("AutoGrader");
         stage.getIcons().add(new Image(getClass().getResource("AutoGraderIcon.png").toExternalForm()));
         stage.setScene(new Scene(mainView.getView()));
+        stage.setResizable(false);
         stage.show();
     }
 

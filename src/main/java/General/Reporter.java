@@ -11,8 +11,8 @@ public class Reporter implements Reportable {
 	public ArrayList<Map<String, Map<Integer, String>>> mapList = new ArrayList<Map<String, Map<Integer, String>>>();
 	public String errorType;
 	public Stack<String> test = new Stack<String>();
-	public ArrayList<Integer> IDALineNumbs = new ArrayList();
-	public ArrayList<Integer> BracketLineNumbs = new ArrayList();
+	public ArrayList<Integer> IDALineNumbs = new ArrayList<Integer>();
+	public ArrayList<Integer> BracketLineNumbs = new ArrayList<Integer>();
 	
 	// repo items
 	public double IDAConsistentPercentage;

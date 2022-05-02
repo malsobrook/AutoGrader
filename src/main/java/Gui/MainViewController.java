@@ -2,6 +2,7 @@ package Gui;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,6 +21,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
@@ -29,14 +31,18 @@ public class MainViewController {
     //Model
     List<File> fileList = new ArrayList<File>();
     UserSettings obj = UserSettings.getInstance();
+    AutoGraderView view;
 
     public MainViewController(AutoGraderView view){
         setView(view);
     }
 
-    public void setView(AutoGraderView view){    
+    @SuppressWarnings("unchecked")
+	public void setView(AutoGraderView view){    
     	loadSettings(view);
         
+    	this.view = view;
+    	
     	//Adds user selected files and closes the view.
         view.getRunButton().setOnAction(event -> {
         	Main.fileList = this.fileList;
@@ -46,9 +52,10 @@ public class MainViewController {
         //Clears file chooser region
         view.getClearButton().setOnAction(event -> {
         	this.fileList.clear();
-        	view.getFileChooserRegion().getChildren().clear();
+        	view.getFileTree().getRoot().getChildren().clear();
         });
         
+        //Changes visibility of textbox for Indentation Spaces
         view.getIndentationType().setOnAction((event) -> {
         	if(view.getIndentationType().getSelectionModel().getSelectedItem() == IndentationTypes.Spaces) {
         		view.getNumberOfSpaces().setVisible(true);
@@ -59,6 +66,7 @@ public class MainViewController {
         	}
         });
         
+        //Text validation
         view.getMaxLineLength().focusedProperty().addListener((arg0, oldValue, newValue) -> {
             if (!newValue) { 
                     if (!view.getMaxLineLength().getText().matches("^[1-9]\\d*$")) {
@@ -68,6 +76,7 @@ public class MainViewController {
                 }
             });
         
+      //Text validation
         view.getNumberOfSpaces().focusedProperty().addListener((arg0, oldValue, newValue) -> {
             if (!newValue) {
                     if (!view.getNumberOfSpaces().getText().matches("^[1-9]\\d*$")) {
@@ -83,6 +92,7 @@ public class MainViewController {
 			 event.consume();
 		 });
         
+        //Check if report directory is valid
         view.getReportDirectory().focusedProperty().addListener((arg0, oldValue, newValue) -> {
             if (!newValue) { 
             	if(!Files.exists(Path.of(view.getReportDirectory().getText()))) {
@@ -103,51 +113,20 @@ public class MainViewController {
 			fc.setFileFilter(new FileNameExtensionFilter("Java file", new String[] {"java", "jar"}));
 			if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 				File file = fc.getSelectedFile();
-				try {
-					Files.find(Paths.get(file.getAbsolutePath()),
-					           Integer.MAX_VALUE,
-					           (filePath, fileAttr) -> fileAttr.isRegularFile())
-					        .forEach(x -> { 
-					        	File subFile = x.toFile();
-					            String ext = subFile.getName().lastIndexOf(".") == -1 ? "" : subFile.getName().substring(subFile.getName().lastIndexOf("."));
-					            if((ext.equals(".java") || ext.equals(".jar")) && checkFileSize(subFile)) {
-					            	fileList.add(subFile);
-					            }
-					        });
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				
+				addFileToRegion(file);
 				
 				if(this.fileList.size() == oldValue) {
-					//Show message that no .java or .jar were found
-					Alert alert = new Alert(AlertType.ERROR);
-		    		alert.setTitle("No Files Detected");
-		    		alert.setHeaderText("No Files Detected");
-		    		alert.setContentText(file.getAbsolutePath() + " did not contain any .java or .jar files.");
-		    		alert.show();
+					noFilesAlert(file);
 				}
-				else {
-					if(file.isDirectory()) {
-					    ImageView directoryImage = new ImageView(getClass().getResource("directory.png").toExternalForm());
-						directoryImage.setFitHeight(20);
-				    	directoryImage.setFitWidth(20);
-						view.getFileChooserRegion().getChildren().add(new Label(file.getName(), directoryImage));
-					}
-					else {
-					    ImageView fileImage = new ImageView(getClass().getResource("file.png").toExternalForm());
-				    	fileImage.setFitHeight(20);
-				    	fileImage.setFitWidth(20);
-						view.getFileChooserRegion().getChildren().add(new Label(file.getName(), fileImage));
-					}
-				}
+				
 				System.out.println(fileList.size()); // TODO Remove this counter
 			}
 			 event.consume();
 		 });
 		 
 		//Defines logic for drag'n'drop compatibility
-        view.getFileChooserRegion().setOnDragOver(event -> {
+        view.getFileTree().setOnDragOver(event -> {
 			Dragboard board = event.getDragboard();
 			if (board.hasFiles()) {
 				event.acceptTransferModes(TransferMode.MOVE);
@@ -156,48 +135,16 @@ public class MainViewController {
 		});
         
         //Defines logic for accepting drag files
-        view.getFileChooserRegion().setOnDragDropped(event -> {
+        view.getFileTree().setOnDragDropped(event -> {
         	int oldValue = this.fileList.size();
 			Dragboard board = event.getDragboard();
 			if (board.hasFiles()) {
 				board.getFiles().forEach(file -> {
-					try {
-						Files.find(Paths.get(file.getAbsolutePath()),
-						           Integer.MAX_VALUE,
-						           (filePath, fileAttr) -> fileAttr.isRegularFile())
-						        .forEach(x -> { 
-						        	File subFile = x.toFile();
-						            String ext = subFile.getName().lastIndexOf(".") == -1 ? "" : subFile.getName().substring(subFile.getName().lastIndexOf("."));
-						            if((ext.equals(".java") || ext.equals(".jar")) && checkFileSize(subFile)) {
-						            	fileList.add(subFile);
-						            }
-						        });
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					
+					addFileToRegion(file);
 					
 					if(this.fileList.size() == oldValue) {
-						//Show message that no .java or .jar were found
-						Alert alert = new Alert(AlertType.ERROR);
-			    		alert.setTitle("No Files Detected");
-			    		alert.setHeaderText("No Files Detected");
-			    		alert.setContentText(file.getAbsolutePath() + " did not contain any .java or .jar files.");
-			    		alert.show();
-					}
-					else {
-						if(file.isDirectory()) {
-						    ImageView directoryImage = new ImageView(getClass().getResource("directory.png").toExternalForm());
-							directoryImage.setFitHeight(20);
-					    	directoryImage.setFitWidth(20);
-							view.getFileChooserRegion().getChildren().add(new Label(file.getName(), directoryImage));
-						}
-						else {
-						    ImageView fileImage = new ImageView(getClass().getResource("file.png").toExternalForm());
-					    	fileImage.setFitHeight(20);
-					    	fileImage.setFitWidth(20);
-							view.getFileChooserRegion().getChildren().add(new Label(file.getName(), fileImage));
-						}
+						noFilesAlert(file);
 					}
 					System.out.println(fileList.size()); // TODO Remove this counter
 				});
@@ -212,7 +159,7 @@ public class MainViewController {
     }
     
     //Alerts user if file size is larger than 1GB.
-    private Boolean checkFileSize(File file) {
+    private static Boolean checkFileSize(File file) {
     	if(file.length() > 1e+9) {    		
     		Alert alert = new Alert(AlertType.CONFIRMATION);
     		alert.setTitle("Large File Detected");
@@ -241,6 +188,7 @@ public class MainViewController {
     	obj.setLowercaseVarNames(view.getLowercaseVarNames().isSelected());
     	obj.setCommentBlockAtTopOfFile(view.getCommentBlockAtTopOfFile().isSelected());
     	obj.setCommentBeforeEachMethod(view.getCommentBeforeEachMethod().isSelected());
+    	obj.setReportDirectory(view.getReportDirectory().getText());
     	obj.setImportsAtTopOfFile(view.getImportsAtTopOfFile().isSelected());
     	obj.setNoBreakContinueOrGoTo(view.getNoBreakContinueOrGoTo().isSelected());
     	
@@ -248,7 +196,8 @@ public class MainViewController {
     }
     
     //Pulls default UserSettings values to initially populate view
-    private void loadSettings(AutoGraderView view) {
+    @SuppressWarnings("unchecked")
+	private void loadSettings(AutoGraderView view) {
     	view.getIndentationType().setValue(obj.getIndentationRequirement());
     	view.getNumberOfSpaces().setText(String.valueOf(obj.getNumberOfSpaces()));
     	view.getBracketStyle().setValue(obj.getBracePlacementStyle());
@@ -259,8 +208,78 @@ public class MainViewController {
     	view.getLowercaseVarNames().setSelected(obj.isLowercaseVarNames());
     	view.getCommentBlockAtTopOfFile().setSelected(obj.isCommentBlockAtTopOfFile());
     	view.getCommentBeforeEachMethod().setSelected(obj.isCommentBeforeEachMethod());
+    	view.getReportDirectory().setText(obj.getReportDirectory());
     	view.getImportsAtTopOfFile().setSelected(obj.isImportsAtTopOfFile());
     	view.getNoBreakContinueOrGoTo().setSelected(obj.isNoBreakContinueOrGoTo());
-    	view.getReportDirectory().setText("");
     }
+    
+    //Adds directory and its files to TreeView
+    private void createTree(TreeItem<FilePath> rootItem) throws IOException {
+
+        try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(rootItem.getValue().getPath())) {
+
+            for (Path path : directoryStream) {
+
+                TreeItem<FilePath> newItem = new TreeItem<FilePath>( new FilePath( path));
+                newItem.setExpanded(true);
+                
+                String fileName = path.getFileName().toString();
+            	String ext = fileName.lastIndexOf(".") == -1 ? "" : fileName.substring(fileName.lastIndexOf("."));
+                
+                if (Files.isDirectory(path)) {
+                	ImageView directoryImage = new ImageView(getClass().getResource("directory.png").toExternalForm());
+        			directoryImage.setFitHeight(20);
+        	    	directoryImage.setFitWidth(20);
+        	    	newItem.setGraphic(directoryImage);
+                	rootItem.getChildren().add(newItem);
+                    createTree(newItem);
+                }
+                else if ((ext.equals(".java") || ext.equals(".jar")) && checkFileSize(path.toFile())){
+                	ImageView fileImage = new ImageView(getClass().getResource("file.png").toExternalForm());
+        	    	fileImage.setFitHeight(20);
+        	    	fileImage.setFitWidth(20);
+        	    	newItem.setGraphic(fileImage);
+                	rootItem.getChildren().add(newItem);
+                	this.fileList.add(path.toFile());
+                }
+            }
+        }
+        catch( Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    private void addFileToRegion(File file) {
+    	if(file.isDirectory()) {
+			ImageView directoryImage = new ImageView(getClass().getResource("directory.png").toExternalForm());
+			directoryImage.setFitHeight(20);
+	    	directoryImage.setFitWidth(20);
+			TreeItem<FilePath> treeItem = new TreeItem<FilePath>( new FilePath( Paths.get( file.getAbsolutePath())), directoryImage);
+			try {
+				createTree(treeItem);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			treeItem.setExpanded(true);
+			view.getFileTree().getRoot().getChildren().add(treeItem);
+		}
+		else {
+			ImageView fileImage = new ImageView(getClass().getResource("file.png").toExternalForm());
+	    	fileImage.setFitHeight(20);
+	    	fileImage.setFitWidth(20);
+			view.getFileTree().getRoot().getChildren().add(new TreeItem(file, fileImage));
+			this.fileList.add(file);
+		}
+    }
+    
+    //Show message that no .java or .jar were found
+    private void noFilesAlert(File file) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("No Files Detected");
+		alert.setHeaderText("No Files Detected");
+		alert.setContentText(file.getAbsolutePath() + " did not contain any .java or .jar files.");
+		alert.show();
+    }
+
 }

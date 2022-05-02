@@ -14,23 +14,24 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 public class AutoGraderView {
 
     //View Nodes
-	VBox fileChooserRegion = new VBox();
+	TreeView fileTree = new TreeView();
 	Button openFileButton = new Button("Open File");
 	Button runButton = new Button("Run");
 	Button clearButton = new Button("Clear");
 	Button saveButton = new Button("Save");
     
     //FORMATTING
-	ComboBox indentationType = new ComboBox(FXCollections.observableArrayList(UserSettings.IndentationTypes.values()));
+	ComboBox<IndentationTypes> indentationType = new ComboBox<IndentationTypes>(FXCollections.observableArrayList(UserSettings.IndentationTypes.values()));
 	TextField numberOfSpaces = new TextField();
-	ComboBox bracketStyle = new ComboBox(FXCollections.observableArrayList(UserSettings.BracketStyles.values()));
+	ComboBox<BracketStyles> bracketStyle = new ComboBox<BracketStyles>(FXCollections.observableArrayList(UserSettings.BracketStyles.values()));
     TextField maxLineLength = new TextField();
     CheckBox excludeStatementFromLoop = new CheckBox("Exclude statement in the body of a loop");
     CheckBox seperateLineForCondition = new CheckBox("Exclude conditional from same line as the condition");
@@ -58,8 +59,8 @@ public class AutoGraderView {
         view = createView();
     }
     
-    public VBox getFileChooserRegion() {
-    	return fileChooserRegion;
+    public TreeView getFileTree() {
+    	return fileTree;
     }
     
     public Button getOpenFileButton() {
@@ -148,20 +149,23 @@ public class AutoGraderView {
     	HBox hBox = new HBox(15);
         VBox vBox = new VBox();
         
-        fileChooserRegion.setPrefHeight(390);
-        fileChooserRegion.setPrefWidth(200);
-        fileChooserRegion.getStyleClass().add("border");
-        
-        HBox buttonBox = new HBox(15);
-        buttonBox.setAlignment(Pos.TOP_RIGHT);
+        fileTree.setPrefHeight(390);
+        fileTree.setPrefWidth(250);
+        fileTree.getStyleClass().add("border");
+        TreeItem rootItem = new TreeItem("Java Files/Directories");
+        rootItem.setExpanded(true);
+        fileTree.setRoot(rootItem);
+        HBox buttonBox = new HBox(52);
+        buttonBox.setAlignment(Pos.TOP_LEFT);
         buttonBox.getChildren().addAll(openFileButton, clearButton, runButton);
         
-        vBox.getChildren().addAll(fileChooserRegion, buttonBox);
-        hBox.getChildren().addAll(vBox, createOptionPanels(), saveButton);
+        vBox.getChildren().addAll(fileTree, buttonBox);
+        hBox.getChildren().addAll(vBox, createOptionPanels());
         return hBox;
     }
     
     private Node createOptionPanels() {
+    	VBox optionPanel = new VBox();
     	VBox stackedPanels = new VBox();
     	   
         stackedPanels.getChildren().addAll(createFormattingOptions(), createIdentifierOptions(), 
@@ -170,8 +174,11 @@ public class AutoGraderView {
         stackedPanels.getStyleClass().add("backgroundMainPanel");
         
         ScrollPane scroll = new ScrollPane(stackedPanels);
-        scroll.setMaxHeight(400);
-        return scroll;
+        scroll.setMaxHeight(390);
+        scroll.setMinWidth(420);
+        optionPanel.setAlignment(Pos.CENTER_RIGHT);
+        optionPanel.getChildren().addAll(scroll, saveButton);
+        return optionPanel;
     }
     
     private TitledPane createFormattingOptions() {

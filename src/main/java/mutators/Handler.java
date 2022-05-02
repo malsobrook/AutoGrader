@@ -1,18 +1,11 @@
 package mutators;
 
 import java.io.*;
-import java.util.Map;
 import java.util.Objects;
-
-import javax.tools.JavaCompiler;
-import javax.tools.ToolProvider;
 
 import General.Reporter;
 import General.Template;
 import Gui.UserSettings;
-import Gui.UserSettings.BracketStyles;
-import Gui.UserSettings.IndentationTypes;
-import mutators.*;
 
 public class Handler {
 	private String ogfilepath;
@@ -23,6 +16,7 @@ public class Handler {
 		//_, $, and & " are taken by letters, spaces, and tabs, respectively
 	public Reporter repo;
 	public Template report;
+	private MiscAnalyzer mca;
 	
 	
 	public Handler(String ogfilepath) {
@@ -47,11 +41,10 @@ public class Handler {
 		bwr.close();
 		bfr.close();
 		
-
 		BracketAnalyzer bracketAnalyzer = new BracketAnalyzer(path, repo);
 		IDAnalyzer ida = new IDAnalyzer(path, repo);
 		MiscAnalyzer mca = new MiscAnalyzer(ogfilepath, UserSettings.getInstance().getMaxLineLength(), repo);
-		
+	
 		report();
 	}
 	
@@ -180,7 +173,7 @@ public class Handler {
 		bfr.close();
 	}
 	
-	public String report() throws Exception {
+	public void report() throws Exception {
 		File file = new File(ogfilepath);
 		Template templateHTML = new Template(file.getName());
 		templateHTML.AddIndentationField(Math.round(repo.calculateIDAScore()), Math.round(repo.getMajorityIDA()), UserSettings.getInstance().getIndentationRequirement().toString(), Math.round(repo.getIDAMatchPercent())
@@ -188,9 +181,12 @@ public class Handler {
 		templateHTML.AddBracketField(Math.round(77.0), Math.round(77.0), UserSettings.getInstance().getBracePlacementStyle().toString(), Math.round(77.0), Math.round(77.0));
 		templateHTML.AddMiscField(Math.round(repo.getMiscScore()), repo.getImpTopBool(), repo.getCommentTopBool());
 		this.attemptCompile(templateHTML);
+		templateHTML.AddIndentationField(repo.calculateIDAScore(), repo.getIDAMatchPercent() , UserSettings.getInstance().getIndentationRequirement().toString(), repo.getMajorityIDA(), repo.getIDACorrectPercent());
+		templateHTML.AddBracketField(777.0, 777.0, UserSettings.getInstance().getBracePlacementStyle().toString(), 777.0, 777.0);
+		templateHTML.AddMiscField(777.0, mca.importAtTop(), mca.commentAtTopOfFile());
+		//this.attemptCompile(templateHTML); Causes program to hang up and never generate the reports.
+		// templateHTML.AddNote("File did not compile."); // replace this with a method that actually attempts to compile the file
 		templateHTML.GenerateReport();
-		
-		return null;
 	}
 	
 		// attempts to compile the current source file
@@ -205,7 +201,7 @@ public class Handler {
 		}
 		
 		if (p1.waitFor() != 0 ) {
-			templateHTML.AddNote("File did not complie");
+			templateHTML.AddNote("File did not compile");
 		} else {
 			templateHTML.AddNote("Compiled successfully");
 		}

@@ -57,6 +57,12 @@ public class MiscAnalyzer implements Reportable {
 	//Parses file to detect if all imports are at the top.
 	public boolean importAtTop() throws IOException {
 		boolean pastTopOfFile;
+		try {
+			fileReader = new BufferedReader(new FileReader(this.filepath));
+		} catch (FileNotFoundException e) {
+			// TODO Add messaged that filepath couldn't be found
+			e.printStackTrace();
+		}
 		for (String line = fileReader.readLine(); line != null; line = fileReader.readLine()) {
 			boolean importFound;
 			
@@ -68,20 +74,26 @@ public class MiscAnalyzer implements Reportable {
 			//Return false if any imports found after the top of the file
 			if(pastTopOfFile == true && importFound == true) {
 				repo.setImportsAtTop(false);
+				fileReader.close();
 				return false;
 			}
 		}
 		repo.setImportsAtTop(true);
 		//Only when no imports are found or all are at the top
+		fileReader.close();
 		return true;
 	}
 	
 	//Parses file to ensure the first entry to the file is a comment.
 	public boolean commentAtTopOfFile() throws IOException {
-		String line = fileReader.readLine();
-		if( ( line != null) && line.isBlank()) {
-			line = fileReader.readLine();
+		try {
+			fileReader = new BufferedReader(new FileReader(this.filepath));
+		} catch (FileNotFoundException e) {
+			// TODO Add messaged that filepath couldn't be found
+			e.printStackTrace();
 		}
+		
+		String line = fileReader.readLine();
 		if (line == null) {
 			repo.setCommentAtTop(false);
 			return false;
@@ -92,6 +104,7 @@ public class MiscAnalyzer implements Reportable {
 			repo.setCommentAtTop(false);
 		}
 		
+		fileReader.close();
 		return line.matches("^(\\/\\/|\\/\\*).*");
 	}
 	

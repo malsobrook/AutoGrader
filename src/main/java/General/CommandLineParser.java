@@ -3,18 +3,15 @@ package General;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
 import Gui.UserSettings;
 import Gui.UserSettings.BracketStyles;
 import Gui.UserSettings.IndentationTypes;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Alert.AlertType;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
@@ -75,6 +72,9 @@ public class CommandLineParser implements Runnable {
     
     @Option(names = { "--noBreakContinueOrGoTo"}, description = "Exlude the following keywords: break, continue, go to")
     public boolean noBreakContinueOrGoTo;
+    
+    @Option(names = { "--reportDir"}, description = "Directory for reports to be saved to.")
+    public String reportDir;
 
 	@Override
 	public void run() {
@@ -119,6 +119,7 @@ public class CommandLineParser implements Runnable {
 	    	obj.setLowercaseVarNames(this.lowercaseVarNames);
 	    	obj.setCommentBlockAtTopOfFile(this.commentBlockAtTopOfFile);
 	    	obj.setCommentBeforeEachMethod(this.commentBeforeEachMethod);
+	    	obj.setReportDirectory(this.reportDir);
 	    	obj.setImportsAtTopOfFile(this.importsAtTopOfFile);
 	    	obj.setNoBreakContinueOrGoTo(this.noBreakContinueOrGoTo);
 		}
@@ -136,19 +137,18 @@ public class CommandLineParser implements Runnable {
     		System.out.println("The current file is \"+ file.length()/1e+9 + \". Would you like to continue? [y/n]");
     		
     		String result = reader.next();
-    		if (result.toLowerCase().equals("y")){
-    		    return true;
-    		} else {
-    		    return false;
-    		}
+    		reader.close();
+    		return result.toLowerCase().equals("y") ? true : false;
     	}
     	return true;
     }
     
     private void Validation() {
+    	Boolean errorFound = false;
+    	
     	if(this.files.isEmpty() && this.directory == null) {
 			System.out.println("No file(s) or directory defined. Include a file or a directory path. ");
-			System.exit(0);
+			errorFound = true;
 		}		
 		
 		try {
@@ -156,7 +156,7 @@ public class CommandLineParser implements Runnable {
 		}
 		catch (Exception ex) {
 			System.out.println(this.indentationRequirement + " is not a valid Indentation Requirement type. Use -h for more information.");
-			System.exit(0);
+			errorFound = true;
 		}
 		
 		try {
@@ -164,17 +164,27 @@ public class CommandLineParser implements Runnable {
 		}
 		catch (Exception ex) {
 			System.out.println(this.bracePlacementStyle + " is not a valid Bracket Placement style. Use -h for more information.");
-			System.exit(0);
+			errorFound = true;
 		}
 		
 		if(Enum.valueOf(IndentationTypes.class, this.indentationRequirement) == IndentationTypes.Spaces && !(this.numberOfSpaces > 0)) {
 			System.out.println("Error: --spaces must an integer greater than zero when using --indentationRequirement=Spaces");
-			System.exit(0);
+			errorFound = true;
 		}
 		
 		if(!(this.maxLineLength > 0)) {
 			System.out.println("Error: --maxLineLength must an integer greater than zero.");
-			System.exit(0);
+			errorFound = true;
 		}
+		
+		if(this.reportDir != null &&
+			!Files.exists(Path.of(this.reportDir))) {
+			System.out.println("Error: --reportDir must have a valid directory path.");
+			errorFound = true;
+		}
+    
+    	if(errorFound == true) {
+    		System.exit(0);
+    	}
     }
 }

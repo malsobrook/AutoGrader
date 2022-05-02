@@ -5,9 +5,6 @@ import java.io.FileWriter;
 
 import com.google.gson.Gson;
 
-import Gui.UserSettings.BracketStyles;
-import Gui.UserSettings.IndentationTypes;
-
 public class UserSettings {
 	private static UserSettings instance;
 	   
@@ -19,8 +16,8 @@ public class UserSettings {
 	private int numberOfSpaces;
 	private BracketStyles bracePlacementStyle;
 	private int maxLineLength;				
-	private boolean excludeStatementFromLoop;	// probs not functional
-	private boolean seperateLineForCondition;	// ditto ^
+	private boolean excludeStatementFromLoop;
+	private boolean seperateLineForCondition;	
 	
 	//INDENTIFIER
 	private boolean uppercaseClassNames;
@@ -33,6 +30,7 @@ public class UserSettings {
 	//FILE NAMING
 	
 	//MISC
+	private String reportDirectory;
 	private boolean importsAtTopOfFile;
 	private boolean noBreakContinueOrGoTo;
 	
@@ -116,6 +114,14 @@ public class UserSettings {
 		this.commentBeforeEachMethod = commentBeforeEachMethod;
 	}
 
+	public String getReportDirectory() {
+		return reportDirectory;
+	}
+	
+	public void setReportDirectory(String path) {
+		this.reportDirectory = path;
+	}
+	
 	public boolean isImportsAtTopOfFile() {
 		return importsAtTopOfFile;
 	}
@@ -142,6 +148,7 @@ public class UserSettings {
 		this.lowercaseVarNames = false;
 		this.commentBeforeEachMethod = false;
 		this.commentBlockAtTopOfFile = false;
+		this.reportDirectory = "";
 		this.importsAtTopOfFile = false;
 		this.noBreakContinueOrGoTo = false;
    }
