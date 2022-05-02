@@ -48,9 +48,9 @@ public class Handler {
 		bfr.close();
 		
 
-		BracketAnalyzer bra = new BracketAnalyzer(path, repo);
-		IDAnalyzer ida = new IDAnalyzer(path, repo );
-		MiscAnalyzer mca = new MiscAnalyzer(ogfilepath, UserSettings.getInstance().getMaxLineLength());
+		
+		IDAnalyzer ida = new IDAnalyzer(path, repo);
+		MiscAnalyzer mca = new MiscAnalyzer(ogfilepath, UserSettings.getInstance().getMaxLineLength(), repo);
 		
 		report();
 	}
@@ -183,11 +183,11 @@ public class Handler {
 	public String report() throws Exception {
 		File file = new File(ogfilepath);
 		Template templateHTML = new Template(file.getName());
-		templateHTML.AddIndentationField(repo.calculateIDAScore(), repo.getIDAMatchPercent() , UserSettings.getInstance().getIndentationRequirement().toString(), repo.getMajorityIDA(), repo.getIDACorrectPercent());
-		templateHTML.AddBracketField(777.0, 777.0, UserSettings.getInstance().getBracePlacementStyle().toString(), 777.0, 777.0);
-		templateHTML.AddMiscField(777.0, true, false);
+		templateHTML.AddIndentationField(Math.round(repo.calculateIDAScore()), Math.round(repo.getMajorityIDA()), UserSettings.getInstance().getIndentationRequirement().toString(), Math.round(repo.getIDAMatchPercent())
+				, Math.round(repo.getIDACorrectPercent()));
+		templateHTML.AddBracketField(Math.round(77.0), Math.round(77.0), UserSettings.getInstance().getBracePlacementStyle().toString(), Math.round(77.0), Math.round(77.0));
+		templateHTML.AddMiscField(Math.round(repo.getMiscScore()), repo.getImpTopBool(), repo.getCommentTopBool());
 		this.attemptCompile(templateHTML);
-		// templateHTML.AddNote("File did not compile."); // replace this with a method that actually attempts to compile the file
 		templateHTML.GenerateReport();
 		
 		return null;
@@ -209,7 +209,5 @@ public class Handler {
 		} else {
 			templateHTML.AddNote("Compiled successfully");
 		}
-		
-		System.out.println("here");
 	}
 }

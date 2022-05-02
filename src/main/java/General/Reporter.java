@@ -20,6 +20,10 @@ public class Reporter implements Reportable {
 	public double IDACorrectPercent;
 	public double IDAScore;
 	public String IDAStyle;
+	public double ImpTop;
+	public double CommentTop;
+	public boolean ImpTopBool;
+	public boolean CommentTopBool;
 	
 	
 	public Reporter(String errorType) {
@@ -96,4 +100,41 @@ public class Reporter implements Reportable {
 		return result;
 	}
 	
+	public double getImportsAtTop() {
+		return this.ImpTop;
+	}
+	
+	public void setImportsAtTop(boolean i) {
+		this.ImpTopBool = i;
+		if (i) {
+			this.ImpTop = 100.0;
+		} else {
+			this.ImpTop = 0.0;
+		}
+	}
+	
+	public double getCommentAtTop() {
+		return this.CommentTop;
+	}
+	
+	public void setCommentAtTop(boolean i) {
+		this.CommentTopBool = i;
+		if (i) {
+			this.CommentTop = 100.0;
+		} else {
+			this.CommentTop = 0;
+		}
+	}
+	
+	public boolean getImpTopBool() {
+		return this.ImpTopBool;
+	}
+	
+	public boolean getCommentTopBool() {
+		return this.CommentTopBool;
+	}
+	
+	public double getMiscScore() {
+		return ( (this.ImpTop + this.CommentTop) / 2.0);
+	}
 }
