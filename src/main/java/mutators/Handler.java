@@ -43,7 +43,7 @@ public class Handler {
 		
 		BracketAnalyzer bracketAnalyzer = new BracketAnalyzer(path, repo);
 		IDAnalyzer ida = new IDAnalyzer(path, repo);
-		MiscAnalyzer mca = new MiscAnalyzer(ogfilepath, UserSettings.getInstance().getMaxLineLength(), repo);
+		mca = new MiscAnalyzer(ogfilepath, UserSettings.getInstance().getMaxLineLength(), repo);
 	
 		report();
 	}
@@ -180,11 +180,10 @@ public class Handler {
 				, Math.round(repo.getIDACorrectPercent()));
 		templateHTML.AddBracketField(Math.round(77.0), Math.round(77.0), UserSettings.getInstance().getBracePlacementStyle().toString(), Math.round(77.0), Math.round(77.0));
 		templateHTML.AddMiscField(Math.round(repo.getMiscScore()), repo.getImpTopBool(), repo.getCommentTopBool());
-		this.attemptCompile(templateHTML);
-		templateHTML.AddIndentationField(repo.calculateIDAScore(), repo.getIDAMatchPercent() , UserSettings.getInstance().getIndentationRequirement().toString(), repo.getMajorityIDA(), repo.getIDACorrectPercent());
-		templateHTML.AddBracketField(777.0, 777.0, UserSettings.getInstance().getBracePlacementStyle().toString(), 777.0, 777.0);
-		templateHTML.AddMiscField(777.0, mca.importAtTop(), mca.commentAtTopOfFile());
 		//this.attemptCompile(templateHTML); Causes program to hang up and never generate the reports.
+		templateHTML.AddIndentationField(repo.calculateIDAScore(), repo.getIDAMatchPercent() , UserSettings.getInstance().getIndentationRequirement().toString(), repo.getMajorityIDA(), repo.getIDACorrectPercent());
+		templateHTML.AddBracketField(100.0, 100.0, UserSettings.getInstance().getBracePlacementStyle().toString(), 100.0, 100.0);
+		templateHTML.AddMiscField(50.0, mca.importAtTop(), mca.commentAtTopOfFile());
 		// templateHTML.AddNote("File did not compile."); // replace this with a method that actually attempts to compile the file
 		templateHTML.GenerateReport();
 	}
