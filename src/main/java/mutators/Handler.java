@@ -48,7 +48,7 @@ public class Handler {
 		bfr.close();
 		
 
-		
+		BracketAnalyzer bra = new BracketAnalyzer(path, repo);
 		IDAnalyzer ida = new IDAnalyzer(path, repo );
 		MiscAnalyzer mca = new MiscAnalyzer(ogfilepath, UserSettings.getInstance().getMaxLineLength());
 		

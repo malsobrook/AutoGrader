@@ -4,6 +4,7 @@ import General.Reportable;
 import General.Reporter;
 import java.io.FileReader;
 import java.io.LineNumberReader;
+import java.util.Iterator;
 
 
 public class BracketAnalyzer implements Reportable {
@@ -20,11 +21,12 @@ public class BracketAnalyzer implements Reportable {
 	//								if, 	else, 	while, 	  for,  try,  catch,  class, (represents methods/constructors)
 
 	private LineNumberReader bracketReader;
-	public Reporter reporter = new Reporter("bracket");
+	Reporter reporter;
 
 
-	public BracketAnalyzer(String filepath) throws Exception {
+	public BracketAnalyzer(String filepath, Reporter reporter) throws Exception {
 		this.filepath = filepath;
+		this.reporter = reporter;
 		this.analyze();
 
 	}
@@ -39,8 +41,11 @@ public class BracketAnalyzer implements Reportable {
 			charArray = temporaryLine.toCharArray();
 			bracketChecker(charArray);
 		}
-
 		
+		System.out.println("inline count: " + inLine);
+		System.out.println("nextline count: " + nextLine);
+
+		this.setReporterValues();
 		bracketReader.close();
 	}
 
@@ -51,26 +56,29 @@ public class BracketAnalyzer implements Reportable {
 			// set anticipateNext to false
 			// call method detectBracketNextLine()
 				// if method returns true, we found next line bracket, make appropriate changes
-			// else call an error "bracket anticipated, but never found
-					
-		
-		// for int i = 0 ; i<CA.length;i++
-			// if find keyword token
-				// determine if bracket is inline, if not, expect on next
-				// seperate method for this ^
-				// make appropriate changes for inline dected
+			// else call an error "bracket anticipated, but never found	
 		
 		
 		if (anticipateNext) {
+			anticipateNext = false;
 			if( ! ( detectBracketNextLine(CA) ) ) {
 				// make appropriate logs / changes
+				System.out.println("Bracket anticipated, but never found.");
+				this.reporter.errorGen("Bracket anticipated, but never found. Line: ", bracketReader.getLineNumber());
 			}
 		}
+		
+		// for int i = 0 ; i<CA.length; i++
+		// if find keyword token
+			// determine if bracket is inline, if not, expect on next
+			// advance the current line number
 		
 		for (int i = 0; i < CA.length; i++) {
 			if (keywordSearch(CA[i])) {
 				if(!(detectBracketInLine(CA, i))) {
 					anticipateNext = true;
+					int lineNum = bracketReader.getLineNumber();
+					bracketReader.setLineNumber(lineNum ++);
 					// make appropriate logs / changes
 				}
 			}
@@ -83,17 +91,25 @@ public class BracketAnalyzer implements Reportable {
 	private boolean detectBracketInLine(char[] ca, int index) {
 		for (int i = index; i < ca.length; i++) {
 			if (ca[i] == '{') {
-				System.out.println("found inline bracket on:" + bracketReader.getLineNumber()); 	// this is only for testing purposes, delete when no longer necessary
+				inLine ++;
+				System.out.println("Found inline bracket on: " + bracketReader.getLineNumber()); 	// this is only for testing purposes, delete when no longer necessary
 				return true;
 			}
 		}
 		return false;
 	}
 	
+	//starts on current line passed to it, then looks for a brace.
 	private boolean detectBracketNextLine(char[] ca) {
 		// assess if there's a bracket in this line, return true if true, otherwise false
-		
-		return true;	// placeholder, change as necessary
+		for (int i = 0; i < ca.length; i++) {
+			if (ca[i] == '{') {
+				nextLine ++;
+				System.out.println("Found a bracket on the next line: " + bracketReader.getLineNumber()); 	// this is only for testing purposes, delete when no longer necessary
+				return true;
+			}
+		}
+		return false;
 	}
 
 		// uses char array to detect if char is present in our keyword array.
@@ -108,8 +124,12 @@ public class BracketAnalyzer implements Reportable {
 
 	@Override
 	public String report() {
-		// TODO Auto-generated method stub
-		return null;
+		String repo = reporter.report();
+		return repo;
+	}
+	
+	public void setReporterValues() {
+
 	}
 
 }
