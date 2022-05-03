@@ -41,10 +41,11 @@ public class Handler {
 		bwr.close();
 		bfr.close();
 		
-		BracketAnalyzer bracketAnalyzer = new BracketAnalyzer(path, repo);
-		IDAnalyzer ida = new IDAnalyzer(path, repo);
-		mca = new MiscAnalyzer(ogfilepath, UserSettings.getInstance().getMaxLineLength(), repo);
-	
+
+		
+		IDAnalyzer ida = new IDAnalyzer(path, repo );
+		MiscAnalyzer mca = new MiscAnalyzer(ogfilepath, UserSettings.getInstance().getMaxLineLength());
+		
 		report();
 	}
 	
@@ -176,14 +177,10 @@ public class Handler {
 	public void report() throws Exception {
 		File file = new File(ogfilepath);
 		Template templateHTML = new Template(file.getName());
-		templateHTML.AddIndentationField(Math.round(repo.calculateIDAScore()), Math.round(repo.getMajorityIDA()), UserSettings.getInstance().getIndentationRequirement().toString(), Math.round(repo.getIDAMatchPercent())
-				, Math.round(repo.getIDACorrectPercent()));
-		templateHTML.AddBracketField(Math.round(77.0), Math.round(77.0), UserSettings.getInstance().getBracePlacementStyle().toString(), Math.round(77.0), Math.round(77.0));
-		templateHTML.AddMiscField(Math.round(repo.getMiscScore()), repo.getImpTopBool(), repo.getCommentTopBool());
-		//this.attemptCompile(templateHTML); Causes program to hang up and never generate the reports.
 		templateHTML.AddIndentationField(repo.calculateIDAScore(), repo.getIDAMatchPercent() , UserSettings.getInstance().getIndentationRequirement().toString(), repo.getMajorityIDA(), repo.getIDACorrectPercent());
-		templateHTML.AddBracketField(100.0, 100.0, UserSettings.getInstance().getBracePlacementStyle().toString(), 100.0, 100.0);
-		templateHTML.AddMiscField(50.0, mca.importAtTop(), mca.commentAtTopOfFile());
+		templateHTML.AddBracketField(777.0, 777.0, UserSettings.getInstance().getBracePlacementStyle().toString(), 777.0, 777.0);
+		templateHTML.AddMiscField(777.0, true, false);
+		this.attemptCompile(templateHTML);
 		// templateHTML.AddNote("File did not compile."); // replace this with a method that actually attempts to compile the file
 		templateHTML.GenerateReport();
 	}
@@ -204,5 +201,7 @@ public class Handler {
 		} else {
 			templateHTML.AddNote("Compiled successfully");
 		}
+		
+		System.out.println("here");
 	}
 }

@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 
 import General.Reportable;
-import General.Reporter;
 import General.Template;
 import Gui.UserSettings;
 
@@ -17,11 +16,9 @@ public class MiscAnalyzer implements Reportable {
 	public int lineLength;
 	public String filepath;
 	public BufferedReader fileReader;
-	public Reporter repo;
 	
-	public MiscAnalyzer(String filepath, int lineLength, Reporter repo) throws Exception {
+	public MiscAnalyzer(String filepath, int lineLength) {
 		this.filepath = filepath;
-		this.repo = repo;
 		this.lineLength = lineLength;
 		try {
 			fileReader = new BufferedReader(new FileReader(filepath));
@@ -29,8 +26,6 @@ public class MiscAnalyzer implements Reportable {
 			// TODO Add messaged that filepath couldn't be found
 			e.printStackTrace();
 		}
-		this.importAtTop();
-		this.commentAtTopOfFile();
 	}
 	
 	
@@ -78,10 +73,13 @@ public class MiscAnalyzer implements Reportable {
 				return false;
 			}
 		}
-		repo.setImportsAtTop(true);
 		//Only when no imports are found or all are at the top
 		fileReader.close();
 		return true;
+	}
+	
+	public void commentHandler() {
+
 	}
 	
 	//Parses file to ensure the first entry to the file is a comment.
@@ -115,6 +113,22 @@ public class MiscAnalyzer implements Reportable {
 		
 		// TODO Remove and replace with the instance variable for report per file
 		Template report = new Template(filepath);
+		
+		try {
+			if(UserSettings.getInstance().isImportsAtTopOfFile()) {
+				passedChecks += this.importAtTop() ? 1 : 0;
+				count++;
+			}
+			if(UserSettings.getInstance().isCommentBlockAtTopOfFile()) {
+				passedChecks += this.commentAtTopOfFile() ? 1 : 0;
+				count++;
+			}
+			
+			report.AddMiscField(passedChecks/count, this.importAtTop(), this.commentAtTopOfFile());
+		} catch (IOException e) {
+			// TODO Add message for IOException failure.
+			e.printStackTrace();
+		}
 		return null;
 	}
 
