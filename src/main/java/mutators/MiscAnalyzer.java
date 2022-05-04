@@ -127,7 +127,9 @@ public class MiscAnalyzer implements Reportable {
 				count++;
 			}
 			
-			repo.setMACorrectPercent(passedChecks/count);
+			if(count != 0) {
+				repo.setMACorrectPercent(passedChecks/count);
+			}
 		} catch (IOException e) {
 			// TODO Add message for IOException failure.
 			e.printStackTrace();

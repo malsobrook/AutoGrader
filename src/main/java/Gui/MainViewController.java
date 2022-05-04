@@ -45,7 +45,7 @@ public class MainViewController {
     	
     	//Adds user selected files and closes the view.
         view.getRunButton().setOnAction(event -> {
-        	Main.fileList = this.fileList;
+        	Main.fileList = new ArrayList<File>(this.fileList);
         	this.fileList.clear();
         	view.getFileTree().getRoot().getChildren().clear();
         });
