@@ -20,6 +20,39 @@ public class Reporter implements Reportable {
 	public double IDACorrectPercent;
 	public double IDAScore;
 	public String IDAStyle;
+	public boolean MAImportAtTop;
+	public double MACorrectPercent;
+	
+	public double getMACorrectPercent() {
+		return MACorrectPercent;
+	}
+
+
+	public void setMACorrectPercent(double mACorrectPercent) {
+		MACorrectPercent = mACorrectPercent;
+	}
+
+
+	public boolean isMAImportAtTop() {
+		return MAImportAtTop;
+	}
+
+
+	public void setMAImportAtTop(boolean mAImportAtTop) {
+		MAImportAtTop = mAImportAtTop;
+	}
+
+
+	public boolean isMACommentAtTop() {
+		return MACommentAtTop;
+	}
+
+
+	public void setMACommentAtTop(boolean mACommentAtTop) {
+		MACommentAtTop = mACommentAtTop;
+	}
+
+	public boolean MACommentAtTop;
 	
 	
 	public Reporter(String errorType) {

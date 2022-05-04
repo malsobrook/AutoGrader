@@ -8,8 +8,8 @@ import com.google.gson.Gson;
 public class UserSettings {
 	private static UserSettings instance;
 	   
-	public enum IndentationTypes { Spaces, Tab; }
-	public enum BracketStyles { Inline, Newline; }
+	public enum IndentationTypes { None, Spaces, Tab; }
+	public enum BracketStyles { None, Inline, Newline; }
 	
 	//FORMATTING
 	private IndentationTypes indentationRequirement;
@@ -139,10 +139,10 @@ public class UserSettings {
 	}
 	
    private UserSettings() {
-	    this.indentationRequirement = IndentationTypes.Tab;
-	    this.numberOfSpaces = 4;
-		this.maxLineLength = 80;
-		this.bracePlacementStyle = BracketStyles.Inline;
+	    this.indentationRequirement = IndentationTypes.None;
+	    this.numberOfSpaces = 0;
+		this.maxLineLength = 0;
+		this.bracePlacementStyle = BracketStyles.None;
 		this.seperateLineForCondition = false;
 		this.uppercaseClassNames = false;
 		this.lowercaseVarNames = false;

@@ -46,7 +46,8 @@ public class MainViewController {
     	//Adds user selected files and closes the view.
         view.getRunButton().setOnAction(event -> {
         	Main.fileList = this.fileList;
-        	Platform.exit();
+        	this.fileList.clear();
+        	view.getFileTree().getRoot().getChildren().clear();
         });
         
         //Clears file chooser region
@@ -119,8 +120,6 @@ public class MainViewController {
 				if(this.fileList.size() == oldValue) {
 					noFilesAlert(file);
 				}
-				
-				System.out.println(fileList.size()); // TODO Remove this counter
 			}
 			 event.consume();
 		 });
@@ -146,7 +145,6 @@ public class MainViewController {
 					if(this.fileList.size() == oldValue) {
 						noFilesAlert(file);
 					}
-					System.out.println(fileList.size()); // TODO Remove this counter
 				});
 
 				event.setDropCompleted(true);
@@ -268,7 +266,7 @@ public class MainViewController {
 			ImageView fileImage = new ImageView(getClass().getResource("file.png").toExternalForm());
 	    	fileImage.setFitHeight(20);
 	    	fileImage.setFitWidth(20);
-			view.getFileTree().getRoot().getChildren().add(new TreeItem(file, fileImage));
+			view.getFileTree().getRoot().getChildren().add(new TreeItem(file.getName(), fileImage));
 			this.fileList.add(file);
 		}
     }

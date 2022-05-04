@@ -44,7 +44,7 @@ public class Handler {
 
 		
 		IDAnalyzer ida = new IDAnalyzer(path, repo );
-		MiscAnalyzer mca = new MiscAnalyzer(ogfilepath, UserSettings.getInstance().getMaxLineLength());
+		MiscAnalyzer mca = new MiscAnalyzer(ogfilepath, repo);
 		
 		report();
 	}
@@ -179,7 +179,7 @@ public class Handler {
 		Template templateHTML = new Template(file.getName());
 		templateHTML.AddIndentationField(repo.calculateIDAScore(), repo.getIDAMatchPercent() , UserSettings.getInstance().getIndentationRequirement().toString(), repo.getMajorityIDA(), repo.getIDACorrectPercent());
 		templateHTML.AddBracketField(777.0, 777.0, UserSettings.getInstance().getBracePlacementStyle().toString(), 777.0, 777.0);
-		templateHTML.AddMiscField(777.0, true, false);
+		templateHTML.AddMiscField(repo.MACorrectPercent, repo.isMAImportAtTop(), repo.isMACommentAtTop());
 		this.attemptCompile(templateHTML);
 		// templateHTML.AddNote("File did not compile."); // replace this with a method that actually attempts to compile the file
 		templateHTML.GenerateReport();

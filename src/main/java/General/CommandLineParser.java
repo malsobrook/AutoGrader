@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 import Gui.UserSettings;
@@ -23,7 +24,7 @@ public class CommandLineParser implements Runnable {
     public boolean saveSettings;
     
     @Option(names = { "-j", "--json"}, description = "Use JSON file for settings")
-    public boolean useJson;
+    public boolean useJson = false;
     
     @Parameters(index = "0..*", description = "File(s) to be graded.")
     public List<File> files = new ArrayList<File>();
@@ -33,16 +34,16 @@ public class CommandLineParser implements Runnable {
     
     //FORMATTING
     @Option(names = { "--indentationRequirement"}, description = "Valid values: \"Spaces\" or \"Tabs.\"")
-    public String indentationRequirement = IndentationTypes.Spaces.toString();
+    public String indentationRequirement = IndentationTypes.None.toString();
     
     @Option(names = { "--spaces"}, description = "Used to specify number of spaces when using --indentationRequirement=Spaces")
     public int numberOfSpaces;
     
     @Option(names = { "--bracePlacementStyle"}, description = "Valid values: \"Inline\" or \"Newline.\"")
-    public String bracePlacementStyle = BracketStyles.Inline.toString();
+    public String bracePlacementStyle = BracketStyles.None.toString();
     
     @Option(names = { "--maxLineLength"}, description = "The max length of a line in the file.")
-    public int maxLineLength;
+    public Optional<Integer> maxLineLength = Optional.empty();
     
     @Option(names = { "--excludeStatementFromLoop"}, description = "")
     public boolean excludeStatementFromLoop;
@@ -109,10 +110,11 @@ public class CommandLineParser implements Runnable {
 		
 		UserSettings obj = UserSettings.getInstance();
     	
+		//Sets user values to UserSettings temporarily
 		if(!this.useJson) {
 	    	obj.setIndentationRequirement(IndentationTypes.valueOf(this.indentationRequirement));
 	    	obj.setBracePlacementStyle(BracketStyles.valueOf(this.bracePlacementStyle));
-	    	obj.setMaxLineLength(this.maxLineLength);
+	    	obj.setMaxLineLength(this.maxLineLength.isEmpty() ? 0 : this.maxLineLength.get());
 	    	obj.setExcludeStatementFromLoop(this.excludeStatementFromLoop);
 	    	obj.setSeperateLineForCondition(this.seperateLineForCondition);
 	    	obj.setUppercaseClassNames(this.uppercaseClassNames);
@@ -172,7 +174,7 @@ public class CommandLineParser implements Runnable {
 			errorFound = true;
 		}
 		
-		if(!(this.maxLineLength > 0)) {
+		if(!this.maxLineLength.isEmpty() && !(this.maxLineLength.get() > 0)) {
 			System.out.println("Error: --maxLineLength must an integer greater than zero.");
 			errorFound = true;
 		}
