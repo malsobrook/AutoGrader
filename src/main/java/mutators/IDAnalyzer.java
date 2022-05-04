@@ -54,19 +54,8 @@ public class IDAnalyzer implements Reportable{
 			temp = bfr.readLine();
 			lineNumb++;
 		}
-
 		
-		String report = report();
-		if(report != null) {
-			System.out.println(report);
-		} else {
-			System.out.println("No indent discrepancies detected");
-		}
-			// test feature
-		String str = "Indent Consistency:	Spaces: " + spaceC + "	Tabs: " + tabC;	// delete
-		System.out.println(str);
-		
-		this.setRepoValues();
+		this.report();
 		bfr.close();
 		
 	}
@@ -115,45 +104,16 @@ public class IDAnalyzer implements Reportable{
 			}
 		}
 		
-			//delete
-		if (ca.length == 0) {
-			System.out.println("Line:" + lineNumb + "        " + "B" + "    " + expectedIdt);	// B for Blank Line
-		} else {
-			System.out.println("Line:" + lineNumb + "        " + actual + "    " + expectedIdt);
-		}
-		
 		if (expectedIdt != actual) {
 			if (ca.length == 0) {
 				// ignore for now
 			} else {
-				this.repo.errorGen("Indentation error on", lineNumb);
 				errorCount++;
 			}
 		}
 		
 		
 		for (int i = 0; i < ca.length; i++) {
-			// if we find a keyword
-				// expect a bracket, this line or next
-				// add 1 to anticipated opening brackets
-				// add 1 to expected indent level depending on bracket style
-			
-			
-			// search for opening bracket
-			// found one
-				// add 1 to bracket count
-				// if we anticipate a bracket on 'next line' and this is it
-					// stop anticipating that bracket
-					// add to expected indent level because we didn't before
-			
-			
-			// search for closing bracket
-			//found one
-				// if bracket count is greater than anticipated count
-					// lower bracket count by 1
-				// else if they are equal
-					// lower bracket count and anticipated count by 1
-					// lower expected indent level by one
 			
 			if (keySearch(ca[i])) {
 				expectedBrackets++;
@@ -184,25 +144,26 @@ public class IDAnalyzer implements Reportable{
 		return false;
 	}
 	
-		// called externally to get all reports of this type.
-	public String report() {
-		String str = repo.report();
-		return str;
-	}
-	
-	public void setRepoValues() {
+	public void report() {
 			// indent consistency
 		if (tabC > spaceC) {
 			this.repo.setMajorityIDA((double)tabC / (double)(spaceC + tabC));
+			this.repo.setIdtStyle("Tab");
 		}
+		
 		if (tabC < spaceC) {
 			this.repo.setMajorityIDA((double)spaceC / (double)(spaceC + tabC));
+			this.repo.setIdtStyle("Space");
 		}
+		
 		if (tabC == 0 && spaceC == 0) {
 			this.repo.setMajorityIDA(0);
+			this.repo.setIdtStyle("None");
 		}
+		
 		if (tabC == spaceC) {
 			this.repo.setMajorityIDA(0.5);
+			this.repo.setIdtStyle("Tab"); // if a 50/50 split occurs we simply display they chose tabs.
 		}
 		
 			// consistency with choice
@@ -212,7 +173,9 @@ public class IDAnalyzer implements Reportable{
 		if ( UserSettings.getInstance().getIndentationRequirement().toString().equals("Space") ) {
 			this.repo.setIDAMatchPercent( ((double)spaceC / (double)(spaceC + tabC)) );
 		}
-		
+		if ( UserSettings.getInstance().getIndentationRequirement().toString().equals("None") ) {
+			this.repo.setIDAMatchPercent(0);
+		}
 			// indent correctness
 		if ( this.errorCount == 0) {
 			this.repo.setIDACorrectPercent(1.0);

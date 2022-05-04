@@ -83,23 +83,25 @@ public class Template {
 			notes.add(note);
 		}
 		
-		public void AddIndentationField(double indentationScore, double indentConsistency, String indentationStyle, double choiceConsistency, double indentCorrectness) {
+		public void AddIndentationField(double indentationScore, double e, String userStyle, String indentationStyle, double choiceConsistency, double d) {
 			this.indentationField = "<h3>Indentation Score: " + indentationScore + "%</h3>"
 									+ "<table>"
-									+ "<tr><td>&emsp;Indentation Consistency:</td><td>" + indentConsistency + "%</td></tr>"
-									+ "<tr><td>&emsp;Indentation Style Chosen:</td><td>" + indentationStyle + "</td></tr>"
-									+ "<tr><td>&emsp;Consistent with Choice:</td><td>" + choiceConsistency + "%</td></tr>"
-									+ "<tr><td>&emsp;Indentation Correctness:</td><td>" + indentCorrectness + "%</td></tr>"
+									+ "<tr><td>&emsp;Indentation Used by Author:</td><td>" + userStyle + "</td></tr>"
+									+ "<tr><td>&emsp;Indentation Author Consistency:</td><td>" + e + "%</td></tr>"
+									+ "<tr><td>&emsp;Indentation Style Graded On:</td><td>" + indentationStyle + "</td></tr>"
+									+ "<tr><td>&emsp;Consistentency with Choice:</td><td>" + choiceConsistency + "%</td></tr>"
+									+ "<tr><td>&emsp;Indentation Correctness:</td><td>" + d + "%</td></tr>"
 									+ "</table>";
 		}
 		
-		public void AddBracketField(double bracketScore, double bracketConsistency, String bracketStyle, double choiceConsistency, double bracketCorrectness) {
-			this.bracketField = "<h3>Bracket Score: " + bracketScore + "%</h3>"
+		public void AddBracketField(double score, double consis, String userStyle, String bracketStyle, double match, double correct) {
+			this.bracketField = "<h3>Bracket Score: " + score + "%</h3>"
 								+ "<table>"
-								+ "<tr><td>&emsp;Bracket Consistency:</td><td>" + bracketConsistency + "%</td></tr>"
-								+ "<tr><td>&emsp;Bracket Style Chosen:</td><td>" + bracketStyle + "</td></tr>"
-								+ "<tr><td>&emsp;Consistent with Choice:</td><td>" + choiceConsistency + "%</td></tr>"
-								+ "<tr><td>&emsp;Bracket Correctness:</td><td>" + bracketCorrectness + "%</td></tr>"
+								+ "<tr><td>&emsp;Bracket Style Used by Author:</td><td>" + userStyle + "</td></tr>"
+								+ "<tr><td>&emsp;Bracket Author Consistency:</td><td>" + consis + "%</td></tr>"
+								+ "<tr><td>&emsp;Bracket Style Graded On:</td><td>" + bracketStyle + "</td></tr>"
+								+ "<tr><td>&emsp;Consistentency with Choice:</td><td>" + match + "%</td></tr>"
+								+ "<tr><td>&emsp;Bracket Correctness:</td><td>" + correct + "%</td></tr>"
 								+ "</table>";
 		}
 		

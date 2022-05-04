@@ -2,8 +2,11 @@ package mutators;
 
 import General.Reportable;
 import General.Reporter;
+import Gui.UserSettings;
+
 import java.io.FileReader;
 import java.io.LineNumberReader;
+import java.util.Iterator;
 
 
 public class BracketAnalyzer implements Reportable {
@@ -11,6 +14,7 @@ public class BracketAnalyzer implements Reportable {
 	private final String filepath;
 	private int inLine = 0;
 	private int nextLine = 0;
+	private int errorCount = 0;
 
 	private boolean anticipateNext = false;
 	private boolean oneTrueBraceStyle = true;
@@ -20,11 +24,12 @@ public class BracketAnalyzer implements Reportable {
 	//								if, 	else, 	while, 	  for,  try,  catch,  class, (represents methods/constructors)
 
 	private LineNumberReader bracketReader;
-	public Reporter reporter = new Reporter("bracket");
+	public Reporter repo;
 
 
-	public BracketAnalyzer(String filepath) throws Exception {
+	public BracketAnalyzer(String filepath, Reporter repo) throws Exception {
 		this.filepath = filepath;
+		this.repo = repo;
 		this.analyze();
 
 	}
@@ -39,31 +44,18 @@ public class BracketAnalyzer implements Reportable {
 			charArray = temporaryLine.toCharArray();
 			bracketChecker(charArray);
 		}
-
 		
+		this.report();
 		bracketReader.close();
 	}
 
 
 	public void bracketChecker (char CA[]) {
-		
-		// if anticipateNext is true
-			// set anticipateNext to false
-			// call method detectBracketNextLine()
-				// if method returns true, we found next line bracket, make appropriate changes
-			// else call an error "bracket anticipated, but never found
-					
-		
-		// for int i = 0 ; i<CA.length;i++
-			// if find keyword token
-				// determine if bracket is inline, if not, expect on next
-				// seperate method for this ^
-				// make appropriate changes for inline dected
-		
-		
 		if (anticipateNext) {
+			anticipateNext = false;
 			if( ! ( detectBracketNextLine(CA) ) ) {
-				// make appropriate logs / changes
+				System.out.println("Bracket anticipated, but never found.");
+				errorCount++;
 			}
 		}
 		
@@ -71,7 +63,8 @@ public class BracketAnalyzer implements Reportable {
 			if (keywordSearch(CA[i])) {
 				if(!(detectBracketInLine(CA, i))) {
 					anticipateNext = true;
-					// make appropriate logs / changes
+					int lineNum = bracketReader.getLineNumber();
+					bracketReader.setLineNumber(lineNum ++);
 				}
 			}
 		}
@@ -83,7 +76,7 @@ public class BracketAnalyzer implements Reportable {
 	private boolean detectBracketInLine(char[] ca, int index) {
 		for (int i = index; i < ca.length; i++) {
 			if (ca[i] == '{') {
-				System.out.println("found inline bracket on:" + bracketReader.getLineNumber()); 	// this is only for testing purposes, delete when no longer necessary
+				inLine++;
 				return true;
 			}
 		}
@@ -92,8 +85,13 @@ public class BracketAnalyzer implements Reportable {
 	
 	private boolean detectBracketNextLine(char[] ca) {
 		// assess if there's a bracket in this line, return true if true, otherwise false
-		
-		return true;	// placeholder, change as necessary
+		for (int i = 0; i < ca.length; i++) {
+			if (ca[i] == '{') {
+				nextLine ++;
+				return true;
+			}
+		}
+		return false;
 	}
 
 		// uses char array to detect if char is present in our keyword array.
@@ -107,11 +105,44 @@ public class BracketAnalyzer implements Reportable {
 	}
 
 	@Override
-	public String report() {
-		// TODO Auto-generated method stub
-		return null;
+	public void report() {
+		// bracket choice and consistency
+		if (inLine > nextLine) {
+			repo.setBrkStyle("Inline");
+			repo.setMajorityBrk( (double)inLine / (double)(nextLine + inLine) );
+		}
+		if (inLine < nextLine) {
+			repo.setBrkStyle("Newline");
+			repo.setMajorityBrk( (double)nextLine / (double)(nextLine + inLine) );
+		}
+		if (inLine ==  nextLine) {
+			repo.setBrkStyle("NextLine");
+			repo.setMajorityBrk(0.5);
+		}
+		
+		// consistency with choice
+		if ( UserSettings.getInstance().getBracePlacementStyle().toString().equals("Inline") ) {
+			this.repo.setBrkMatchPercent( ((double)inLine / (double)(inLine + nextLine)) );
+		}
+		if ( UserSettings.getInstance().getBracePlacementStyle().toString().equals("Newline") ) {
+			this.repo.setBrkMatchPercent( ((double)nextLine / (double)(inLine + nextLine)) );
+		}
+		if ( UserSettings.getInstance().getIndentationRequirement().toString().equals("None") ) {
+			this.repo.setBrkMatchPercent(0);
+		}
+		
+		// correctness check
+		if (errorCount == 0) {
+			this.repo.setBrkCorrectPercent(1.0);
+		} else {
+			double result = (  ( (double)inLine + (double)nextLine - (double)errorCount) ) / ( (double)inLine + (double)nextLine);
+			if (result < 0.0) {
+				result = 0.0;
+			}
+			this.repo.setBrkCorrectPercent(result);
+		}
+		
 	}
-
 }
 
 

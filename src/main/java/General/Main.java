@@ -1,6 +1,4 @@
 package General;
-// main class
-// main > handler > analyzer > flagging > production > done
 
 import javax.swing.UIManager;
 import java.io.File;
@@ -42,12 +40,5 @@ public class Main {
 			
 			System.out.println("done");
 		}
-		
-//		Template report = new Template ("Main.java");
-//		report.AddIndentationField(95, 90, IndentationTypes.Tab.toString(), 95, 100);
-//		report.AddBracketField(80, 75, BracketStyles.Inline.toString(), 80, 85);
-//		report.AddMiscField(50, true, false);
-//		report.AddNote("File did not compile.");
-//		report.GenerateReport();
 	}
 }

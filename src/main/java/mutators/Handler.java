@@ -42,7 +42,7 @@ public class Handler {
 		bfr.close();
 		
 
-		
+		BracketAnalyzer bka = new BracketAnalyzer(path, repo);
 		IDAnalyzer ida = new IDAnalyzer(path, repo );
 		MiscAnalyzer mca = new MiscAnalyzer(ogfilepath, repo);
 		
@@ -149,14 +149,13 @@ public class Handler {
 	
 		// inputs token in line if constructor is detected. 
 	public String detectConstructor(String input) {
-		if(input.matches("(?s).*\\b(public|private|protected)\\b\\s+[\\$_\\w]+\\s*\\([^\\)]*\\).*")) {
+		if(input.matches("(?s).*\\b(public|private|protected)\\b\\s+(static)?\\s*[\\$_\\w]+\\s*\\([^\\)]*\\).*") ) {
 			input = (input.substring(0, input.length()/2) + "`" + input.substring(input.length()/2));
 		}
 		return input;
 	}
 	
 		// creates a dumpfile for translated documents that will be stored locally, temporarily. 
-		// May in future support option to check/validate files in dumplocation to prevent overwriting
 	public String createDumpFile() {
 		String path = "dump.txt";
 		File dumpFile = new File(path);
@@ -177,11 +176,12 @@ public class Handler {
 	public void report() throws Exception {
 		File file = new File(ogfilepath);
 		Template templateHTML = new Template(file.getName());
-		templateHTML.AddIndentationField(repo.calculateIDAScore(), repo.getIDAMatchPercent() , UserSettings.getInstance().getIndentationRequirement().toString(), repo.getMajorityIDA(), repo.getIDACorrectPercent());
-		templateHTML.AddBracketField(777.0, 777.0, UserSettings.getInstance().getBracePlacementStyle().toString(), 777.0, 777.0);
-		templateHTML.AddMiscField(repo.MACorrectPercent, repo.isMAImportAtTop(), repo.isMACommentAtTop());
-		this.attemptCompile(templateHTML);
-		// templateHTML.AddNote("File did not compile."); // replace this with a method that actually attempts to compile the file
+		templateHTML.AddIndentationField(Math.round(repo.calculateIDAScore()), Math.round(repo.getMajorityIDA()), repo.getIdtStyle() ,UserSettings.getInstance().getIndentationRequirement().toString(), 
+				Math.round(repo.getIDAMatchPercent()), Math.round(repo.getIDACorrectPercent()));
+		templateHTML.AddMiscField(Math.round(repo.MACorrectPercent), repo.isMAImportAtTop(), repo.isMACommentAtTop());
+		templateHTML.AddBracketField(Math.round(repo.calculateBrkScore()), Math.round(repo.getMajorityBrk()), repo.getBrkStyle() ,UserSettings.getInstance().getBracePlacementStyle().toString(), 
+				Math.round(repo.getBrkMatchPercent()), Math.round( repo.getBrkCorrectPercent()));
+		// this.attemptCompile(templateHTML); breaking during runtime
 		templateHTML.GenerateReport();
 	}
 	

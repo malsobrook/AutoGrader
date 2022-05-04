@@ -29,7 +29,7 @@ public class MiscAnalyzer implements Reportable {
 			// TODO Add messaged that filepath couldn't be found
 			e.printStackTrace();
 		}
-		calculate();
+		report();
 	}
 	
 	
@@ -111,7 +111,8 @@ public class MiscAnalyzer implements Reportable {
 		return false;
 	}
 	
-	public void calculate() {
+	@Override
+	public void report() {
 		int count = 0;
 		int passedChecks = 0;
 		
@@ -134,12 +135,6 @@ public class MiscAnalyzer implements Reportable {
 			// TODO Add message for IOException failure.
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	public String report() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

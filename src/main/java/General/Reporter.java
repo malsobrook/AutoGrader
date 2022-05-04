@@ -14,14 +14,24 @@ public class Reporter implements Reportable {
 	public ArrayList<Integer> IDALineNumbs = new ArrayList<Integer>();
 	public ArrayList<Integer> BracketLineNumbs = new ArrayList<Integer>();
 	
-	// repo items
+	// indent items
 	public double IDAConsistentPercentage;
 	public double IDAMatchPercent;
 	public double IDACorrectPercent;
 	public double IDAScore;
 	public String IDAStyle;
+	// Misc Items
 	public boolean MAImportAtTop;
 	public double MACorrectPercent;
+	public boolean MACommentAtTop;
+	public String IDAMajStyle;
+	// bracket items
+	public double BrkConsistentPercentage;
+	public double BrkMatchPercent;
+	public double BrkCorrectPercent; 
+	public double BrkScore;
+	public String BrkStyle;
+	public String BrkMajStyle;
 	
 	public double getMACorrectPercent() {
 		return MACorrectPercent;
@@ -52,9 +62,7 @@ public class Reporter implements Reportable {
 		MACommentAtTop = mACommentAtTop;
 	}
 
-	public boolean MACommentAtTop;
-	
-	
+
 	public Reporter(String errorType) {
 		this.errorType = errorType;
 		
@@ -77,19 +85,11 @@ public class Reporter implements Reportable {
 		map.remove(lineNumb);
 	}
 	
-		// returns large string of every error or null if no errors
-	public String report() {
-		String out = "";
-		while ( !(test.isEmpty()) ) {
-			out = out + test.pop() +"\n";
-		}
-		if ( out.isBlank()) {
-			return null;
-		}
-		return out;
+	public void report() {
+		// TODO remove outdated? or repurpose.
 	}
 	
-		// get and set the percentage of the majority indent style used
+		// get and set the percentage of the majority indent style author used
 	public double getMajorityIDA() {
 		return this.IDAConsistentPercentage;
 	}
@@ -129,4 +129,48 @@ public class Reporter implements Reportable {
 		return result;
 	}
 	
+	public double getMajorityBrk() {
+		return this.BrkConsistentPercentage;
+	}
+	
+	public void setMajorityBrk(double i) {
+		this.BrkConsistentPercentage = i*100;
+	}
+	
+	public String getBrkStyle() {
+		return this.BrkStyle;
+	}
+	
+	public void setBrkStyle(String i) {
+		this.BrkStyle = i;
+	}
+	
+	public double getBrkMatchPercent() {
+		return this.BrkMatchPercent;
+	}
+	
+	public void setBrkMatchPercent(double i) {
+		this.BrkMatchPercent = i*100;
+	}
+	
+	public void setBrkCorrectPercent(double i) {
+		this.BrkCorrectPercent = i*100;
+	}
+	
+	public double getBrkCorrectPercent() {
+		return this.BrkCorrectPercent;
+	}
+	
+	public void setBrkMajStyle(String i) {
+		this.BrkMajStyle = i;
+	}
+	
+	public String getBrkMajStyle() {
+		return this.BrkMajStyle;
+	}
+	
+	public double calculateBrkScore() {
+		double result = ( (BrkMatchPercent + BrkConsistentPercentage + BrkCorrectPercent) / 3 );
+		return result;
+	}
 }
