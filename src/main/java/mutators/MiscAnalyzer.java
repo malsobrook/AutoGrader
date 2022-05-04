@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 
 import General.Reportable;
+import General.Reporter;
 import General.Template;
 import Gui.UserSettings;
 
@@ -15,17 +16,20 @@ public class MiscAnalyzer implements Reportable {
 
 	public int lineLength;
 	public String filepath;
+	Reporter repo;
 	public BufferedReader fileReader;
 	
-	public MiscAnalyzer(String filepath, int lineLength) {
+	public MiscAnalyzer(String filepath, Reporter handlerReporter) {
 		this.filepath = filepath;
-		this.lineLength = lineLength;
+		this.lineLength = UserSettings.getInstance().getMaxLineLength();
+		this.repo = handlerReporter;
 		try {
 			fileReader = new BufferedReader(new FileReader(filepath));
 		} catch (FileNotFoundException e) {
 			// TODO Add messaged that filepath couldn't be found
 			e.printStackTrace();
 		}
+		calculate();
 	}
 	
 	
@@ -52,6 +56,12 @@ public class MiscAnalyzer implements Reportable {
 	//Parses file to detect if all imports are at the top.
 	public boolean importAtTop() throws IOException {
 		boolean pastTopOfFile;
+		try {
+			fileReader = new BufferedReader(new FileReader(this.filepath));
+		} catch (FileNotFoundException e) {
+			// TODO Add messaged that filepath couldn't be found
+			e.printStackTrace();
+		}
 		for (String line = fileReader.readLine(); line != null; line = fileReader.readLine()) {
 			boolean importFound;
 			
@@ -62,10 +72,12 @@ public class MiscAnalyzer implements Reportable {
 			
 			//Return false if any imports found after the top of the file
 			if(pastTopOfFile == true && importFound == true) {
+				fileReader.close();
 				return false;
 			}
 		}
 		//Only when no imports are found or all are at the top
+		fileReader.close();
 		return true;
 	}
 	
@@ -75,37 +87,58 @@ public class MiscAnalyzer implements Reportable {
 	
 	//Parses file to ensure the first entry to the file is a comment.
 	public boolean commentAtTopOfFile() throws IOException {
-		String line = fileReader.readLine();
-		if(line.isBlank()) {
-			line = fileReader.readLine();
+		boolean pastTopOfFile;
+		try {
+			fileReader = new BufferedReader(new FileReader(this.filepath));
+		} catch (FileNotFoundException e) {
+			// TODO Add messaged that filepath couldn't be found
+			e.printStackTrace();
 		}
-		
-		return line.matches("^(\\/\\/|\\/\\*).*");
+		for (String line = fileReader.readLine(); line != null; line = fileReader.readLine()) {
+			boolean commentFound;
+			
+			commentFound = line.strip().matches("^(\\/\\/|\\/\\*).*");
+			
+			//Assumes that if any of these keywords have appeared you've surpassed the "top" of the file.
+			pastTopOfFile = line.matches("^\\s*(public|final|abstract|private|static|protected|class|enum)(.*)");
+			
+			if(pastTopOfFile == true) {
+				fileReader.close();
+				return commentFound ? true : false;
+			}
+		}
+		fileReader.close();
+		return false;
 	}
 	
-	@Override
-	public String report() {
+	public void calculate() {
 		int count = 0;
 		int passedChecks = 0;
 		
-		// TODO Remove and replace with the instance variable for report per file
-		Template report = new Template(filepath);
-		
 		try {
 			if(UserSettings.getInstance().isImportsAtTopOfFile()) {
-				passedChecks += this.importAtTop() ? 1 : 0;
+				repo.setMAImportAtTop(this.importAtTop());
+				passedChecks += repo.isMAImportAtTop() ? 1 : 0;
 				count++;
 			}
 			if(UserSettings.getInstance().isCommentBlockAtTopOfFile()) {
-				passedChecks += this.commentAtTopOfFile() ? 1 : 0;
+				repo.setMACommentAtTop(this.commentAtTopOfFile());
+				passedChecks += repo.isMACommentAtTop() ? 1 : 0;
 				count++;
 			}
 			
-			report.AddMiscField(passedChecks/count, this.importAtTop(), this.commentAtTopOfFile());
+			if(count != 0) {
+				repo.setMACorrectPercent(passedChecks/count);
+			}
 		} catch (IOException e) {
 			// TODO Add message for IOException failure.
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public String report() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 

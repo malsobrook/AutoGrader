@@ -5,22 +5,19 @@ import java.io.FileWriter;
 
 import com.google.gson.Gson;
 
-import Gui.UserSettings.BracketStyles;
-import Gui.UserSettings.IndentationTypes;
-
 public class UserSettings {
 	private static UserSettings instance;
 	   
-	public enum IndentationTypes { Spaces, Tab; }
-	public enum BracketStyles { Inline, Newline; }
+	public enum IndentationTypes { None, Spaces, Tab; }
+	public enum BracketStyles { None, Inline, Newline; }
 	
 	//FORMATTING
 	private IndentationTypes indentationRequirement;
 	private int numberOfSpaces;
 	private BracketStyles bracePlacementStyle;
 	private int maxLineLength;				
-	private boolean excludeStatementFromLoop;	// probs not functional
-	private boolean seperateLineForCondition;	// ditto ^
+	private boolean excludeStatementFromLoop;
+	private boolean seperateLineForCondition;	
 	
 	//INDENTIFIER
 	private boolean uppercaseClassNames;
@@ -33,6 +30,7 @@ public class UserSettings {
 	//FILE NAMING
 	
 	//MISC
+	private String reportDirectory;
 	private boolean importsAtTopOfFile;
 	private boolean noBreakContinueOrGoTo;
 	
@@ -116,6 +114,14 @@ public class UserSettings {
 		this.commentBeforeEachMethod = commentBeforeEachMethod;
 	}
 
+	public String getReportDirectory() {
+		return reportDirectory;
+	}
+	
+	public void setReportDirectory(String path) {
+		this.reportDirectory = path;
+	}
+	
 	public boolean isImportsAtTopOfFile() {
 		return importsAtTopOfFile;
 	}
@@ -133,15 +139,16 @@ public class UserSettings {
 	}
 	
    private UserSettings() {
-	    this.indentationRequirement = IndentationTypes.Tab;
-	    this.numberOfSpaces = 4;
-		this.maxLineLength = 80;
-		this.bracePlacementStyle = BracketStyles.Inline;
+	    this.indentationRequirement = IndentationTypes.None;
+	    this.numberOfSpaces = 0;
+		this.maxLineLength = 0;
+		this.bracePlacementStyle = BracketStyles.None;
 		this.seperateLineForCondition = false;
 		this.uppercaseClassNames = false;
 		this.lowercaseVarNames = false;
 		this.commentBeforeEachMethod = false;
 		this.commentBlockAtTopOfFile = false;
+		this.reportDirectory = "";
 		this.importsAtTopOfFile = false;
 		this.noBreakContinueOrGoTo = false;
    }
