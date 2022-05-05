@@ -171,7 +171,7 @@ Project Link: [https://github.com/malsobrook/AutoGrader](https://github.com/mals
 ## Acknowledgments
 
 * [Dr. Tennyson, Murray State University]()
-* [Java Style Guide](https://google.github.io/styleguide/javaguide.html))
+* [Java Style Guide](https://google.github.io/styleguide/javaguide.html)
 * [Java Source Code Research](http://ceur-ws.org/Vol-1852/p14.pdf)
 * [README Template](https://github.com/othneildrew/Best-README-Template/graphs/contributors)
 
