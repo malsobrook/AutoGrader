@@ -64,7 +64,7 @@
 ## About The Project
 <div align="center">
   <a href="https://github.com/github_username/repo_name">
-    <img src="src/main/java/Gui/screenshot.jpg" alt="Screenshot" width="400" height="300">
+    <img src="src/main/java/Gui/screenshot.png" alt="Screenshot" width="400" height="300">
   </a>
 </div>
 
