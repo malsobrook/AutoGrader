@@ -38,7 +38,6 @@ public class IDAnalyzer implements Reportable{
 		this.filePath = filepath;
 		this.spaceIndex = UserSettings.getInstance().getNumberOfSpaces();
 		this.repo = handlerReporter;
-		this.OneTBS = true;
 		this.analyze();
 	}
 	
@@ -111,13 +110,13 @@ public class IDAnalyzer implements Reportable{
 				errorCount++;
 			}
 		}
-		
+		System.out.println(lineNumb + ":    " + expectedIdt + "    " + actual);
 		
 		for (int i = 0; i < ca.length; i++) {
 			
 			if (keySearch(ca[i])) {
 				expectedBrackets++;
-				if (OneTBS) {
+				if (bktSearch(ca)) {
 					expectedIdt++;
 				} else {
 					nextLineBracket = true;
@@ -138,6 +137,15 @@ public class IDAnalyzer implements Reportable{
 	private boolean keySearch(char c) {
 		for (int i=0; i < iso.length; i++) {
 			if (c == iso[i]) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private boolean bktSearch(char[] c) {
+		for (int i=0; i < c.length; i++) {
+			if (c[i] == '{') {
 				return true;
 			}
 		}

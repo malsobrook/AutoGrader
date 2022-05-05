@@ -149,7 +149,8 @@ public class Handler {
 	
 		// inputs token in line if constructor is detected. 
 	public String detectConstructor(String input) {
-		if(input.matches("(?s).*\\b(public|private|protected)\\b\\s+(static)?\\s*[\\$_\\w]+\\s*\\([^\\)]*\\).*") ) {
+		if(input.matches("(?s).*\\b(public|private|protected)\\b\\s+(static)?\\s*[\\$_\\w]+\\s*\\([^\\)]*\\).*") ||
+				input.matches(".*\\b(public|private|protected)\\b\\s+(static)?\\s*[\\$_\\w]*\\s*[\\$_\\w]+\\s*\\([^\\)]*\\).*")) {
 			input = (input.substring(0, input.length()/2) + "`" + input.substring(input.length()/2));
 		}
 		return input;
