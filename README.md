@@ -18,9 +18,10 @@
 
   <p align="center">
     A program that will automatically, upon file selection, assess the file for indentation errors, bracket placement errors (or lack thereof), proper naming convention, and proper comments.
-    <br />
-    <a href="https://github.com/malsobrook/AutoGrader"><strong>Explore the docs »</strong></a>
-    <br />
+    <!--br /-->
+    <!-- Commented this out just for a simplified clean look (MM) -->
+    <!--a href="https://github.com/malsobrook/AutoGrader"><strong>Explore the docs »</strong></a-->
+    <!--br /-->
     <br />
     <a href="https://github.com/malsobrook/AutoGrader">View Demo</a>
     ·
