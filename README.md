@@ -181,11 +181,11 @@ Project Link: [https://github.com/malsobrook/AutoGrader](https://github.com/mals
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/github_username/repo_name.svg?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/malsobrook/AutoGrader.svg?style=for-the-badge
 [contributors-url]: https://github.com/malsobrook/AutoGrader/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/github_username/repo_name.svg?style=for-the-badge
+[forks-shield]: https://img.shields.io/github/forks/malsobrook/AutoGrader.svg?style=for-the-badge
 [forks-url]: https://github.com/malsobrook/AutoGrader/network/members
-[stars-shield]: https://img.shields.io/github/stars/github_username/repo_name.svg?style=for-the-badge
+[stars-shield]: https://img.shields.io/github/stars/malsobrook/AutoGrader.svg?style=for-the-badge
 [stars-url]: https://github.com/malsobrook/AutoGrader/stargazers
-[issues-shield]: https://img.shields.io/github/issues/github_username/repo_name.svg?style=for-the-badge
+[issues-shield]: https://img.shields.io/github/issues/malsobrook/AutoGrader.svg?style=for-the-badge
 [issues-url]: https://github.com/malsobrook/AutoGrader/issues
