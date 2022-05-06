@@ -7,6 +7,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import Gui.UserSettings;
+import Gui.UserSettings.BracketStyles;
+import Gui.UserSettings.IndentationTypes;
 
 public class Template {
 
@@ -87,22 +89,27 @@ public class Template {
 			this.indentationField = "<h3>Indentation Score: " + indentationScore + "%</h3>"
 									+ "<table>"
 									+ "<tr><td>&emsp;Indentation Used by Author:</td><td>" + userStyle + "</td></tr>"
-									+ "<tr><td>&emsp;Indentation Author Consistency:</td><td>" + e + "%</td></tr>"
-									+ "<tr><td>&emsp;Indentation Style Graded On:</td><td>" + indentationStyle + "</td></tr>"
-									+ "<tr><td>&emsp;Consistentency with Choice:</td><td>" + choiceConsistency + "%</td></tr>"
-									+ "<tr><td>&emsp;Indentation Correctness:</td><td>" + d + "%</td></tr>"
-									+ "</table>";
+									+ "<tr><td>&emsp;Indentation Author Consistency:</td><td>" + e + "%</td></tr>";
+			if(!(UserSettings.getInstance().getIndentationRequirement() == IndentationTypes.None)) {
+				this.indentationField += "<tr><td>&emsp;Indentation Style Graded On:</td><td>" + indentationStyle + "</td></tr>"
+										+ "<tr><td>&emsp;Consistentency with Choice:</td><td>" + choiceConsistency + "%</td></tr>"
+										+ "<tr><td>&emsp;Indentation Correctness:</td><td>" + d + "%</td></tr>";
+						
+			}
+			this.indentationField += "</table>";
 		}
 		
 		public void AddBracketField(double score, double consis, String userStyle, String bracketStyle, double match, double correct) {
 			this.bracketField = "<h3>Bracket Score: " + score + "%</h3>"
 								+ "<table>"
 								+ "<tr><td>&emsp;Bracket Style Used by Author:</td><td>" + userStyle + "</td></tr>"
-								+ "<tr><td>&emsp;Bracket Author Consistency:</td><td>" + consis + "%</td></tr>"
-								+ "<tr><td>&emsp;Bracket Style Graded On:</td><td>" + bracketStyle + "</td></tr>"
-								+ "<tr><td>&emsp;Consistentency with Choice:</td><td>" + match + "%</td></tr>"
-								+ "<tr><td>&emsp;Bracket Correctness:</td><td>" + correct + "%</td></tr>"
-								+ "</table>";
+								+ "<tr><td>&emsp;Bracket Author Consistency:</td><td>" + consis + "%</td></tr>";
+			if(!(UserSettings.getInstance().getBracePlacementStyle() == BracketStyles.None)) {
+				this.bracketField += "<tr><td>&emsp;Bracket Style Graded On:</td><td>" + bracketStyle + "</td></tr>"
+									+ "<tr><td>&emsp;Consistentency with Choice:</td><td>" + match + "%</td></tr>"
+									+ "<tr><td>&emsp;Bracket Correctness:</td><td>" + correct + "%</td></tr>";								
+			}
+			this.bracketField += "</table>";
 		}
 		
 		public void AddMiscField(double miscScore, boolean importsAtTop, boolean commentAtTop) {

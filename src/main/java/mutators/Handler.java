@@ -16,7 +16,6 @@ public class Handler {
 		//_, $, and & " are taken by letters, spaces, and tabs, respectively
 	public Reporter repo;
 	public Template report;
-	private MiscAnalyzer mca;
 	
 	
 	public Handler(String ogfilepath) {
@@ -179,7 +178,9 @@ public class Handler {
 		Template templateHTML = new Template(file.getName());
 		templateHTML.AddIndentationField(Math.round(repo.calculateIDAScore()), Math.round(repo.getMajorityIDA()), repo.getIdtStyle() ,UserSettings.getInstance().getIndentationRequirement().toString(), 
 				Math.round(repo.getIDAMatchPercent()), Math.round(repo.getIDACorrectPercent()));
-		templateHTML.AddMiscField(Math.round(repo.MACorrectPercent), repo.isMAImportAtTop(), repo.isMACommentAtTop());
+		if(UserSettings.getInstance().isCommentBlockAtTopOfFile() | UserSettings.getInstance().isImportsAtTopOfFile()) {
+			templateHTML.AddMiscField(Math.round(repo.MACorrectPercent), repo.isMAImportAtTop(), repo.isMACommentAtTop());
+		}
 		templateHTML.AddBracketField(Math.round(repo.calculateBrkScore()), Math.round(repo.getMajorityBrk()), repo.getBrkStyle() ,UserSettings.getInstance().getBracePlacementStyle().toString(), 
 				Math.round(repo.getBrkMatchPercent()), Math.round( repo.getBrkCorrectPercent()));
 		// this.attemptCompile(templateHTML); breaking during runtime
@@ -202,7 +203,5 @@ public class Handler {
 		} else {
 			templateHTML.AddNote("Compiled successfully");
 		}
-		
-		System.out.println("here");
 	}
 }

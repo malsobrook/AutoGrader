@@ -70,8 +70,11 @@ public class MiscAnalyzer implements Reportable {
 			//Assumes that if any of these keywords have appeared you've surpassed the "top" of the file.
 			pastTopOfFile = line.matches("^\\s*(public|final|abstract|private|static|protected|class|enum)(.*)");
 			
-			//Return false if any imports found after the top of the file
-			if(pastTopOfFile == true && importFound == true) {
+			if(!pastTopOfFile && importFound) {
+				fileReader.close();
+				return true;
+			}
+			else if(pastTopOfFile) {
 				fileReader.close();
 				return false;
 			}
@@ -102,9 +105,13 @@ public class MiscAnalyzer implements Reportable {
 			//Assumes that if any of these keywords have appeared you've surpassed the "top" of the file.
 			pastTopOfFile = line.matches("^\\s*(public|final|abstract|private|static|protected|class|enum)(.*)");
 			
-			if(pastTopOfFile == true) {
+			if(commentFound == true && pastTopOfFile == false) {
 				fileReader.close();
-				return commentFound ? true : false;
+				return true;
+			}
+			else if(pastTopOfFile == true && commentFound == false) {
+				fileReader.close();
+				return false;
 			}
 		}
 		fileReader.close();
@@ -129,7 +136,7 @@ public class MiscAnalyzer implements Reportable {
 			}
 			
 			if(count != 0) {
-				repo.setMACorrectPercent(passedChecks/count);
+				repo.setMACorrectPercent(((double)passedChecks/(double)count) * 100);
 			}
 		} catch (IOException e) {
 			// TODO Add message for IOException failure.

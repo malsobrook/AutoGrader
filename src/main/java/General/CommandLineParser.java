@@ -91,6 +91,7 @@ public class CommandLineParser implements Runnable {
 				        	File subFile = x.toFile();
 				            String ext = subFile.getName().lastIndexOf(".") == -1 ? "" : subFile.getName().substring(subFile.getName().lastIndexOf("."));
 				            if((ext.equals(".java") || ext.equals(".jar")) && CheckFileSize(subFile)) {
+				            	this.files.add(subFile);
 				            	Main.fileList.add(subFile);
 				            }
 				        });

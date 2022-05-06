@@ -25,6 +25,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import mutators.Handler;
 
 public class MainViewController {
 
@@ -45,7 +46,19 @@ public class MainViewController {
     	
     	//Adds user selected files and closes the view.
         view.getRunButton().setOnAction(event -> {
-        	Main.fileList = new ArrayList<File>(this.fileList);
+        	for(File file : this.fileList) {
+    			Handler trs = new Handler(file.getAbsolutePath());
+    			try {
+    				trs.handle();
+    			} catch (Exception e) {
+    				System.out.println("error on pass to Translator");
+    				e.printStackTrace();
+    			}
+    			
+    			
+    			System.out.println("done");
+    		}
+        	
         	this.fileList.clear();
         	view.getFileTree().getRoot().getChildren().clear();
         });
@@ -177,7 +190,7 @@ public class MainViewController {
     //Saves view settings to UserSettings and updates userSettings.json
     private void saveSettings(AutoGraderView view) {
     	obj.setIndentationRequirement(Enum.valueOf(IndentationTypes.class, view.getIndentationType().getValue().toString()));
-    	obj.setNumberOfSpaces(Integer.valueOf(view.getNumberOfSpaces().getText()));
+    	obj.setNumberOfSpaces(view.getNumberOfSpaces().getText() == "" ? 0 : Integer.valueOf(view.getNumberOfSpaces().getText()));
     	obj.setBracePlacementStyle(Enum.valueOf(BracketStyles.class, view.getBracketStyle().getValue().toString()));
     	obj.setMaxLineLength(Integer.valueOf(view.getMaxLineLength().getText()));
     	obj.setExcludeStatementFromLoop(view.getExcludeStatementFromLoop().isSelected());
