@@ -56,7 +56,6 @@ public class MainViewController {
     			}
     			
     			
-    			System.out.println("done");
     		}
         	
         	this.fileList.clear();

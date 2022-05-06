@@ -54,7 +54,6 @@ public class BracketAnalyzer implements Reportable {
 		if (anticipateNext) {
 			anticipateNext = false;
 			if( ! ( detectBracketNextLine(CA) ) ) {
-				System.out.println("Bracket anticipated, but never found.");
 				errorCount++;
 			}
 		}

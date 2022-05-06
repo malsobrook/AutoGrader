@@ -110,7 +110,6 @@ public class IDAnalyzer implements Reportable{
 				errorCount++;
 			}
 		}
-		System.out.println(lineNumb + ":    " + expectedIdt + "    " + actual);
 		
 		for (int i = 0; i < ca.length; i++) {
 			
