@@ -19,24 +19,5 @@ public class Main {
 		else {
 			Gui.App.start();
 		}
-		
-		try {
-			// set better look and feel. Throws happen here.
-			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		for(File file : fileList) {
-			Handler trs = new Handler(file.getAbsolutePath());
-			try {
-				trs.handle();
-			} catch (Exception e) {
-				System.out.println("error on pass to Translator");
-				e.printStackTrace();
-			}
-			
-		}
 	}
 }
